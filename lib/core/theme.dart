@@ -60,7 +60,6 @@ class AppTheme {
         padding: WidgetStatePropertyAll(EdgeInsets.symmetric(vertical: 15, horizontal: 20))
       ),
     ),
-  
     textButtonTheme: TextButtonThemeData(
       style: ButtonStyle(
         foregroundColor: WidgetStateColor.resolveWith((states) {
@@ -79,7 +78,7 @@ class AppTheme {
     textTheme: const TextTheme(bodyMedium: TextStyle(color: _darkText, fontWeight: FontWeight.bold)),
     bottomAppBarTheme: BottomAppBarTheme(
       color: AppTheme._darkText,
-      shape: CircularNotchedRectangle(),
+      shape: null,
     ),
     fontFamily: 'Montserrat',
     extensions: <ThemeExtension<dynamic>>[
@@ -151,7 +150,7 @@ class AppTheme {
     textTheme: const TextTheme(bodyMedium: TextStyle(color: _lightText)),
     bottomAppBarTheme: BottomAppBarTheme(
       color: AppTheme._lightBackground,
-      shape: CircularNotchedRectangle(),
+      shape: null,
     ),
     fontFamily: 'Montserrat',
     extensions: <ThemeExtension<dynamic>>[

@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:odyss/core/constraints.dart';
+import 'package:odyss/screens/chat_screen/chat_screen.dart';
 import 'package:odyss/screens/explore_screen/explore_screen.dart';
 import 'package:odyss/screens/login_screen/login_screen.dart';
+import 'package:odyss/screens/profile_screen/profile_screen.dart';
 import 'package:odyss/screens/rides_screen/rides_screen.dart';
 import 'package:odyss/screens/signup_screens/signup_sc%20reen1.dart';
 import 'package:odyss/screens/signup_screens/signup_screen2.dart';
@@ -17,7 +19,9 @@ final GoRouter router = GoRouter(
   initialLocation: initLocationFunc(),
   routes: [
     GoRoute(path: '/', builder: (context, state) => SplashScreen()),
-    GoRoute(path: '/start', pageBuilder: (context, state) => CustomTransitionPage(
+    GoRoute(
+      path: '/start',
+      pageBuilder: (context, state) => CustomTransitionPage(
         child: StartScreen(),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return FadeTransition(
@@ -35,7 +39,8 @@ final GoRouter router = GoRouter(
         },
       ),
     ),
-    GoRoute(path: '/welcome',
+    GoRoute(
+      path: '/welcome',
       pageBuilder: (context, state) => CustomTransitionPage(
         key: state.pageKey,
         child: WelcomeScreen(),
@@ -56,7 +61,9 @@ final GoRouter router = GoRouter(
         },
       ),
     ),
-    GoRoute(path: '/login', pageBuilder: (context, state) => CustomTransitionPage(
+    GoRoute(
+      path: '/login',
+      pageBuilder: (context, state) => CustomTransitionPage(
         key: state.pageKey,
         child: LoginScreen(),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
@@ -76,7 +83,8 @@ final GoRouter router = GoRouter(
         },
       ),
     ),
-    GoRoute(path: '/signup1',
+    GoRoute(
+      path: '/signup1',
       pageBuilder: (context, state) => CustomTransitionPage(
         key: state.pageKey,
         child: SignupScreen1(),
@@ -97,7 +105,9 @@ final GoRouter router = GoRouter(
         },
       ),
     ),
-    GoRoute(path: '/signup2', pageBuilder: (context, state) => CustomTransitionPage(
+    GoRoute(
+      path: '/signup2',
+      pageBuilder: (context, state) => CustomTransitionPage(
         key: state.pageKey,
         child: SignupScreen2(),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
@@ -117,7 +127,9 @@ final GoRouter router = GoRouter(
         },
       ),
     ),
-    GoRoute(path: '/signup3', pageBuilder: (context, state) => CustomTransitionPage(
+    GoRoute(
+      path: '/signup3',
+      pageBuilder: (context, state) => CustomTransitionPage(
         key: state.pageKey,
         child: SignupScreen3(),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
@@ -137,7 +149,9 @@ final GoRouter router = GoRouter(
         },
       ),
     ),
-    GoRoute(path: '/signup4', pageBuilder: (context, state) => CustomTransitionPage(
+    GoRoute(
+      path: '/signup4',
+      pageBuilder: (context, state) => CustomTransitionPage(
         key: state.pageKey,
         child: SignupScreen4(),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
@@ -157,7 +171,9 @@ final GoRouter router = GoRouter(
         },
       ),
     ),
-    GoRoute(path: '/signup5', pageBuilder: (context, state) => CustomTransitionPage(
+    GoRoute(
+      path: '/signup5',
+      pageBuilder: (context, state) => CustomTransitionPage(
         key: state.pageKey,
         child: SignupScreen5(),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
@@ -177,91 +193,21 @@ final GoRouter router = GoRouter(
         },
       ),
     ),
-    GoRoute(path: '/explore', pageBuilder: (context, state) => CustomTransitionPage(
-        key: state.pageKey,
-        child: ExploreScreen(),
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          const begin = Offset(1.0, 0.0); // Slide in from right
-          const end = Offset.zero;
-          const curve = Curves.ease;
-
-          final tween = Tween(
-            begin: begin,
-            end: end,
-          ).chain(CurveTween(curve: curve));
-
-          return SlideTransition(
-            position: animation.drive(tween),
-            child: child,
-          );
-        },
-      ),
+    GoRoute(
+      path: '/profile',
+      pageBuilder: (context, state) => NoTransitionPage(child: ProfileScreen()),
+    ),
+    GoRoute(
+      path: '/chat',
+      pageBuilder: (context, state) => NoTransitionPage(child: ChatScreen()),
     ),
     GoRoute(
       path: '/explore',
-      pageBuilder: (context, state) => CustomTransitionPage(
-        key: state.pageKey,
-        child: ExploreScreen(),
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          const begin = Offset(1.0, 0.0); // Slide in from right
-          const end = Offset.zero;
-          const curve = Curves.ease;
-
-          final tween = Tween(
-            begin: begin,
-            end: end,
-          ).chain(CurveTween(curve: curve));
-
-          return SlideTransition(
-            position: animation.drive(tween),
-            child: child,
-          );
-        },
-      ),
-    ),
-    GoRoute(
-      path: '/explore',
-      pageBuilder: (context, state) => CustomTransitionPage(
-        key: state.pageKey,
-        child: ExploreScreen(),
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          const begin = Offset(1.0, 0.0); // Slide in from right
-          const end = Offset.zero;
-          const curve = Curves.ease;
-
-          final tween = Tween(
-            begin: begin,
-            end: end,
-          ).chain(CurveTween(curve: curve));
-
-          return SlideTransition(
-            position: animation.drive(tween),
-            child: child,
-          );
-        },
-      ),
+      pageBuilder: (context, state) => NoTransitionPage(child: ExploreScreen()),
     ),
     GoRoute(
       path: '/rides',
-      pageBuilder: (context, state) => CustomTransitionPage(
-        key: state.pageKey,
-        child: RidesScreen(),
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          const begin = Offset(1.0, 0.0); // Slide in from right
-          const end = Offset.zero;
-          const curve = Curves.ease;
-
-          final tween = Tween(
-            begin: begin,
-            end: end,
-          ).chain(CurveTween(curve: curve));
-
-          return SlideTransition(
-            position: animation.drive(tween),
-            child: child,
-          );
-        },
-      ),
+      pageBuilder: (context, state) => NoTransitionPage(child: RidesScreen()),
     ),
-  ] 
+  ],
 );

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:odyss/core/colors.dart';
+import 'package:odyss/screens/signup_screens/signup_screens_widgets/signup5_button.dart';
 
 class SignupScreen5 extends StatefulWidget {
   const SignupScreen5({super.key});
@@ -11,6 +13,7 @@ class SignupScreen5 extends StatefulWidget {
 class _SignupScreen2State extends State<SignupScreen5> {
   @override
   Widget build(BuildContext context) {
+    final myColors = Theme.of(context).extension<MyColors>()!;
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
@@ -45,12 +48,13 @@ class _SignupScreen2State extends State<SignupScreen5> {
                             ),
                           ),
                         ),
+                        
                       ],
                     ),
                     SizedBox(height: 50),
                     Container(
                       width: MediaQuery.of(context).size.width,
-                      height: 350,
+                      height: 300,
                       padding: EdgeInsets.all(
                         MediaQuery.sizeOf(context).width * 0.05,
                       ),
@@ -58,7 +62,20 @@ class _SignupScreen2State extends State<SignupScreen5> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Container(),
+                          Container(
+                            child: Wrap(
+                              spacing: 10,
+                              runSpacing: 10,
+                              alignment: WrapAlignment.center,
+                              children: [VibeButton(text: 'sing-along'),
+                                VibeButton(text: 'chatty'),
+                                VibeButton(text: 'quiet'),
+                                VibeButton(text: 'social media'),
+                                VibeButton(text: 'explore'),
+                                VibeButton(text: 'games'),
+                                VibeButton(text: 'movies'),
+                              ])
+                          ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
