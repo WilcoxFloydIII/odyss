@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:odyss/core/colors.dart';
+import 'package:odyss/core/providers/ride_list_provider.dart';
 
-class SearchWidget extends StatefulWidget {
+class SearchWidget extends ConsumerStatefulWidget {
   SearchWidget({super.key});
 
   @override
-  State<SearchWidget> createState() => _SearchWidgetState();
+  ConsumerState<SearchWidget> createState() => _SearchWidgetState();
 }
 
-class _SearchWidgetState extends State<SearchWidget> {
+class _SearchWidgetState extends ConsumerState<SearchWidget> {
   final TextEditingController destinationController = TextEditingController();
   final TextEditingController locationController = TextEditingController();
   final TextEditingController dateController = TextEditingController();
@@ -35,6 +37,7 @@ class _SearchWidgetState extends State<SearchWidget> {
           selectedDateTime?.minute ?? 0,
         );
         dateController.text = '${picked.day}/${picked.month}/${picked.year}';
+        ref.read(dateQueryProvider.notifier).state = '${picked.day}/${picked.month}/${picked.year}';
       }
     }
 
@@ -58,6 +61,10 @@ class _SearchWidgetState extends State<SearchWidget> {
                 onTap: () => onSelected('Afternoon'),
               ),
               ListTile(title: Text('Night'), onTap: () => onSelected('Night')),
+              ListTile(
+                title: Text('None'),
+                onTap: () => onSelected(''),
+              ),
             ],
           ),
         ),
@@ -69,6 +76,7 @@ class _SearchWidgetState extends State<SearchWidget> {
         timeController.text = selectedPeriod;
         setState(() {
           timeController.text = selectedPeriod;
+          ref.read(timeQueryProvider.notifier).state = selectedPeriod;
         }); // To update UI if needed
       });
     }
@@ -84,29 +92,24 @@ class _SearchWidgetState extends State<SearchWidget> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              ListTile(
-                title: Text('Abuja'),
-                onTap: () => onSelected('Abuja'),
-              ),
-              ListTile(
-                title: Text('Lagos'),
-                onTap: () => onSelected('Lagos'),
-              ),
+              ListTile(title: Text('Abuja'), onTap: () => onSelected('Abuja')),
+              ListTile(title: Text('Lagos'), onTap: () => onSelected('Lagos')),
+              ListTile(title: Text('None'), onTap: () => onSelected('')),
             ],
           ),
         ),
       );
     }
-    
+
     Future<void> pickState() async {
       await showStatePeriodDialog(context, (String selectedState) {
         destinationController.text = selectedState;
         setState(() {
           destinationController.text = selectedState;
+          ref.read(arrivalQueryProvider.notifier).state = selectedState;
         }); // To update UI if needed
       });
     }
-
 
     return SafeArea(
       child: Container(

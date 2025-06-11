@@ -43,6 +43,7 @@ dependencies:
   flutter_multi_formatter: ^2.6.0
   mask_text_input_formatter: ^2.4.0
   flutter_launcher_icons: ^0.13.1
+  intl: ^0.18.0
 
 dev_dependencies:
   flutter_test:
