@@ -2,10 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:odyss/core/constraints.dart';
 import 'package:odyss/screens/chat_screen/chat_screen.dart';
+import 'package:odyss/screens/curate_trip_screen/curate_trip_screen.dart';
 import 'package:odyss/screens/explore_screen/explore_screen.dart';
 import 'package:odyss/screens/login_screen/login_screen.dart';
 import 'package:odyss/screens/profile_screen/profile_screen.dart';
 import 'package:odyss/screens/rides_screen/rides_screen.dart';
+import 'package:odyss/screens/rides_screen/rides_screen_widgets/selected_ride_dialog.dart';
 import 'package:odyss/screens/signup_screens/signup_sc%20reen1.dart';
 import 'package:odyss/screens/signup_screens/signup_screen2.dart';
 import 'package:odyss/screens/signup_screens/signup_screen3.dart';
@@ -209,5 +211,6 @@ final GoRouter router = GoRouter(
       path: '/rides',
       pageBuilder: (context, state) => NoTransitionPage(child: RidesScreen()),
     ),
+    GoRoute(path: '/curate', builder: (context, state) => CurateTripScreen(),)
   ],
 );

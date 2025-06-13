@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:odyss/core/colors.dart';
+// import 'package:odyss/core/colors.dart';
 import 'package:odyss/screens/signup_screens/signup_screens_widgets/signup5_button.dart';
 
 class SignupScreen5 extends StatefulWidget {
@@ -13,7 +13,7 @@ class SignupScreen5 extends StatefulWidget {
 class _SignupScreen2State extends State<SignupScreen5> {
   @override
   Widget build(BuildContext context) {
-    final myColors = Theme.of(context).extension<MyColors>()!;
+    // final myColors = Theme.of(context).extension<MyColors>()!;
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(

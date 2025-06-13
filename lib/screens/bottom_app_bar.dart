@@ -114,11 +114,13 @@ class _FloatingButtonWidgetState extends State<FloatingButtonWidget> {
       width: 70,
       height: 70,
       child: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          context.push('/curate');
+        },
         shape: CircleBorder(
           side: BorderSide(width: 4, color: myColors.backgound),
         ),
-        
+
         child: Icon(Icons.add_rounded, size: 30),
       ),
     );

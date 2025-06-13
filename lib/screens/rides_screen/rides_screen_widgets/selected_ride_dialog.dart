@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:odyss/core/colors.dart';
+import 'package:odyss/screens/rides_screen/rides_screen_widgets/make_payment_widget.dart';
 
 class SelectedRideDialog extends StatefulWidget {
   const SelectedRideDialog({
@@ -15,6 +16,7 @@ class SelectedRideDialog extends StatefulWidget {
     required this.members,
     required this.seats,
     required this.vehicle,
+    required this.price,
   });
 
   final String depLoc;
@@ -26,16 +28,22 @@ class SelectedRideDialog extends StatefulWidget {
   final String vehicle;
   final int days;
   final List members;
+  final int price;
 
   @override
   State<SelectedRideDialog> createState() => _SelectedRideDialogState();
 }
 
 class _SelectedRideDialogState extends State<SelectedRideDialog> {
+  bool toSimilarTrip = false;
+  bool splitCost = false;
+  bool offlineFill = false;
+
   @override
   Widget build(BuildContext context) {
     final myColors = Theme.of(context).extension<MyColors>()!;
     return Scaffold(
+      extendBodyBehindAppBar: false,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(170),
         child: SafeArea(
@@ -170,6 +178,374 @@ class _SelectedRideDialogState extends State<SelectedRideDialog> {
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height - 170,
+          child: ListView(
+            children: [
+              Container(
+                width: MediaQuery.of(context).size.width,
+                padding: EdgeInsets.all(
+                  MediaQuery.of(context).size.width * 0.05,
+                ),
+                decoration: BoxDecoration(
+                  border: BoxBorder.fromLTRB(
+                    bottom: BorderSide(width: 1, color: Colors.black26),
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Travel buddies', style: TextStyle(fontSize: 15)),
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.9,
+                      height: (((40 + 14) * widget.members.length) + 50),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          ...List.generate(widget.members.length, (indexnew) {
+                            return Container(
+                              width: MediaQuery.of(context).size.width * 0.9,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 7,
+                                ),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      width: 250,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            width: 40,
+                                            height: 40,
+                                            decoration: BoxDecoration(
+                                              border: Border.all(
+                                                width: 2,
+                                                color: Colors.black,
+                                              ),
+                                              color: Colors.grey.shade300,
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                            ),
+                                          ),
+                                          SizedBox(width: 10),
+                                          Text(
+                                            '${widget.members[indexnew]} ',
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          }),
+                          ElevatedButton(
+                            onPressed: () {},
+                            style: ButtonStyle(
+                              padding: WidgetStatePropertyAll(
+                                EdgeInsets.symmetric(
+                                  vertical: 0,
+                                  horizontal: 20,
+                                ),
+                              ),
+                              backgroundColor: WidgetStateColor.resolveWith((
+                                states,
+                              ) {
+                                if (states.contains(WidgetState.pressed)) {
+                                  return myColors.primary;
+                                }
+                                return Colors.transparent;
+                              }),
+                              shadowColor: WidgetStatePropertyAll(
+                                Colors.transparent,
+                              ),
+                              side: WidgetStatePropertyAll(
+                                BorderSide(width: 2, color: myColors.primary),
+                              ),
+                            ),
+                            child: Text(
+                              'Invite others',
+                              style: TextStyle(
+                                fontSize: 10,
+                                color: myColors.primary,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                padding: EdgeInsets.all(
+                  MediaQuery.of(context).size.width * 0.05,
+                ),
+                decoration: BoxDecoration(
+                  border: BoxBorder.fromLTRB(
+                    bottom: BorderSide(width: 1, color: Colors.black26),
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Smart Fill Policy', style: TextStyle(fontSize: 15)),
+                    ListTile(
+                      onTap: () {
+                        setState(() {
+                          toSimilarTrip = !toSimilarTrip;
+                        });
+                      },
+                      contentPadding: EdgeInsets.all(0),
+                      leading: Text('Switch to a similar trip'),
+                      trailing: toSimilarTrip? Icon(Icons.check) : null,
+                    ),
+                    ListTile(
+                      onTap: () {
+                        setState(() {
+                          splitCost = !splitCost;
+                        });
+                      },
+                      contentPadding: EdgeInsets.all(0),
+                      leading: Text('Split the Remaining Cost'),
+                      trailing: splitCost ? Icon(Icons.check) : null,
+                    ),
+                    ListTile(
+                      onTap: () {
+                        setState(() {
+                          offlineFill = !offlineFill;
+                        });
+                      },
+                      contentPadding: EdgeInsets.all(0),
+                      leading: Text('Allow Offline Fill-in'),
+                      trailing: offlineFill ? Icon(Icons.check) : null,
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                padding: EdgeInsets.all(
+                  MediaQuery.of(context).size.width * 0.05,
+                ),
+                decoration: BoxDecoration(
+                  border: BoxBorder.fromLTRB(
+                    bottom: BorderSide(width: 1, color: Colors.black26),
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Refund Eligibility', style: TextStyle(fontSize: 15)),
+                    SizedBox(height: 10),
+                    ListTile(
+                      leading: Icon(Icons.circle, size: 5),
+                      titleAlignment: ListTileTitleAlignment.titleHeight,
+                      contentPadding: EdgeInsets.all(0),
+                      horizontalTitleGap: 0,
+                      title: Text(
+                        'You are eligible for a full refund if you cancel your booking at least 3 days (72 hours) before the scheduled trip date.',
+                        style: TextStyle(fontSize: 10),
+                      ),
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.circle, size: 5),
+                      titleAlignment: ListTileTitleAlignment.titleHeight,
+                      contentPadding: EdgeInsets.all(0),
+                      minVerticalPadding: 0,
+                      horizontalTitleGap: 0,
+                      title: Text(
+                        'Refunds will be processed within 5-7 business days to your original payment method.',
+                        style: TextStyle(fontSize: 10),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                padding: EdgeInsets.all(
+                  MediaQuery.of(context).size.width * 0.05,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: double.infinity,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            width: 200,
+                            child: Row(
+                              children: [
+                                Container(
+                                  height: 25,
+                                  width: 25,
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey.shade300,
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                ),
+                                SizedBox(width: 3),
+                                Text(
+                                  widget.company,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Text.rich(
+                            TextSpan(
+                              text: 'Vehicle: ',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 12,
+                              ),
+                              children: [
+                                TextSpan(
+                                  text: widget.vehicle,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          flex: 5,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'N${widget.price.toString()}',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 12,
+                                ),
+                              ),
+                              Text(
+                                'per seat',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 10,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          flex: 5,
+                          child: Column(
+                            children: [
+                              Text(
+                                '${(widget.seats - widget.members.length).toString()} seats',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 12,
+                                ),
+                              ),
+                              Text(
+                                'available',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 10,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          flex: 5,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                '${widget.days.toString()} days',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 12,
+                                ),
+                              ),
+                              Text(
+                                'left to trip',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 10,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 20),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: MediaQuery.of(context).size.width * 0.05,
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          showGeneralDialog(
+                            context: context,
+                            barrierDismissible: true,
+                            barrierLabel: 'Dialog',
+                            transitionDuration: const Duration(
+                              milliseconds: 300,
+                            ),
+                            pageBuilder:
+                                (context, animation, secondaryAnimation) {
+                                  return MakePaymentWidget();
+                                },
+                            transitionBuilder:
+                                (
+                                  context,
+                                  animation,
+                                  secondaryAnimation,
+                                  child,
+                                ) {
+                                  final offsetAnimation = Tween<Offset>(
+                                    begin: const Offset(0, 1), // From bottom
+                                    end: Offset.zero,
+                                  ).animate(animation);
+                                  return SlideTransition(
+                                    position: offsetAnimation,
+                                    child: child,
+                                  );
+                                },
+                          );
+                        },
+                        child: Text('Join Trip'),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

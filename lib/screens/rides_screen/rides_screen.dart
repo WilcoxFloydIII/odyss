@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:odyss/core/colors.dart';
+// import 'package:odyss/core/colors.dart';
 import 'package:odyss/screens/bottom_app_bar.dart';
 import 'package:odyss/screens/rides_screen/rides_screen_widgets/available_rides_widget.dart';
 import 'package:odyss/screens/rides_screen/rides_screen_widgets/search_widget.dart';
@@ -14,7 +14,7 @@ class RidesScreen extends StatefulWidget {
 class _RidesScreenState extends State<RidesScreen> {
   @override
   Widget build(BuildContext context) {
-    final myColors = Theme.of(context).extension<MyColors>()!;
+    // final myColors = Theme.of(context).extension<MyColors>()!;
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();

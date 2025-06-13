@@ -29,7 +29,7 @@ class _AvailableRidesWidgetState extends ConsumerState<AvailableRidesWidget> {
           }
         }
 
-        final bool cardLimitCheck = ride.members.length > 3;
+        // final bool cardLimitCheck = ride.members.length > 3;
         final bool dayCheck = ride.departureDate.day.toString().length > 1;
 
         return Container(
@@ -58,7 +58,7 @@ class _AvailableRidesWidgetState extends ConsumerState<AvailableRidesWidget> {
                             child: Stack(
                               children: [
                                 ...List.generate(cardLimit(), (indexnew) {
-                                  final member = ride.members[indexnew];
+                                  // final member = ride.members[indexnew];
                                   return Positioned(
                                     left: indexnew * 17,
                                     child: Container(
@@ -97,7 +97,7 @@ class _AvailableRidesWidgetState extends ConsumerState<AvailableRidesWidget> {
                           transitionDuration: const Duration(milliseconds: 300),
                           pageBuilder:
                               (context, animation, secondaryAnimation) {
-                                return SelectedRideDialog(arrLoc: ride.arrivalLoc, company: ride.company, days: ride.days, depLoc: ride.departureLoc, finalDate: ride.arrivalDate, initDate: ride.departureDate, members: ride.members, seats: ride.seats, vehicle: ride.vehicle,);
+                                return SelectedRideDialog(arrLoc: ride.arrivalLoc, company: ride.company, days: ride.days, depLoc: ride.departureLoc, finalDate: ride.arrivalDate, initDate: ride.departureDate, members: ride.members, seats: ride.seats, vehicle: ride.vehicle, price: ride.price,);
                               },
                           transitionBuilder:
                               (context, animation, secondaryAnimation, child) {
