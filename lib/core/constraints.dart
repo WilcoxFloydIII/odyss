@@ -1,4 +1,6 @@
-bool signedIn = true;
+import 'package:odyss/data/models/user_model.dart';
+
+bool signedIn = false;
 
 initLocationFunc() {
   if (signedIn == false) {
@@ -7,3 +9,9 @@ initLocationFunc() {
     return '/rides';
   }
 }
+
+late UserModel currentUser;
+
+Map<String, dynamic> user = {'FN': '', 'LN': '', 'DOB' : '',};
+
+

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class CurateTripScreen extends StatefulWidget {
   const CurateTripScreen({super.key});
@@ -36,7 +37,9 @@ class _CurateTripScreenState extends State<CurateTripScreen> {
               style: TextStyle(fontSize: 20),
             ),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.05,),
+              padding: EdgeInsets.symmetric(
+                horizontal: MediaQuery.of(context).size.width * 0.05,
+              ),
               child: Text(
                 "Let's help you create a ride where everyone's on the same vibe - it only takes a few steps!.",
                 textAlign: TextAlign.center,
@@ -48,7 +51,9 @@ class _CurateTripScreenState extends State<CurateTripScreen> {
               children: [
                 Expanded(
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      context.push('/tripDetails');
+                    },
                     child: Text(
                       'Get curating',
                       style: TextStyle(fontWeight: FontWeight.w700),

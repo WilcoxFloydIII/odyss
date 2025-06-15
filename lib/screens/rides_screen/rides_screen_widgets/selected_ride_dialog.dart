@@ -527,12 +527,20 @@ class _SelectedRideDialogState extends State<SelectedRideDialog> {
                                   secondaryAnimation,
                                   child,
                                 ) {
-                                  final offsetAnimation = Tween<Offset>(
-                                    begin: const Offset(0, 1), // From bottom
-                                    end: Offset.zero,
-                                  ).animate(animation);
+                                  const begin = Offset(
+                                    1.0,
+                                    0.0,
+                                  ); // Slide in from right
+                                  const end = Offset.zero;
+                                  const curve = Curves.ease;
+
+                                  final tween = Tween(
+                                    begin: begin,
+                                    end: end,
+                                  ).chain(CurveTween(curve: curve));
+
                                   return SlideTransition(
-                                    position: offsetAnimation,
+                                    position: animation.drive(tween),
                                     child: child,
                                   );
                                 },
