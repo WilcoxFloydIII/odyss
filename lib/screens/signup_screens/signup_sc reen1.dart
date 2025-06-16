@@ -239,6 +239,7 @@ class _SignupPage1State extends State<SignupScreen1> {
                                             duration: Duration(seconds: 2),
                                             content: Text(
                                               'First name cannot be less than 3',
+                                              textAlign: TextAlign.center,
                                               style: TextStyle(
                                                 fontSize: 15,
                                                 fontWeight: FontWeight.w400,
@@ -259,6 +260,7 @@ class _SignupPage1State extends State<SignupScreen1> {
                                               duration: Duration(seconds: 2),
                                               content: Text(
                                                 'Last name cannot be less than 3',
+                                                textAlign: TextAlign.center,
                                                 style: TextStyle(
                                                   fontSize: 15,
                                                   fontWeight: FontWeight.w400,
@@ -276,6 +278,7 @@ class _SignupPage1State extends State<SignupScreen1> {
                                                 duration: Duration(seconds: 2),
                                                 content: Text(
                                                   'You must give a valid date of birth',
+                                                  textAlign: TextAlign.center,
                                                   style: TextStyle(
                                                     fontSize: 15,
                                                     fontWeight: FontWeight.w400,
