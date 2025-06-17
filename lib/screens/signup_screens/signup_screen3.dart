@@ -48,7 +48,7 @@ class _SignupScreen2State extends State<SignupScreen3> {
                       children: [
                         IconButton(
                           onPressed: () {
-                            context.push('/signup2');
+                            context.pop();
                           },
                           icon: Icon(Icons.arrow_back_ios_rounded, size: 30),
                         ),
@@ -205,7 +205,7 @@ class _SignupScreen2State extends State<SignupScreen3> {
                     ),
                     TextButton(
                       onPressed: () {
-                        context.go('/login');
+                        context.push('/login');
                       },
                       child: Text(
                         'Login',

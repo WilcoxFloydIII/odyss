@@ -64,7 +64,7 @@ class WelcomeScreen extends StatelessWidget {
                           flex: 10,
                           child: ElevatedButton(
                             onPressed: () {
-                              context.go('/login');
+                              context.push('/login');
                             },
                             style: ButtonStyle(
                               backgroundColor: WidgetStateColor.resolveWith((

@@ -75,7 +75,9 @@ flutter:
     - assets/images/intoimg1.png
     - assets/images/introimg2.png
     - assets/splash/splash.png
-    - assets/logo/logo.png
+    - assets/logo/logo_white.png
+    - assets/logo/app_icon.png
+    - assets/logo/app_icon_white.png
     - assets/splash/Solid_black.png
     - assets/logo/square-xxl.png
     - assets/icons/active_chat_icon.png 
@@ -166,9 +168,9 @@ flutter:
 flutter_launcher_icons:
   android: true
   ios: true
-  image_path: "assets/logo/logo.png"
+  image_path: "assets/logo/app_icon.png"
   adaptive_icon_background: "#FFFFFF" 
-  adaptive_icon_foreground: "assets/logo/logo.png"
+  adaptive_icon_foreground: "assets/logo/app_icon.png"
   remove_alpha_ios: true
 
 flutter_native_splash:

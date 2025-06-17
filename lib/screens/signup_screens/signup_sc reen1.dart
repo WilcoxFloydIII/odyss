@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:odyss/core/colors.dart';
 import 'package:odyss/core/constraints.dart';
 
 class SignupScreen1 extends StatefulWidget {
@@ -30,6 +31,7 @@ class _SignupPage1State extends State<SignupScreen1> {
 
   @override
   Widget build(BuildContext context) {
+    final myColors = Theme.of(context).extension<MyColors>()!;
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
@@ -50,7 +52,7 @@ class _SignupPage1State extends State<SignupScreen1> {
                         children: [
                           IconButton(
                             onPressed: () {
-                              context.push('/welcome');
+                              context.pop();
                             },
                             icon: Icon(Icons.arrow_back_ios_rounded, size: 30),
                           ),
@@ -229,28 +231,27 @@ class _SignupPage1State extends State<SignupScreen1> {
                                   width: 130,
                                   child: ElevatedButton(
                                     onPressed: () {
-                                      if (firstNameController == null ||
-                                          firstNameController.text.isEmpty ||
+                                      if (firstNameController.text.isEmpty ||
                                           firstNameController.text.length < 3) {
                                         ScaffoldMessenger.of(
                                           context,
                                         ).showSnackBar(
                                           SnackBar(
                                             duration: Duration(seconds: 2),
+                                            backgroundColor: myColors.backgound,
                                             content: Text(
-                                              'First name cannot be less than 3',
+                                              'First name cannot be less than 3 letters long',
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.w400,
+                                                fontSize: 13,
+                                                fontWeight: FontWeight.w500,
                                                 color: Colors.red,
                                               ),
                                             ),
                                           ),
                                         );
                                       } else {
-                                        if (lastNameController == null ||
-                                            lastNameController.text.isEmpty ||
+                                        if (lastNameController.text.isEmpty ||
                                             lastNameController.text.length <
                                                 3) {
                                           ScaffoldMessenger.of(
@@ -258,30 +259,33 @@ class _SignupPage1State extends State<SignupScreen1> {
                                           ).showSnackBar(
                                             SnackBar(
                                               duration: Duration(seconds: 2),
+                                              backgroundColor:
+                                                  myColors.backgound,
                                               content: Text(
-                                                'Last name cannot be less than 3',
+                                                'Last name cannot be less than 3 letters long',
                                                 textAlign: TextAlign.center,
                                                 style: TextStyle(
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 13,
+                                                  fontWeight: FontWeight.w500,
                                                   color: Colors.red,
                                                 ),
                                               ),
                                             ),
                                           );
                                         } else {
-                                          if(dateController.text == null || dateController.text.isEmpty) {
+                                          if(dateController.text.isEmpty) {
                                           ScaffoldMessenger.of(
                                               context,
                                             ).showSnackBar(
                                               SnackBar(
                                                 duration: Duration(seconds: 2),
+                                                backgroundColor: myColors.backgound,
                                                 content: Text(
                                                   'You must give a valid date of birth',
                                                   textAlign: TextAlign.center,
                                                   style: TextStyle(
-                                                    fontSize: 15,
-                                                    fontWeight: FontWeight.w400,
+                                                    fontSize: 13,
+                                                    fontWeight: FontWeight.w500,
                                                     color: Colors.red,
                                                   ),
                                                 ),
@@ -331,7 +335,7 @@ class _SignupPage1State extends State<SignupScreen1> {
                       ),
                       TextButton(
                         onPressed: () {
-                          context.go('/login');
+                          context.push('/login');
                         },
                         child: Text(
                           'Login',
