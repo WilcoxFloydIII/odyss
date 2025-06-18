@@ -5,6 +5,7 @@ import 'package:odyss/screens/chat_screen/chat_screen.dart';
 import 'package:odyss/screens/curate_trip_screen/curate_trip_screen.dart';
 import 'package:odyss/screens/explore_screen/explore_screen.dart';
 import 'package:odyss/screens/login_screen/login_screen.dart';
+import 'package:odyss/screens/pricing_screen/pricing_screen.dart';
 import 'package:odyss/screens/profile_screen/profile_screen.dart';
 import 'package:odyss/screens/ride_details_screen/ride_details_screen.dart';
 import 'package:odyss/screens/rides_screen/rides_screen.dart';
@@ -275,6 +276,28 @@ final GoRouter router = GoRouter(
       pageBuilder: (context, state) => CustomTransitionPage(
         key: state.pageKey,
         child: TripVibeScreen(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          const begin = Offset(1.0, 0.0); // Slide in from right
+          const end = Offset.zero;
+          const curve = Curves.ease;
+
+          final tween = Tween(
+            begin: begin,
+            end: end,
+          ).chain(CurveTween(curve: curve));
+
+          return SlideTransition(
+            position: animation.drive(tween),
+            child: child,
+          );
+        },
+      ),
+    ),
+    GoRoute(
+      path: '/pricing',
+      pageBuilder: (context, state) => CustomTransitionPage(
+        key: state.pageKey,
+        child: PricingScreen(),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           const begin = Offset(1.0, 0.0); // Slide in from right
           const end = Offset.zero;

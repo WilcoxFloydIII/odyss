@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:odyss/core/colors.dart';
+import 'package:odyss/data/models/user_model.dart';
 import 'package:odyss/screens/rides_screen/rides_screen_widgets/make_payment_widget.dart';
 
 class SelectedRideDialog extends StatefulWidget {
@@ -27,7 +28,7 @@ class SelectedRideDialog extends StatefulWidget {
   final int seats;
   final String vehicle;
   final int days;
-  final List members;
+  final List<UserModel> members;
   final int price;
 
   @override
@@ -230,7 +231,7 @@ class _SelectedRideDialogState extends State<SelectedRideDialog> {
                                           ),
                                           SizedBox(width: 10),
                                           Text(
-                                            '${widget.members[indexnew]} ',
+                                            '${widget.members[indexnew].firstName} ${widget.members[indexnew].lastName} ',
                                             style: TextStyle(
                                               fontSize: 12,
                                               fontWeight: FontWeight.w500,
@@ -435,7 +436,7 @@ class _SelectedRideDialogState extends State<SelectedRideDialog> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'N${widget.price.toString()}',
+                                '₦${widget.price.toString()}',
                                 style: TextStyle(
                                   fontWeight: FontWeight.w600,
                                   fontSize: 12,

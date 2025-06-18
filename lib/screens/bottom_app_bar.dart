@@ -86,7 +86,7 @@ class _BottomAppBarWidgetState extends State<BottomAppBarWidget> {
               },
               child: Image.asset(
                 widget.toggle4
-                    ? 'assets/icons/profile_icon.png'
+                    ? 'assets/icons/active_profile.png'
                     : 'assets/icons/profile_icon.png',
                 width: 25,
                 height: 25,

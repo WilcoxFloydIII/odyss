@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:odyss/core/colors.dart';
+import 'package:odyss/core/constraints.dart';
 import 'package:odyss/core/providers/ride_list_provider.dart';
+import 'package:odyss/core/providers/user_list_provider.dart';
+import 'package:odyss/data/models/user_model.dart';
 import 'package:odyss/screens/rides_screen/rides_screen_widgets/selected_ride_dialog.dart';
 
 class AvailableRidesWidget extends ConsumerStatefulWidget {
@@ -15,19 +19,30 @@ class AvailableRidesWidget extends ConsumerStatefulWidget {
 class _AvailableRidesWidgetState extends ConsumerState<AvailableRidesWidget> {
   @override
   Widget build(BuildContext context) {
-    var filteredRides = ref.watch(filteredRidesProvider);
+    final myColors = Theme.of(context).extension<MyColors>()!;
+    final filteredRides = ref.watch(filteredRidesProvider);
+    var allRides = ref.watch(ridesListProvider);
+    var userList = ref.watch(userListProvider);
 
     return ListView.builder(
       itemCount: filteredRides.length,
       itemBuilder: (context, index) {
         var ride = filteredRides[index];
+
+        List<UserModel> members = userList
+            .where((members) => ride.memberIds.contains(members.id))
+            .toList();
+
         cardLimit() {
-          if (ride.members.length >= 3) {
+          if (ride.memberIds.length >= 3) {
             return 3;
           } else {
-            return ride.members.length;
+            return ride.memberIds.length;
           }
         }
+
+        
+        bool isMember = ride.memberIds.contains(UID);
 
         // final bool cardLimitCheck = ride.members.length > 3;
         final bool dayCheck = ride.departureDate.day.toString().length > 1;
@@ -79,7 +94,7 @@ class _AvailableRidesWidgetState extends ConsumerState<AvailableRidesWidget> {
                             ),
                           ),
                           Text(
-                            '${ride.members[0]} and ${ride.members.length - 1} others',
+                            '${members[0].nickName} and ${ride.memberIds.length - 1} others',
                             style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
@@ -90,32 +105,63 @@ class _AvailableRidesWidgetState extends ConsumerState<AvailableRidesWidget> {
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        showGeneralDialog(
-                          context: context,
-                          barrierDismissible: true,
-                          barrierLabel: 'Dialog',
-                          transitionDuration: const Duration(milliseconds: 300),
-                          pageBuilder:
-                              (context, animation, secondaryAnimation) {
-                                return SelectedRideDialog(arrLoc: ride.arrivalLoc, company: ride.company, days: ride.days, depLoc: ride.departureLoc, finalDate: ride.arrivalDate, initDate: ride.departureDate, members: ride.members, seats: ride.seats, vehicle: ride.vehicle, price: ride.price,);
-                              },
-                          transitionBuilder:
-                              (context, animation, secondaryAnimation, child) {
-                                final offsetAnimation = Tween<Offset>(
-                                  begin: const Offset(0, 1), // From bottom
-                                  end: Offset.zero,
-                                ).animate(animation);
-                                return SlideTransition(
-                                  position: offsetAnimation,
-                                  child: child,
-                                );
-                              },
-                        );
+                        print(members);
+                        isMember
+                            ? ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('Already a member'),
+                                  duration: Duration(seconds: 2),
+                                  backgroundColor: myColors.backgound,
+                                ),
+                              )
+                            : showGeneralDialog(
+                                context: context,
+                                barrierDismissible: true,
+                                barrierLabel: 'Dialog',
+                                transitionDuration: const Duration(
+                                  milliseconds: 300,
+                                ),
+                                pageBuilder:
+                                    (context, animation, secondaryAnimation) {
+                                      return SelectedRideDialog(
+                                        arrLoc: ride.arrivalLoc,
+                                        company: ride.company,
+                                        days: ride.days,
+                                        depLoc: ride.departureLoc,
+                                        finalDate: ride.arrivalDate,
+                                        initDate: ride.departureDate,
+                                        members: members,
+                                        seats: ride.seats,
+                                        vehicle: ride.vehicle,
+                                        price: ride.price,
+                                      );
+                                    },
+                                transitionBuilder:
+                                    (
+                                      context,
+                                      animation,
+                                      secondaryAnimation,
+                                      child,
+                                    ) {
+                                      final offsetAnimation = Tween<Offset>(
+                                        begin: const Offset(
+                                          0,
+                                          1,
+                                        ), // From bottom
+                                        end: Offset.zero,
+                                      ).animate(animation);
+                                      return SlideTransition(
+                                        position: offsetAnimation,
+                                        child: child,
+                                      );
+                                    },
+                              );
                       },
                       style: ButtonStyle(
                         padding: WidgetStatePropertyAll(
                           EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                         ),
+                        backgroundColor: WidgetStatePropertyAll(isMember? Colors.blueGrey.shade400 : myColors.primary)
                       ),
                       child: Text('Join trip', style: TextStyle(fontSize: 12)),
                     ),
@@ -263,7 +309,7 @@ class _AvailableRidesWidgetState extends ConsumerState<AvailableRidesWidget> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'N${ride.price.toString()}',
+                          '₦${ride.price.toString()}',
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: 12,
@@ -284,7 +330,7 @@ class _AvailableRidesWidgetState extends ConsumerState<AvailableRidesWidget> {
                     child: Column(
                       children: [
                         Text(
-                          '${(ride.seats - ride.members.length).toString()} seats',
+                          '${(ride.seats - ride.memberIds.length).toString()} seats',
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: 12,

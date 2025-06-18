@@ -1,32 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:odyss/core/colors.dart';
+import 'package:odyss/core/constraints.dart';
 
-class VibeButton extends StatefulWidget {
+class TripVibeButton extends StatefulWidget {
   final String text;
-  final VoidCallback? onPressed;
 
-  const VibeButton({Key? key, required this.text, this.onPressed})
-    : super(key: key);
+  TripVibeButton({Key? key, required this.text}) : super(key: key);
 
   @override
-  State<VibeButton> createState() => _VibeButtonState();
+  State<TripVibeButton> createState() => _TripVibeButtonState();
 }
 
-class _VibeButtonState extends State<VibeButton> {
+class _TripVibeButtonState extends State<TripVibeButton> {
+  
   bool _isSelected = false;
-
-  void _toggleSelection() {
-    setState(() {
-      _isSelected = !_isSelected;
-    });
-
-    if (widget.onPressed != null) {
-      widget.onPressed!();
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
+    void toggleSelection() {
+      setState(() {
+        _isSelected = !_isSelected;
+      });
+
+      if (newRide['vibes'].contains(widget.text)) {
+        newRide['vibes'].remove(widget.text);
+      } else {
+        newRide['vibes'].add(widget.text);
+      }
+
+      print(newRide['vibes']);
+      print(newRide['destLoc']);
+    }
+
     final myColors = Theme.of(context).extension<MyColors>()!;
     return OutlinedButton(
       style: OutlinedButton.styleFrom(
@@ -34,10 +39,13 @@ class _VibeButtonState extends State<VibeButton> {
         side: BorderSide(color: myColors.primary, width: 2),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-        foregroundColor: _isSelected? myColors.backgound: myColors.primary,
+        foregroundColor: _isSelected ? myColors.backgound : myColors.primary,
         textStyle: TextStyle(fontSize: 15),
       ),
-      onPressed: _toggleSelection,
+      onPressed: () {
+        print('pressed');
+        toggleSelection();
+      },
       child: Text(widget.text),
     );
   }

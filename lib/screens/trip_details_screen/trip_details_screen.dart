@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:odyss/core/colors.dart';
+import 'package:odyss/core/constraints.dart';
 
 class TripDetailsScreen extends StatefulWidget {
   const TripDetailsScreen({super.key});
@@ -12,13 +14,12 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
   final GlobalKey _departureKey = GlobalKey();
   final GlobalKey _destinationKey = GlobalKey();
   final GlobalKey _timeKey = GlobalKey();
-  TextEditingController nameController = TextEditingController();
-  TextEditingController descriptionController = TextEditingController();
   TextEditingController departureController = TextEditingController();
   TextEditingController destinationController = TextEditingController();
   TextEditingController timeController = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    final myColors = Theme.of(context).extension<MyColors>()!;
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
@@ -87,7 +88,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 50,),
+                SizedBox(height: 50),
                 Column(
                   children: [
                     SizedBox(height: 30),
@@ -357,7 +358,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                                     fontWeight: FontWeight.w400,
                                   ),
                                   decoration: InputDecoration(
-                                    hintText: 'Morning',
+                                    hintText: 'Time',
                                     hintStyle: TextStyle(
                                       fontSize: 13,
                                       fontWeight: FontWeight.w400,
@@ -412,8 +413,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                                             ),
                                             onTap: () {
                                               setState(() {
-                                                timeController.text =
-                                                    'Morning';
+                                                timeController.text = 'Morning';
                                               });
                                             },
                                           ),
@@ -427,7 +427,8 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                                             ),
                                             onTap: () {
                                               setState(() {
-                                                timeController.text = 'Afternoon';
+                                                timeController.text =
+                                                    'Afternoon';
                                               });
                                             },
                                           ),
@@ -461,7 +462,70 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                                 width: 130,
                                 child: ElevatedButton(
                                   onPressed: () {
-                                    context.push('/rideDetails');
+                                    if (departureController.text.isEmpty) {
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(
+                                          duration: Duration(seconds: 2),
+                                          backgroundColor: myColors.backgound,
+                                          content: Text(
+                                            textAlign: TextAlign.center,
+                                            'Choose a departure city',
+                                            style: TextStyle(
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.red,
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    } else if (destinationController
+                                        .text
+                                        .isEmpty) {
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(
+                                          duration: Duration(seconds: 2),
+                                          backgroundColor: myColors.backgound,
+                                          content: Text(
+                                            textAlign: TextAlign.center,
+                                            'Choose a destination city',
+                                            style: TextStyle(
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.red,
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    } else if (timeController.text.isEmpty) {
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(
+                                          duration: Duration(seconds: 2),
+                                          backgroundColor: myColors.backgound,
+                                          content: Text(
+                                            textAlign: TextAlign.center,
+                                            'Choose a departure time',
+                                            style: TextStyle(
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.red,
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    } else {
+                                      newRide['depLoc'] =
+                                          departureController.text;
+                                      newRide['destLoc'] =
+                                          destinationController.text;
+                                      newRide['time'] = timeController.text;
+                                      context.push('/rideDetails');
+                                    }
                                   },
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,

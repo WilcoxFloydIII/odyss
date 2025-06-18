@@ -1,5 +1,6 @@
 class RideModel {
-  final List members;
+  final String id;
+  final List memberIds;
   final int seats;
   final String company;
   final int price;
@@ -12,8 +13,9 @@ class RideModel {
   final String vehicle;
 
   RideModel({
+    required this.id,
     required this.vehicle,
-    required this.members,
+    required this.memberIds,
     required this.seats,
     required this.company,
     required this.price,
@@ -22,7 +24,7 @@ class RideModel {
     required this.arrivalLoc,
     required this.departureTOD,
     required this.departureDate,
-    required this.arrivalDate, 
+    required this.arrivalDate,
   });
 
   get departureLocation => null;

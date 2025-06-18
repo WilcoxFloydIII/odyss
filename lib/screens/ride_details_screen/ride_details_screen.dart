@@ -1,20 +1,44 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:odyss/core/colors.dart';
+import 'package:odyss/core/constraints.dart';
+import 'package:odyss/core/providers/company_list_provider.dart';
+import 'package:odyss/data/models/company_model.dart';
 
-class RideDetailsScreen extends StatefulWidget {
+class RideDetailsScreen extends ConsumerStatefulWidget {
   const RideDetailsScreen({super.key});
 
   @override
-  State<RideDetailsScreen> createState() => _RideDetailsScreenState();
+  ConsumerState<RideDetailsScreen> createState() => _RideDetailsScreenState();
 }
 
-class _RideDetailsScreenState extends State<RideDetailsScreen> {
+class _RideDetailsScreenState extends ConsumerState<RideDetailsScreen> {
   final GlobalKey _partnerKey = GlobalKey();
+  final GlobalKey _vehicleKey = GlobalKey();
   TextEditingController vehicleController = TextEditingController();
   TextEditingController numberController = TextEditingController();
   TextEditingController partnerController = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    final myColors = Theme.of(context).extension<MyColors>()!;
+
+    final partnerList = ref.watch(partnerListProvider);
+
+    List<PartnerModel> partners = partnerList
+        .where(
+          (partners) =>
+              partners.locations.contains(newRide['depLoc']) &&
+              partners.locations.contains(newRide['destLoc']),
+        )
+        .toList();
+
+    List<VehicleModel> vehiclePicker(String company) {
+      // this is for getting the vehicles for the specific company that has been chosen
+      final partner = partners.firstWhere((partner) => partner.name == company);
+      return partner.vehicles;
+    }
+
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
@@ -83,7 +107,7 @@ class _RideDetailsScreenState extends State<RideDetailsScreen> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 50,),
+                SizedBox(height: 50),
                 Column(
                   children: [
                     SizedBox(height: 30),
@@ -132,91 +156,6 @@ class _RideDetailsScreenState extends State<RideDetailsScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('Vehicle Type'),
-                                TextFormField(
-                                  controller: vehicleController,
-                                  keyboardType: TextInputType.text,
-                                  textInputAction: TextInputAction.next,
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                  decoration: InputDecoration(
-                                    hintText: 'What vehicle are you using?',
-                                    hintStyle: TextStyle(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                    border: InputBorder.none,
-                                    enabledBorder: InputBorder.none,
-                                    contentPadding: EdgeInsets.zero,
-                                    disabledBorder: InputBorder.none,
-                                    focusedBorder: InputBorder.none,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(height: 10),
-                          Container(
-                            width: MediaQuery.of(context).size.width * 0.9,
-                            padding: EdgeInsets.only(
-                              top: 10,
-                              bottom: 0,
-                              left: 10,
-                              right: 10,
-                            ),
-                            decoration: BoxDecoration(
-                              border: Border.all(width: 2),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Number of seats youre offering'),
-                                TextFormField(
-                                  controller: numberController,
-                                  keyboardType: TextInputType.number,
-                                  textInputAction: TextInputAction.next,
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                  decoration: InputDecoration(
-                                    hintText:
-                                        'How many people can join this trip?',
-                                    hintStyle: TextStyle(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                    border: InputBorder.none,
-                                    enabledBorder: InputBorder.none,
-                                    contentPadding: EdgeInsets.zero,
-                                    disabledBorder: InputBorder.none,
-                                    focusedBorder: InputBorder.none,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(height: 10),
-                          Container(
-                            width: MediaQuery.of(context).size.width * 0.9,
-                            padding: EdgeInsets.only(
-                              top: 10,
-                              bottom: 0,
-                              left: 10,
-                              right: 10,
-                            ),
-                            decoration: BoxDecoration(
-                              border: Border.all(width: 2),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
                                 Text('Transport partner'),
                                 TextFormField(
                                   key: _partnerKey,
@@ -229,7 +168,8 @@ class _RideDetailsScreenState extends State<RideDetailsScreen> {
                                     fontWeight: FontWeight.w400,
                                   ),
                                   decoration: InputDecoration(
-                                    hintText: 'Select which Odyss partner to travel with',
+                                    hintText:
+                                        'Select which Odyss partner to travel with',
                                     hintStyle: TextStyle(
                                       fontSize: 13,
                                       fontWeight: FontWeight.w400,
@@ -273,24 +213,12 @@ class _RideDetailsScreenState extends State<RideDetailsScreen> {
                                           position.dx + button.size.width,
                                           position.dy,
                                         ),
-                                        items: [
-                                          PopupMenuItem(
+                                        items: List.generate(partners.length, (
+                                          index,
+                                        ) {
+                                          return PopupMenuItem(
                                             child: Text(
-                                              'Peace Mass Transit',
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: 15,
-                                              ),
-                                            ),
-                                            onTap: () {
-                                              setState(() {
-                                                partnerController.text = 'Peace Mass Transit';
-                                              });
-                                            },
-                                          ),
-                                          PopupMenuItem(
-                                            child: Text(
-                                              'God is Good Motors',
+                                              partners[index].name,
                                               style: TextStyle(
                                                 fontWeight: FontWeight.w500,
                                                 fontSize: 15,
@@ -299,11 +227,11 @@ class _RideDetailsScreenState extends State<RideDetailsScreen> {
                                             onTap: () {
                                               setState(() {
                                                 partnerController.text =
-                                                    'God is Good Motors';
+                                                    partners[index].name;
                                               });
                                             },
-                                          ),
-                                        ],
+                                          );
+                                        }),
                                       );
                                     });
                                   },
@@ -311,6 +239,204 @@ class _RideDetailsScreenState extends State<RideDetailsScreen> {
                               ],
                             ),
                           ),
+                          SizedBox(height: 10),
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.9,
+                            padding: EdgeInsets.only(
+                              top: 10,
+                              bottom: 0,
+                              left: 10,
+                              right: 10,
+                            ),
+                            decoration: BoxDecoration(
+                              border: Border.all(width: 2),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Vehicle Type'),
+                                TextFormField(
+                                  controller: vehicleController,
+                                  keyboardType: TextInputType.text,
+                                  textInputAction: TextInputAction.next,
+                                  key: _vehicleKey,
+                                  readOnly: true,
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                  decoration: InputDecoration(
+                                    hintText: 'What vehicle are you using?',
+                                    hintStyle: TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                    border: InputBorder.none,
+                                    enabledBorder: InputBorder.none,
+                                    contentPadding: EdgeInsets.zero,
+                                    disabledBorder: InputBorder.none,
+                                    focusedBorder: InputBorder.none,
+                                  ),
+                                  onTap: () {
+                                    if (partnerController.text.isEmpty) {
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(
+                                          duration: Duration(seconds: 2),
+                                          backgroundColor: myColors.backgound,
+                                          content: Text(
+                                            textAlign: TextAlign.center,
+                                            'Choose a transport partner first',
+                                            style: TextStyle(
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.red,
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    } else {
+                                      return setState(() {
+                                        final RenderBox button =
+                                            _vehicleKey.currentContext!
+                                                    .findRenderObject()
+                                                as RenderBox;
+                                        final RenderBox overlay =
+                                            Overlay.of(
+                                                  context,
+                                                ).context.findRenderObject()
+                                                as RenderBox;
+
+                                        final Offset position = button
+                                            .localToGlobal(
+                                              Offset.zero,
+                                              ancestor: overlay,
+                                            );
+
+                                        showMenu(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadiusGeometry.circular(
+                                                  20,
+                                                ),
+                                          ),
+                                          context: context,
+                                          position: RelativeRect.fromLTRB(
+                                            position.dx,
+                                            position.dy +
+                                                button
+                                                    .size
+                                                    .height, // show just below
+                                            position.dx + button.size.width,
+                                            position.dy,
+                                          ),
+                                          items: List.generate(
+                                            vehiclePicker(
+                                              partnerController.text,
+                                            ).length,
+                                            (index) {
+                                              return PopupMenuItem(
+                                                child: Text(
+                                                  vehiclePicker(
+                                                    partnerController.text,
+                                                  )[index].type,
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.w500,
+                                                    fontSize: 15,
+                                                  ),
+                                                ),
+                                                onTap: () {
+                                                  setState(() {
+                                                    vehicleController
+                                                        .text = vehiclePicker(
+                                                      partnerController.text,
+                                                    )[index].type;
+                                                    numberController
+                                                        .text = vehiclePicker(
+                                                      partnerController.text,
+                                                    )[index].seats;
+                                                  });
+                                                },
+                                              );
+                                            },
+                                          ),
+                                        );
+                                      });
+                                    }
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.9,
+                            padding: EdgeInsets.only(
+                              top: 10,
+                              bottom: 0,
+                              left: 10,
+                              right: 10,
+                            ),
+                            decoration: BoxDecoration(
+                              border: Border.all(width: 2),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Number of seats'),
+                                TextFormField(
+                                  controller: numberController,
+                                  keyboardType: TextInputType.number,
+                                  textInputAction: TextInputAction.next,
+                                  readOnly: true,
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                  decoration: InputDecoration(
+                                    hintText:
+                                        'How many people can join this trip?',
+                                    hintStyle: TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                    border: InputBorder.none,
+                                    enabledBorder: InputBorder.none,
+                                    contentPadding: EdgeInsets.zero,
+                                    disabledBorder: InputBorder.none,
+                                    focusedBorder: InputBorder.none,
+                                  ),
+                                  onTap: () {
+                                    if (vehicleController.text.isEmpty) {
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(
+                                          duration: Duration(seconds: 2),
+                                          backgroundColor: myColors.backgound,
+                                          content: Text(
+                                            textAlign: TextAlign.center,
+                                            'Choose a vehicle first',
+                                            style: TextStyle(
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.red,
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+
                           SizedBox(height: 40),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
@@ -319,7 +445,50 @@ class _RideDetailsScreenState extends State<RideDetailsScreen> {
                                 width: 130,
                                 child: ElevatedButton(
                                   onPressed: () {
-                                    context.push('/tripVibe');
+                                    if (partnerController.text.isEmpty) {
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(
+                                          duration: Duration(seconds: 2),
+                                          backgroundColor: myColors.backgound,
+                                          content: Text(
+                                            textAlign: TextAlign.center,
+                                            'Choose a Transport partner',
+                                            style: TextStyle(
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.red,
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    } else if (vehicleController.text.isEmpty) {
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(
+                                          duration: Duration(seconds: 2),
+                                          backgroundColor: myColors.backgound,
+                                          content: Text(
+                                            textAlign: TextAlign.center,
+                                            'Choose a vehicle type',
+                                            style: TextStyle(
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.red,
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    } else {
+                                      newRide['partner'] =
+                                          partnerController.text;
+                                      newRide['vehicle'] =
+                                          vehicleController.text;
+                                      newRide['seats'] = numberController.text;
+                                      context.push('/tripVibe');
+                                    }
                                   },
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,

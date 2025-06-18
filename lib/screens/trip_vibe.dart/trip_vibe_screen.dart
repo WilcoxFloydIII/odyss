@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:odyss/screens/signup_screens/signup_screens_widgets/signup5_button.dart';
+import 'package:odyss/screens/trip_vibe.dart/trip_vibe_screen_widgets/trip_vibe_button.dart';
 
 class TripVibeScreen extends StatefulWidget {
   const TripVibeScreen({super.key});
@@ -33,10 +33,11 @@ class _TripVibeScreenState extends State<TripVibeScreen> {
                     height: 5,
                     decoration: BoxDecoration(
                       color: Colors.black54,
-                      borderRadius: BorderRadius.circular(10)
+                      borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                ), SizedBox(width: 5,),
+                ),
+                SizedBox(width: 5),
                 Expanded(
                   flex: 4,
                   child: Container(
@@ -79,7 +80,7 @@ class _TripVibeScreenState extends State<TripVibeScreen> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 50,),
+                SizedBox(height: 50),
                 Column(
                   children: [
                     Row(
@@ -122,13 +123,13 @@ class _TripVibeScreenState extends State<TripVibeScreen> {
                               runSpacing: 10,
                               alignment: WrapAlignment.center,
                               children: [
-                                VibeButton(text: 'sing-along'),
-                                VibeButton(text: 'chatty'),
-                                VibeButton(text: 'quiet'),
-                                VibeButton(text: 'social media'),
-                                VibeButton(text: 'explore'),
-                                VibeButton(text: 'games'),
-                                VibeButton(text: 'movies'),
+                                TripVibeButton(text: 'sing-along'),
+                                TripVibeButton(text: 'chatty'),
+                                TripVibeButton(text: 'quiet'),
+                                TripVibeButton(text: 'social media'),
+                                TripVibeButton(text: 'explore'),
+                                TripVibeButton(text: 'games'),
+                                TripVibeButton(text: 'movies'),
                               ],
                             ),
                           ),
@@ -139,7 +140,7 @@ class _TripVibeScreenState extends State<TripVibeScreen> {
                                 width: 130,
                                 child: ElevatedButton(
                                   onPressed: () {
-                                    context.push('');
+                                    context.push('/pricing');
                                   },
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,

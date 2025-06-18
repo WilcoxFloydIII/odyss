@@ -1,10 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:odyss/data/models/ride_model.dart';
 
-final ridesListProvider = Provider<List<RideModel>>(
+var ridesListProvider = StateProvider<List<RideModel>>(
   (ref) => [
     RideModel(
-      members: ['Tumi', 'Ade', 'John'],
+      memberIds: ['xxxx1', 'xxxx2', 'xxxx3'],//ids
       seats: 6,
       company: 'Peace Mass Transit',
       price: 18000,
@@ -14,10 +14,10 @@ final ridesListProvider = Provider<List<RideModel>>(
       arrivalDate: DateTime(2025, 5, 8, 14, 0),
       departureDate: DateTime(2025, 5, 8, 9, 0),
       vehicle: 'Sienna',
-      departureTOD: 'Morning',
+      departureTOD: 'Morning', id: '',
     ),
     RideModel(
-      members: ['Banjo','Ayo', 'Ade', 'John'],
+      memberIds: ['xxxx4', 'xxxx5', 'xxxx6', 'xxxx7'],
       seats: 11,
       company: 'God Is Good Motors',
       price: 10000,
@@ -27,7 +27,7 @@ final ridesListProvider = Provider<List<RideModel>>(
       arrivalDate: DateTime(2025, 7, 9, 15, 0),
       departureDate: DateTime(2025, 9, 7, 7, 0),
       vehicle: 'Bus',
-      departureTOD: 'Morning',
+      departureTOD: 'Morning', id: '',
     ),
   ],
 );
@@ -37,7 +37,7 @@ final arrivalQueryProvider = StateProvider<String>((ref) => '');
 final dateQueryProvider = StateProvider<String>((ref) => '');
 final timeQueryProvider = StateProvider<String>((ref) => '');
 
-final filteredRidesProvider = Provider<List<RideModel>>((ref) {
+final filteredRidesProvider = StateProvider<List<RideModel>>((ref) {
   final rides = ref.watch(ridesListProvider);
   final depQuery = ref.watch(departureQueryProvider).toLowerCase();
   final arrQuery = ref.watch(arrivalQueryProvider).toLowerCase();

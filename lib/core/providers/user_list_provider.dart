@@ -4,7 +4,7 @@ import 'package:odyss/data/models/user_model.dart';
 final userListProvider = Provider<List<UserModel>>(
   (ref) => [
     UserModel(
-      id: '',
+      id: 'xxxx1',
       nickName: 'Tumi',
       firstName: 'Tumi',
       lastName: 'Adeoluwa',
@@ -17,7 +17,7 @@ final userListProvider = Provider<List<UserModel>>(
       rides: [],
     ),
     UserModel(
-      id: '',
+      id: 'xxxx2',
       nickName: 'Glory21',
       firstName: 'Glory',
       lastName: 'Johnson',
@@ -30,7 +30,7 @@ final userListProvider = Provider<List<UserModel>>(
       rides: [],
     ),
     UserModel(
-      id: '',
+      id: 'xxxx3',
       nickName: 'Tos',
       firstName: 'Tosi',
       lastName: 'Kosisochukwu',
@@ -43,7 +43,7 @@ final userListProvider = Provider<List<UserModel>>(
       rides: [],
     ),
     UserModel(
-      id: '',
+      id: 'xxxx4',
       nickName: 'Banjo',
       firstName: 'Banjo',
       lastName: 'Adewale',
@@ -56,7 +56,7 @@ final userListProvider = Provider<List<UserModel>>(
       rides: [],
     ),
     UserModel(
-      id: '',
+      id: 'xxxx5',
       nickName: 'Ayobams',
       firstName: 'Ayobami',
       lastName: 'Joshua',
@@ -69,7 +69,7 @@ final userListProvider = Provider<List<UserModel>>(
       rides: [],
     ),
     UserModel(
-      id: '',
+      id: 'xxxx6',
       nickName: 'Rex',
       firstName: 'Remi',
       lastName: 'Tunji',
@@ -82,7 +82,7 @@ final userListProvider = Provider<List<UserModel>>(
       rides: [],
     ),
     UserModel(
-      id: '',
+      id: 'xxxx7',
       nickName: 'Don',
       firstName: 'Donald',
       lastName: 'Blake',
@@ -95,7 +95,7 @@ final userListProvider = Provider<List<UserModel>>(
       rides: [],
     ),
     UserModel(
-      id: '',
+      id: 'xxxx8',
       nickName: 'Tess',
       firstName: 'Tesbiyu',
       lastName: 'Olatunji',
@@ -108,7 +108,7 @@ final userListProvider = Provider<List<UserModel>>(
       rides: [],
     ),
     UserModel(
-      id: '',
+      id: 'xxxx9',
       nickName: 'Princess',
       firstName: 'Princess',
       lastName: 'Egbunike',
