@@ -6,7 +6,7 @@ initLocationFunc() {
   if (signedIn == false) {
     return '/';
   } else {
-    return '/rides';
+    return '/profile';
   }
 }
 
@@ -26,4 +26,4 @@ Map<String, dynamic> newRide = {
   'members': [],
 };
 
-String UID = 'xxxx9';
+String UID = 'xxxx1';

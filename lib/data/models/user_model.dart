@@ -10,9 +10,19 @@ class UserModel {
   late final String email;
   late final List<String> vibes;
   late final List rides;
+  late final String insta;
+  late final String tiktok;
+  late final String x;
+  late final String fb;
+  late final String bio;
 
   UserModel({
     required this.id,
+    required this.bio,
+    required this.x,
+    required this.fb,
+    required this.tiktok,
+    required this.insta,
     required this.nickName,
     required this.firstName,
     required this.lastName,

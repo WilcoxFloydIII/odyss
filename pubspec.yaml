@@ -45,6 +45,7 @@ dependencies:
   flutter_launcher_icons: ^0.13.1
   intl: ^0.18.0
   another_flushbar: ^1.10.30
+  http: ^1.0.0
 
 dev_dependencies:
   flutter_test:
@@ -91,6 +92,10 @@ flutter:
     - assets/icons/make_payment_icon.png 
     - assets/icons/rides_icon.png
     - assets/icons/active_profile.png
+    - assets/images/facebook_logo.png
+    - assets/images/instagram_logo.png
+    - assets/images/tiktok_logo.png
+    - assets/images/x_logo.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

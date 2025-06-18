@@ -4,7 +4,7 @@ import 'package:odyss/data/models/ride_model.dart';
 var ridesListProvider = StateProvider<List<RideModel>>(
   (ref) => [
     RideModel(
-      memberIds: ['xxxx1', 'xxxx2', 'xxxx3'],//ids
+      memberIds: ['xxxx1', 'xxxx2', 'xxxx3'],
       seats: 6,
       company: 'Peace Mass Transit',
       price: 18000,

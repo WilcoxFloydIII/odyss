@@ -1,9 +1,7 @@
-import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:odyss/core/colors.dart';
-import 'package:odyss/core/constraints.dart';
 import 'package:odyss/core/providers/ride_list_provider.dart';
 import 'package:odyss/core/providers/user_list_provider.dart';
 import 'package:odyss/data/models/user_model.dart';
@@ -42,7 +40,6 @@ class _AvailableRidesWidgetState extends ConsumerState<AvailableRidesWidget> {
           }
         }
 
-        bool isMember = ride.memberIds.contains(UID);
 
         // final bool cardLimitCheck = ride.members.length > 3;
         final bool dayCheck = ride.departureDate.day.toString().length > 1;
@@ -106,23 +103,7 @@ class _AvailableRidesWidgetState extends ConsumerState<AvailableRidesWidget> {
                     ElevatedButton(
                       onPressed: () {
                         print(members);
-                        isMember
-                            ? Flushbar(
-                                message:
-                                    'You are already a member of this trip',
-                                duration: Duration(seconds: 2),
-                                flushbarPosition:
-                                    FlushbarPosition.TOP, // Top of screen
-                                backgroundColor: Colors
-                                    .redAccent, // Optional: customize color
-                                margin: EdgeInsets.all(
-                                  8,
-                                ), // Optional: margin for better look
-                                borderRadius: BorderRadius.circular(
-                                  8,
-                                ), // Optional: rounded corners
-                              ).show(context)
-                            : showGeneralDialog(
+                        showGeneralDialog(
                                 context: context,
                                 barrierDismissible: true,
                                 barrierLabel: 'Dialog',
@@ -168,11 +149,6 @@ class _AvailableRidesWidgetState extends ConsumerState<AvailableRidesWidget> {
                       style: ButtonStyle(
                         padding: WidgetStatePropertyAll(
                           EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                        ),
-                        backgroundColor: WidgetStatePropertyAll(
-                          isMember
-                              ? Colors.blueGrey.shade400
-                              : myColors.primary,
                         ),
                       ),
                       child: Text('Join trip', style: TextStyle(fontSize: 12)),

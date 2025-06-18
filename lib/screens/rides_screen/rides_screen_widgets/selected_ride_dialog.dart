@@ -1,7 +1,9 @@
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:odyss/core/colors.dart';
+import 'package:odyss/core/constraints.dart';
 import 'package:odyss/data/models/user_model.dart';
 import 'package:odyss/screens/rides_screen/rides_screen_widgets/make_payment_widget.dart';
 
@@ -43,6 +45,7 @@ class _SelectedRideDialogState extends State<SelectedRideDialog> {
   @override
   Widget build(BuildContext context) {
     final myColors = Theme.of(context).extension<MyColors>()!;
+    bool isMember = widget.members.any((members) => members.id == UID);
     return Scaffold(
       extendBodyBehindAppBar: false,
       appBar: PreferredSize(
@@ -262,6 +265,14 @@ class _SelectedRideDialogState extends State<SelectedRideDialog> {
                                 }
                                 return Colors.transparent;
                               }),
+                              foregroundColor: WidgetStateColor.resolveWith((
+                                states,
+                              ) {
+                                if (states.contains(WidgetState.pressed)) {
+                                  return myColors.backgound;
+                                }
+                                return myColors.primary;
+                              }),
                               shadowColor: WidgetStatePropertyAll(
                                 Colors.transparent,
                               ),
@@ -273,7 +284,6 @@ class _SelectedRideDialogState extends State<SelectedRideDialog> {
                               'Invite others',
                               style: TextStyle(
                                 fontSize: 10,
-                                color: myColors.primary,
                               ),
                             ),
                           ),
@@ -510,6 +520,23 @@ class _SelectedRideDialogState extends State<SelectedRideDialog> {
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () {
+                          isMember
+                              ? Flushbar(
+                                  message:
+                                      'You are already a member of this trip',
+                                  duration: Duration(seconds: 2),
+                                  flushbarPosition:
+                                      FlushbarPosition.TOP, // Top of screen
+                                  backgroundColor: Colors
+                                      .redAccent, // Optional: customize color
+                                  margin: EdgeInsets.all(
+                                    8,
+                                  ), // Optional: margin for better look
+                                  borderRadius: BorderRadius.circular(
+                                    8,
+                                  ), // Optional: rounded corners
+                                ).show(context)
+                              : 
                           showGeneralDialog(
                             context: context,
                             barrierDismissible: true,
@@ -547,6 +574,14 @@ class _SelectedRideDialogState extends State<SelectedRideDialog> {
                                 },
                           );
                         },
+                        style: ButtonStyle(
+                          
+                          backgroundColor: WidgetStatePropertyAll(
+                            isMember
+                                ? Colors.blueGrey.shade400
+                                : myColors.primary,
+                          ),
+                        ),
                         child: Text('Join Trip'),
                       ),
                     ),
