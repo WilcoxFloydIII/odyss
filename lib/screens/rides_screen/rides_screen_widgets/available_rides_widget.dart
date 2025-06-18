@@ -1,3 +1,4 @@
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -41,7 +42,6 @@ class _AvailableRidesWidgetState extends ConsumerState<AvailableRidesWidget> {
           }
         }
 
-        
         bool isMember = ride.memberIds.contains(UID);
 
         // final bool cardLimitCheck = ride.members.length > 3;
@@ -107,13 +107,21 @@ class _AvailableRidesWidgetState extends ConsumerState<AvailableRidesWidget> {
                       onPressed: () {
                         print(members);
                         isMember
-                            ? ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text('Already a member'),
-                                  duration: Duration(seconds: 2),
-                                  backgroundColor: myColors.backgound,
-                                ),
-                              )
+                            ? Flushbar(
+                                message:
+                                    'You are already a member of this trip',
+                                duration: Duration(seconds: 2),
+                                flushbarPosition:
+                                    FlushbarPosition.TOP, // Top of screen
+                                backgroundColor: Colors
+                                    .redAccent, // Optional: customize color
+                                margin: EdgeInsets.all(
+                                  8,
+                                ), // Optional: margin for better look
+                                borderRadius: BorderRadius.circular(
+                                  8,
+                                ), // Optional: rounded corners
+                              ).show(context)
                             : showGeneralDialog(
                                 context: context,
                                 barrierDismissible: true,
@@ -161,7 +169,11 @@ class _AvailableRidesWidgetState extends ConsumerState<AvailableRidesWidget> {
                         padding: WidgetStatePropertyAll(
                           EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                         ),
-                        backgroundColor: WidgetStatePropertyAll(isMember? Colors.blueGrey.shade400 : myColors.primary)
+                        backgroundColor: WidgetStatePropertyAll(
+                          isMember
+                              ? Colors.blueGrey.shade400
+                              : myColors.primary,
+                        ),
                       ),
                       child: Text('Join trip', style: TextStyle(fontSize: 12)),
                     ),
