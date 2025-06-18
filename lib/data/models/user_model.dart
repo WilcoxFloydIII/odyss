@@ -8,6 +8,7 @@ class UserModel {
   late final String picture;
   late final String number;
   late final String email;
+  late final String password;
   late final List<String> vibes;
   late final List rides;
   late final String insta;
@@ -31,6 +32,7 @@ class UserModel {
     required this.picture,
     required this.number,
     required this.email,
+    required this.password,
     required this.vibes,
     required this.rides,
   });

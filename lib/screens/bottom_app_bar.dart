@@ -111,8 +111,8 @@ class _FloatingButtonWidgetState extends State<FloatingButtonWidget> {
   Widget build(BuildContext context) {
     final myColors = Theme.of(context).extension<MyColors>()!;
     return SizedBox(
-      width: 70,
-      height: 70,
+      width: MediaQuery.of(context).size.width * 0.17,
+      height: MediaQuery.of(context).size.width * 0.17,
       child: FloatingActionButton(
         onPressed: () {
           context.push('/curate');

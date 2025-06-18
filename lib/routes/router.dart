@@ -9,7 +9,7 @@ import 'package:odyss/screens/pricing_screen/pricing_screen.dart';
 import 'package:odyss/screens/profile_screen/profile_screen.dart';
 import 'package:odyss/screens/ride_details_screen/ride_details_screen.dart';
 import 'package:odyss/screens/rides_screen/rides_screen.dart';
-import 'package:odyss/screens/signup_screens/signup_sc%20reen1.dart';
+import 'package:odyss/screens/signup_screens/signup_screen1.dart';
 import 'package:odyss/screens/signup_screens/signup_screen2.dart';
 import 'package:odyss/screens/signup_screens/signup_screen3.dart';
 import 'package:odyss/screens/signup_screens/signup_screen4.dart';

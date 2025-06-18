@@ -12,14 +12,16 @@ final userListProvider = Provider<List<UserModel>>(
       video: '',
       picture: '',
       number: '',
-      email: '',
+      email: 'tumiadeoluwa@gmail.com',
       vibes: ['friendly', 'easy-going', 'sing-along'],
       rides: [],
-      bio: 'Hi, I am Tumi and I love fun trips with folks I vibe with, I also love making friends.',
-      x: '',
-      fb: '',
-      tiktok: '',
-      insta: '',
+      bio:
+          'Hi, I am Tumi and I love fun trips with folks I vibe with, I also love making friends.',
+      x: '@tumirants',
+      fb: 'https://facebook.com/tumiadeoluwa',
+      tiktok: '@tumi',
+      insta: '@tumi002',
+      password: 'Tumi1Adeoluwa',
     ),
     UserModel(
       id: 'xxxx2',
@@ -38,6 +40,7 @@ final userListProvider = Provider<List<UserModel>>(
       fb: '',
       tiktok: '',
       insta: '',
+      password: '',
     ),
     UserModel(
       id: 'xxxx3',
@@ -56,6 +59,7 @@ final userListProvider = Provider<List<UserModel>>(
       fb: '',
       tiktok: '',
       insta: '',
+      password: '',
     ),
     UserModel(
       id: 'xxxx4',
@@ -74,6 +78,7 @@ final userListProvider = Provider<List<UserModel>>(
       fb: '',
       tiktok: '',
       insta: '',
+      password: '',
     ),
     UserModel(
       id: 'xxxx5',
@@ -92,6 +97,7 @@ final userListProvider = Provider<List<UserModel>>(
       fb: '',
       tiktok: '',
       insta: '',
+      password: '',
     ),
     UserModel(
       id: 'xxxx6',
@@ -110,6 +116,7 @@ final userListProvider = Provider<List<UserModel>>(
       fb: '',
       tiktok: '',
       insta: '',
+      password: '',
     ),
     UserModel(
       id: 'xxxx7',
@@ -128,6 +135,7 @@ final userListProvider = Provider<List<UserModel>>(
       fb: '',
       tiktok: '',
       insta: '',
+      password: '',
     ),
     UserModel(
       id: 'xxxx8',
@@ -146,6 +154,7 @@ final userListProvider = Provider<List<UserModel>>(
       fb: '',
       tiktok: '',
       insta: '',
+      password: '',
     ),
     UserModel(
       id: 'xxxx9',
@@ -164,6 +173,7 @@ final userListProvider = Provider<List<UserModel>>(
       fb: '',
       tiktok: '',
       insta: '',
+      password: '',
     ),
   ],
 );

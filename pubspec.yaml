@@ -96,6 +96,7 @@ flutter:
     - assets/images/instagram_logo.png
     - assets/images/tiktok_logo.png
     - assets/images/x_logo.png
+    - assets/images/pen.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

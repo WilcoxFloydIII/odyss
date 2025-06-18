@@ -46,7 +46,9 @@ class _AvailableRidesWidgetState extends ConsumerState<AvailableRidesWidget> {
 
         return Container(
           width: MediaQuery.of(context).size.width,
-          padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.05),
+          padding: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width * 0.05, MediaQuery.of(context).size.width * 0.05,
+           MediaQuery.of(context).size.width * 0.05, MediaQuery.of(context).size.width * 0.02,
+          ),
           decoration: BoxDecoration(
             border: BoxBorder.fromLTRB(
               bottom: BorderSide(width: 1, color: Colors.black26),
@@ -358,6 +360,7 @@ class _AvailableRidesWidgetState extends ConsumerState<AvailableRidesWidget> {
                   ),
                 ],
               ),
+              SizedBox(height: MediaQuery.of(context).size.width * 0.05)
             ],
           ),
         );

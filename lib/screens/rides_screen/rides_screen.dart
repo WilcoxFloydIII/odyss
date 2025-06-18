@@ -31,7 +31,7 @@ class _RidesScreenState extends State<RidesScreen> {
         body: SafeArea(
           child: Container(
             width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height*0.75,
+            height: (MediaQuery.of(context).size.height*0.75),
             padding: EdgeInsets.only(top: 20),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -41,9 +41,9 @@ class _RidesScreenState extends State<RidesScreen> {
                   fontSize: 20
                 ),),
                 Container(
-                  height: MediaQuery.of(context).size.height * 0.5,
+                  height: (MediaQuery.of(context).size.height * 0.5),
                   width: MediaQuery.of(context).size.width,
-                  child: AvailableRidesWidget()
+                  child: AvailableRidesWidget(),
                 ),
               ],
             ),
