@@ -273,13 +273,14 @@ class _SignupPage1State extends State<SignupScreen1> {
                                             ),
                                           );
                                         } else {
-                                          if(dateController.text.isEmpty) {
-                                          ScaffoldMessenger.of(
+                                          if (dateController.text.isEmpty) {
+                                            ScaffoldMessenger.of(
                                               context,
                                             ).showSnackBar(
                                               SnackBar(
                                                 duration: Duration(seconds: 2),
-                                                backgroundColor: myColors.backgound,
+                                                backgroundColor:
+                                                    myColors.backgound,
                                                 content: Text(
                                                   'You must give a valid date of birth',
                                                   textAlign: TextAlign.center,
@@ -291,14 +292,15 @@ class _SignupPage1State extends State<SignupScreen1> {
                                                 ),
                                               ),
                                             );
-                                        } else {
-                                          user['FN'] =
+                                          } else {
+                                            newUser['firstName'] =
                                                 firstNameController.text;
-                                            user['LN'] =
+                                            newUser['lastName'] =
                                                 lastNameController.text;
                                             context.push('/signup2');
-                                        }
+                                            newUser['DOB'] = dateController.text;
                                           }
+                                        }
                                       }
                                     },
                                     child: Row(

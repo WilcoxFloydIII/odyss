@@ -1,35 +1,87 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:odyss/data/models/ride_model.dart';
 
-var ridesListProvider = StateProvider<List<RideModel>>(
-  (ref) => [
+class RideListNotifier extends StateNotifier<List<RideModel>> {
+  RideListNotifier() : super([
     RideModel(
-      memberIds: ['xxxx1', 'xxxx2', 'xxxx3'],
-      seats: 6,
-      company: 'Peace Mass Transit',
-      price: 18000,
-      days: 3,
-      departureLoc: 'Enugu',
-      arrivalLoc: 'Abuja',
-      arrivalDate: DateTime(2025, 5, 8, 14, 0),
-      departureDate: DateTime(2025, 5, 8, 9, 0),
-      vehicle: 'Sienna',
-      departureTOD: 'Morning', id: '',
-    ),
-    RideModel(
-      memberIds: ['xxxx4', 'xxxx5', 'xxxx6', 'xxxx7'],
-      seats: 11,
-      company: 'God Is Good Motors',
-      price: 10000,
-      days: 7,
-      departureLoc: 'Enugu',
-      arrivalLoc: 'Lagos',
-      arrivalDate: DateTime(2025, 7, 9, 15, 0),
-      departureDate: DateTime(2025, 9, 7, 7, 0),
-      vehicle: 'Bus',
-      departureTOD: 'Morning', id: '',
-    ),
-  ],
+    memberIds: ['xxxx1', 'xxxx2', 'xxxx3'],
+    seats: 6,
+    company: 'Peace Mass Transit',
+    price: 18000,
+    days: 3,
+    departureLoc: 'Enugu',
+    arrivalLoc: 'Abuja',
+    arrivalDate: DateTime(2025, 5, 8, 14, 0),
+    departureDate: DateTime(2025, 5, 8, 9, 0),
+    vehicle: 'Sienna',
+    departureTOD: 'Morning',
+    id: '',
+  ),
+  RideModel(
+    memberIds: ['xxxx4', 'xxxx5', 'xxxx6', 'xxxx7'],
+    seats: 11,
+    company: 'God Is Good Motors',
+    price: 10000,
+    days: 7,
+    departureLoc: 'Enugu',
+    arrivalLoc: 'Lagos',
+    arrivalDate: DateTime(2025, 7, 9, 15, 0),
+    departureDate: DateTime(2025, 9, 7, 7, 0),
+    vehicle: 'Bus',
+    departureTOD: 'Morning',
+    id: '',
+  ),
+  ]);
+
+  void addRide(RideModel ride) {
+    state = [...state, ride];
+  }
+
+  void updateRide(
+    String id, {
+      List? memberIds,
+    int? seats,
+    String? company,
+    int? price,
+    int? days,
+    String? departureLoc,
+    String? arrivalLoc,
+    DateTime? departureDate,
+    DateTime? arrivalDate,
+    String? departureTOD,
+    String? vehicle,
+    }
+  ) {
+    state = state.map((ride) {
+      if (ride.id == id) {
+        return ride.copyWith(
+          id: id,
+          vehicle: vehicle,
+      memberIds: memberIds ,
+      seats: seats ,
+      company: company ,
+      price: price ,
+      days: days ,
+      departureLoc: departureLoc ,
+      arrivalLoc: arrivalLoc ,
+      departureTOD: departureTOD ,
+      departureDate: departureDate ,
+      arrivalDate: arrivalDate ,
+        );
+      }
+      return ride;
+    }).toList();
+  }
+}
+
+
+
+
+
+
+
+
+var ridesListProvider = StateNotifierProvider<RideListNotifier, List<RideModel>>((ref) => RideListNotifier()
 );
 
 final departureQueryProvider = StateProvider<String>((ref) => '');
@@ -75,3 +127,7 @@ final filteredRidesProvider = StateProvider<List<RideModel>>((ref) {
   // If no search terms provided, return full list
   return rides;
 });
+
+List rides = [
+  
+];

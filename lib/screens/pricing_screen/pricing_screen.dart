@@ -252,12 +252,7 @@ class _PricingScreenState extends ConsumerState<PricingScreen> {
                                     );
                                     ref
                                         .read(ridesListProvider.notifier)
-                                        .state = [
-                                      ...ref
-                                          .read(ridesListProvider.notifier)
-                                          .state,
-                                      newRideModel,
-                                    ];
+                                        .addRide(newRideModel);
                                     print(ref.watch(ridesListProvider).length);
                                     context.go('/rides');
                                   },

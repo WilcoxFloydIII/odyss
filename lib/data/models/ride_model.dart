@@ -27,5 +27,33 @@ class RideModel {
     required this.arrivalDate,
   });
 
-  get departureLocation => null;
+  RideModel copyWith({
+    String? id,
+    List? memberIds,
+    int? seats,
+    String? company,
+    int? price,
+    int? days,
+    String? departureLoc,
+    String? arrivalLoc,
+    DateTime? departureDate,
+    DateTime? arrivalDate,
+    String? departureTOD,
+    String? vehicle,
+  }) {
+    return RideModel(
+      id: id ?? this.id,
+      vehicle: vehicle ?? this.vehicle,
+      memberIds: memberIds ?? this.memberIds,
+      seats: seats ?? this.seats,
+      company: company ?? this.company,
+      price: price ?? this.price,
+      days: days ?? this.days,
+      departureLoc: departureLoc ?? this.departureLoc,
+      arrivalLoc: arrivalLoc ?? this.arrivalLoc,
+      departureTOD: departureTOD ?? this.departureTOD,
+      departureDate: departureDate ?? this.departureDate,
+      arrivalDate: arrivalDate ?? this.arrivalDate,
+    );
+  }
 }

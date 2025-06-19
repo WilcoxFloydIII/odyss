@@ -36,4 +36,44 @@ class UserModel {
     required this.vibes,
     required this.rides,
   });
+
+  UserModel copyWith({
+    String? id,
+    String? nickName,
+    String? firstName,
+    String? lastName,
+    String? middleName,
+    String? video,
+    String? picture,
+    String? number,
+    String? email,
+    String? password,
+    List<String>? vibes,
+    List? rides,
+    String? insta,
+    String? tiktok,
+    String? x,
+    String? fb,
+    String? bio,
+  }) {
+    return UserModel(
+      id: id ?? this.id,
+      bio: bio ?? this.bio,
+      x: x ?? this.x,
+      fb: fb ?? this.fb,
+      tiktok: tiktok ?? this.tiktok,
+      insta: insta ?? this.insta,
+      nickName: nickName ?? this.nickName,
+      firstName: firstName ?? this.firstName,
+      lastName: lastName ?? this.lastName,
+      middleName: middleName ?? this.middleName,
+      video: video ?? this.video,
+      picture: picture ?? this.picture,
+      number: number ?? this.number,
+      email: email ?? this.email,
+      password: password ?? this.password,
+      vibes: vibes ?? this.vibes,
+      rides: rides ?? this.rides,
+    );
+  }
 }

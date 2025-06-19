@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:odyss/core/colors.dart';
 import 'package:odyss/core/constraints.dart';
 import 'package:odyss/core/providers/user_list_provider.dart';
-import 'package:odyss/screens/bottom_app_bar.dart';
 
 class EditProfile extends ConsumerStatefulWidget {
   const EditProfile({super.key});
@@ -37,6 +37,7 @@ class _EditProfileState extends ConsumerState<EditProfile> {
     insatgramController.text = user.insta;
     twitterController.text = user.x;
     facebookController.text = user.fb;
+
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
@@ -449,25 +450,35 @@ class _EditProfileState extends ConsumerState<EditProfile> {
                     ),
                   ),
                   SizedBox(height: 20),
-                  Row(children: [Expanded(child: ElevatedButton(onPressed: () {}, child: Text('Update')))],),
-                  SizedBox(height: 40,),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            ref
+                                .read(userListProvider.notifier)
+                                .updateUser(
+                                  UID,
+                                  nickName: nickNameController.text,
+                                  firstName: firstNameController.text,
+                                  lastName: lastNameController.text,
+                                  bio: bioController.text,
+                                  tiktok: tiktokController.text,
+                                  insta: insatgramController.text,
+                                  x: twitterController.text,
+                                  fb: facebookController.text,
+                                );
+                            context.pop();
+                          },
+                          child: Text('Update'),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 40),
                 ],
               ),
             ),
-          ),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        floatingActionButton: FloatingButtonWidget(),
-        bottomNavigationBar: ClipRRect(
-          borderRadius: BorderRadiusGeometry.only(
-            topLeft: Radius.circular(25),
-            topRight: Radius.circular(25),
-          ),
-          child: BottomAppBarWidget(
-            toggle1: false,
-            toggle2: false,
-            toggle3: false,
-            toggle4: true,
           ),
         ),
       ),

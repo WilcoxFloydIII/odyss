@@ -38,8 +38,7 @@ class SelectedRideDialog extends StatefulWidget {
 }
 
 class _SelectedRideDialogState extends State<SelectedRideDialog> {
-  bool toSimilarTrip = false;
-  bool splitCost = false;
+  bool splitCost = true;
   bool offlineFill = false;
 
   @override
@@ -282,9 +281,7 @@ class _SelectedRideDialogState extends State<SelectedRideDialog> {
                             ),
                             child: Text(
                               'Invite others',
-                              style: TextStyle(
-                                fontSize: 10,
-                              ),
+                              style: TextStyle(fontSize: 10),
                             ),
                           ),
                         ],
@@ -310,17 +307,8 @@ class _SelectedRideDialogState extends State<SelectedRideDialog> {
                     ListTile(
                       onTap: () {
                         setState(() {
-                          toSimilarTrip = !toSimilarTrip;
-                        });
-                      },
-                      contentPadding: EdgeInsets.all(0),
-                      leading: Text('Switch to a similar trip'),
-                      trailing: toSimilarTrip? Icon(Icons.check) : null,
-                    ),
-                    ListTile(
-                      onTap: () {
-                        setState(() {
                           splitCost = !splitCost;
+                          offlineFill = !offlineFill;
                         });
                       },
                       contentPadding: EdgeInsets.all(0),
@@ -330,8 +318,9 @@ class _SelectedRideDialogState extends State<SelectedRideDialog> {
                     ListTile(
                       onTap: () {
                         setState(() {
-                          offlineFill = !offlineFill;
-                        });
+                                offlineFill = !offlineFill;
+                                splitCost = !splitCost;
+                              });
                       },
                       contentPadding: EdgeInsets.all(0),
                       leading: Text('Allow Offline Fill-in'),
@@ -536,46 +525,44 @@ class _SelectedRideDialogState extends State<SelectedRideDialog> {
                                     8,
                                   ), // Optional: rounded corners
                                 ).show(context)
-                              : 
-                          showGeneralDialog(
-                            context: context,
-                            barrierDismissible: true,
-                            barrierLabel: 'Dialog',
-                            transitionDuration: const Duration(
-                              milliseconds: 300,
-                            ),
-                            pageBuilder:
-                                (context, animation, secondaryAnimation) {
-                                  return MakePaymentWidget();
-                                },
-                            transitionBuilder:
-                                (
-                                  context,
-                                  animation,
-                                  secondaryAnimation,
-                                  child,
-                                ) {
-                                  const begin = Offset(
-                                    1.0,
-                                    0.0,
-                                  ); // Slide in from right
-                                  const end = Offset.zero;
-                                  const curve = Curves.ease;
+                              : showGeneralDialog(
+                                  context: context,
+                                  barrierDismissible: true,
+                                  barrierLabel: 'Dialog',
+                                  transitionDuration: const Duration(
+                                    milliseconds: 300,
+                                  ),
+                                  pageBuilder:
+                                      (context, animation, secondaryAnimation) {
+                                        return MakePaymentWidget();
+                                      },
+                                  transitionBuilder:
+                                      (
+                                        context,
+                                        animation,
+                                        secondaryAnimation,
+                                        child,
+                                      ) {
+                                        const begin = Offset(
+                                          1.0,
+                                          0.0,
+                                        ); // Slide in from right
+                                        const end = Offset.zero;
+                                        const curve = Curves.ease;
 
-                                  final tween = Tween(
-                                    begin: begin,
-                                    end: end,
-                                  ).chain(CurveTween(curve: curve));
+                                        final tween = Tween(
+                                          begin: begin,
+                                          end: end,
+                                        ).chain(CurveTween(curve: curve));
 
-                                  return SlideTransition(
-                                    position: animation.drive(tween),
-                                    child: child,
-                                  );
-                                },
-                          );
+                                        return SlideTransition(
+                                          position: animation.drive(tween),
+                                          child: child,
+                                        );
+                                      },
+                                );
                         },
                         style: ButtonStyle(
-                          
                           backgroundColor: WidgetStatePropertyAll(
                             isMember
                                 ? Colors.blueGrey.shade400
