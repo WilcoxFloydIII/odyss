@@ -20,7 +20,7 @@ class _AvailableRidesWidgetState extends ConsumerState<AvailableRidesWidget> {
   Widget build(BuildContext context) {
     final myColors = Theme.of(context).extension<MyColors>()!;
     final filteredRides = ref.watch(filteredRidesProvider);
-    var allRides = ref.watch(ridesListProvider);
+    //var allRides = ref.watch(ridesListProvider);
     var userList = ref.watch(userListProvider);
 
     return ListView.builder(
@@ -40,14 +40,16 @@ class _AvailableRidesWidgetState extends ConsumerState<AvailableRidesWidget> {
           }
         }
 
-
         // final bool cardLimitCheck = ride.members.length > 3;
         final bool dayCheck = ride.departureDate.day.toString().length > 1;
 
         return Container(
           width: MediaQuery.of(context).size.width,
-          padding: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width * 0.05, MediaQuery.of(context).size.width * 0.05,
-           MediaQuery.of(context).size.width * 0.05, MediaQuery.of(context).size.width * 0.02,
+          padding: EdgeInsets.fromLTRB(
+            MediaQuery.of(context).size.width * 0.05,
+            MediaQuery.of(context).size.width * 0.05,
+            MediaQuery.of(context).size.width * 0.05,
+            MediaQuery.of(context).size.width * 0.02,
           ),
           decoration: BoxDecoration(
             border: BoxBorder.fromLTRB(
@@ -102,56 +104,62 @@ class _AvailableRidesWidgetState extends ConsumerState<AvailableRidesWidget> {
                         ],
                       ),
                     ),
-                    ElevatedButton(
+                    TextButton(
                       onPressed: () {
                         print(members);
-                        showGeneralDialog(
-                                context: context,
-                                barrierDismissible: true,
-                                barrierLabel: 'Dialog',
-                                transitionDuration: const Duration(
-                                  milliseconds: 300,
-                                ),
-                                pageBuilder:
-                                    (context, animation, secondaryAnimation) {
-                                      return SelectedRideDialog(
-                                        arrLoc: ride.arrivalLoc,
-                                        company: ride.company,
-                                        days: ride.days,
-                                        depLoc: ride.departureLoc,
-                                        finalDate: ride.arrivalDate,
-                                        initDate: ride.departureDate,
-                                        members: members,
-                                        seats: ride.seats,
-                                        vehicle: ride.vehicle,
-                                        price: ride.price,
-                                      );
-                                    },
-                                transitionBuilder:
-                                    (
-                                      context,
-                                      animation,
-                                      secondaryAnimation,
-                                      child,
-                                    ) {
-                                      final offsetAnimation = Tween<Offset>(
-                                        begin: const Offset(
-                                          0,
-                                          1,
-                                        ), // From bottom
-                                        end: Offset.zero,
-                                      ).animate(animation);
-                                      return SlideTransition(
-                                        position: offsetAnimation,
-                                        child: child,
-                                      );
-                                    },
-                              );
+                        Navigator.push(
+                          context, PageRouteBuilder(pageBuilder: (context, animation, secondaryAnimation) => SelectedRideDialog(
+                                  arrLoc: ride.arrivalLoc,
+                                  company: ride.company,
+                                  days: ride.days,
+                                  depLoc: ride.departureLoc,
+                                  finalDate: ride.arrivalDate,
+                                  initDate: ride.departureDate,
+                                  members: members,
+                                  seats: ride.seats,
+                                  vehicle: ride.vehicle,
+                                  price: ride.price,
+                                ), transitionsBuilder:
+                                (
+                                  context,
+                                  animation,
+                                  secondaryAnimation,
+                                  child,
+                                ) {
+                                  final offsetAnimation = Tween<Offset>(
+                                    begin: const Offset(0, 1), // From bottom
+                                    end: Offset.zero,
+                                  ).animate(animation);
+                                  return SlideTransition(
+                                    position: offsetAnimation,
+                                    child: child,
+                                  );
+                                },
+                          )
+                        );
                       },
                       style: ButtonStyle(
                         padding: WidgetStatePropertyAll(
                           EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                         ),
+                        foregroundColor: WidgetStateColor.resolveWith((states) {
+                          if (states.contains(WidgetState.pressed)) {
+                            return myColors.primary;
+                          }
+                          return myColors.backgound;
+                        }),
+                        backgroundColor: WidgetStateColor.resolveWith((states) {
+                          if (states.contains(WidgetState.pressed)) {
+                            return myColors.backgound;
+                          }
+                          return myColors.primary;
+                        }),
+                        shape: WidgetStatePropertyAll(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadiusGeometry.circular(35),
+                          ),
+                        ),
+                        alignment: Alignment.center,
                       ),
                       child: Text('Join trip', style: TextStyle(fontSize: 12)),
                     ),
@@ -360,7 +368,7 @@ class _AvailableRidesWidgetState extends ConsumerState<AvailableRidesWidget> {
                   ),
                 ],
               ),
-              SizedBox(height: MediaQuery.of(context).size.width * 0.05)
+              SizedBox(height: 20),
             ],
           ),
         );

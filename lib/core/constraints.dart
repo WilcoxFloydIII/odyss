@@ -1,5 +1,3 @@
-import 'package:odyss/data/models/user_model.dart';
-
 bool signedIn = true;
 
 initLocationFunc() {
@@ -9,6 +7,7 @@ initLocationFunc() {
     return '/rides';
   }
 }
+
 
 Map<String, dynamic> newRide = {
   'depLoc': '',

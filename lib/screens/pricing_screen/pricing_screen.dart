@@ -1,7 +1,7 @@
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:odyss/core/colors.dart';
 import 'package:odyss/core/constraints.dart';
 import 'package:odyss/core/providers/company_list_provider.dart';
 import 'package:odyss/core/providers/ride_list_provider.dart';
@@ -20,10 +20,10 @@ class _PricingScreenState extends ConsumerState<PricingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final myColors = Theme.of(context).extension<MyColors>()!;
+    //final myColors = Theme.of(context).extension<MyColors>()!;
 
     final partnerList = ref.watch(partnerListProvider);
-    final ridesList = ref.watch(ridesListProvider);
+    //final ridesList = ref.watch(ridesListProvider);
 
     PartnerModel currPartner = partnerList.firstWhere(
       (currPartner) => currPartner.name == newRide['partner'],
@@ -178,6 +178,24 @@ class _PricingScreenState extends ConsumerState<PricingScreen> {
                                     disabledBorder: InputBorder.none,
                                     focusedBorder: InputBorder.none,
                                   ),
+                                  onTap: () {
+                                    Flushbar(
+                                      message:
+                                          "Prices are automatically set based on the trip details you've chosen",
+                                      messageSize: 12,
+                                      duration: Duration(seconds: 1),
+                                      flushbarPosition:
+                                          FlushbarPosition.TOP, // Top of screen
+                                      backgroundColor: Colors
+                                          .red, // Optional: customize color
+                                      margin: EdgeInsets.all(
+                                        8,
+                                      ), // Optional: margin for better look
+                                      borderRadius: BorderRadius.circular(
+                                        8,
+                                      ), // Optional: rounded corners
+                                    ).show(context);
+                                  },
                                 ),
                               ],
                             ),

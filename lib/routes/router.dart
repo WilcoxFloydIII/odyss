@@ -7,6 +7,7 @@ import 'package:odyss/screens/explore_screen/explore_screen.dart';
 import 'package:odyss/screens/login_screen/login_screen.dart';
 import 'package:odyss/screens/pricing_screen/pricing_screen.dart';
 import 'package:odyss/screens/profile_screen/profile_screen.dart';
+import 'package:odyss/screens/profile_screen/profile_screen_widgets/edit_profile.dart';
 import 'package:odyss/screens/ride_details_screen/ride_details_screen.dart';
 import 'package:odyss/screens/rides_screen/rides_screen.dart';
 import 'package:odyss/screens/signup_screens/signup_screen1.dart';
@@ -312,6 +313,20 @@ final GoRouter router = GoRouter(
             position: animation.drive(tween),
             child: child,
           );
+        },
+      ),
+    ),
+    GoRoute(
+      path: '/editProfile',
+      pageBuilder: (context, state) => CustomTransitionPage(
+        key: state.pageKey,
+        child: EditProfile(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          final offsetAnimation = Tween<Offset>(
+            begin: const Offset(0, 1), // From bottom
+            end: Offset.zero,
+          ).animate(animation);
+          return SlideTransition(position: offsetAnimation, child: child);
         },
       ),
     ),

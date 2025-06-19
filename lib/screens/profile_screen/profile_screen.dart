@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:odyss/core/colors.dart';
 import 'package:odyss/core/constraints.dart';
@@ -7,7 +8,6 @@ import 'package:odyss/core/providers/ride_list_provider.dart';
 import 'package:odyss/core/providers/user_list_provider.dart';
 import 'package:odyss/data/models/ride_model.dart';
 import 'package:odyss/screens/bottom_app_bar.dart';
-import 'package:odyss/screens/profile_screen/profile_screen_widgets/edit_profile.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});
@@ -17,8 +17,6 @@ class ProfileScreen extends ConsumerStatefulWidget {
 }
 
 class _ProfileScreenState extends ConsumerState<ProfileScreen> {
-
-  
   bool switchPic = false;
   @override
   Widget build(BuildContext context) {
@@ -247,49 +245,17 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       Row(
                         children: [
                           Expanded(
-                            child: ElevatedButton(
+                            child: TextButton(
                               onPressed: () {
-                                showGeneralDialog(
-                                  context: context,
-                                  barrierDismissible: true,
-                                  barrierLabel: 'Dialog',
-                                  transitionDuration: const Duration(
-                                    milliseconds: 300,
-                                  ),
-                                  pageBuilder:
-                                      (context, animation, secondaryAnimation) {
-                                        return EditProfile();
-                                      },
-                                  transitionBuilder:
-                                      (
-                                        context,
-                                        animation,
-                                        secondaryAnimation,
-                                        child,
-                                      ) {
-                                        final offsetAnimation = Tween<Offset>(
-                                          begin: const Offset(
-                                            0,
-                                            1,
-                                          ), // From bottom
-                                          end: Offset.zero,
-                                        ).animate(animation);
-                                        return SlideTransition(
-                                          position: offsetAnimation,
-                                          child: child,
-                                        );
-                                      },
-                                );
+                                context.push('/editProfile');
                               },
                               style: ButtonStyle(
-                                backgroundColor: WidgetStateColor.resolveWith((
-                                  states,
-                                ) {
-                                  if (states.contains(WidgetState.pressed)) {
-                                    return myColors.primary;
-                                  }
-                                  return myColors.backgound;
-                                }),
+                                padding: WidgetStatePropertyAll(
+                                  EdgeInsets.symmetric(
+                                    vertical: 10,
+                                    horizontal: 20,
+                                  ),
+                                ),
                                 foregroundColor: WidgetStateColor.resolveWith((
                                   states,
                                 ) {
@@ -298,10 +264,25 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                   }
                                   return myColors.primary;
                                 }),
+                                backgroundColor: WidgetStateColor.resolveWith((
+                                  states,
+                                ) {
+                                  if (states.contains(WidgetState.pressed)) {
+                                    return myColors.primary;
+                                  }
+                                  return myColors.backgound;
+                                }),
+                                shape: WidgetStatePropertyAll(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadiusGeometry.circular(
+                                      35,
+                                    ),
+                                  ),
+                                ),
+                                alignment: Alignment.center,
                                 side: WidgetStatePropertyAll(
                                   BorderSide(width: 2, color: myColors.primary),
                                 ),
-                                elevation: WidgetStatePropertyAll(0),
                               ),
                               child: Center(
                                 child: Row(
@@ -340,8 +321,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       ),
                       SizedBox(height: 10),
                       Container(
-                        height: 280,
+                        height: (300 * rides.length).toDouble(),
                         child: ListView.builder(
+                          physics: NeverScrollableScrollPhysics(),
                           itemCount: rides.length,
                           itemBuilder: (context, index) {
                             bool dayCheck =
@@ -372,7 +354,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                             MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text('ID: ${rides[index].id} '),
-                                          ElevatedButton(
+                                          TextButton(
                                             onPressed: () {},
                                             style: ButtonStyle(
                                               padding: WidgetStatePropertyAll(
@@ -667,8 +649,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       ),
                       SizedBox(height: 10),
                       Container(
-                        height: 280,
+                        height: (300 * rides.length).toDouble(),
                         child: ListView.builder(
+                          physics: NeverScrollableScrollPhysics(),
                           itemCount: rides.length,
                           itemBuilder: (context, index) {
                             bool dayCheck =
@@ -760,7 +743,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                               ],
                                             ),
                                           ),
-                                          ElevatedButton(
+                                          TextButton(
                                             onPressed: () {},
                                             style: ButtonStyle(
                                               padding: WidgetStatePropertyAll(

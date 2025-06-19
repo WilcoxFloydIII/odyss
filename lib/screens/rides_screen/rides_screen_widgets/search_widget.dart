@@ -1,5 +1,7 @@
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:odyss/core/colors.dart';
 import 'package:odyss/core/providers/ride_list_provider.dart';
 
@@ -37,7 +39,8 @@ class _SearchWidgetState extends ConsumerState<SearchWidget> {
           selectedDateTime?.minute ?? 0,
         );
         dateController.text = '${picked.day}/${picked.month}/${picked.year}';
-        ref.read(dateQueryProvider.notifier).state = '${picked.day}/${picked.month}/${picked.year}';
+        ref.read(dateQueryProvider.notifier).state =
+            '${picked.day}/${picked.month}/${picked.year}';
       }
     }
 
@@ -52,18 +55,27 @@ class _SearchWidgetState extends ConsumerState<SearchWidget> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              ListTile(
-                title: Text('Morning'),
-                onTap: () => onSelected('Morning'),
-              ),
+              ListTile(title: Text('Morning')),
               ListTile(
                 title: Text('Afternoon'),
-                onTap: () => onSelected('Afternoon'),
+                onTap: () {
+                  onSelected('Afternoon');
+                  context.pop();
+                },
               ),
-              ListTile(title: Text('Night'), onTap: () => onSelected('Night')),
+              ListTile(
+                title: Text('Night'),
+                onTap: () {
+                  onSelected('Night');
+                  context.pop();
+                },
+              ),
               ListTile(
                 title: Text('None'),
-                onTap: () => onSelected(''),
+                onTap: () {
+                  onSelected('');
+                  context.pop();
+                },
               ),
             ],
           ),
@@ -92,9 +104,27 @@ class _SearchWidgetState extends ConsumerState<SearchWidget> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              ListTile(title: Text('Abuja'), onTap: () => onSelected('Abuja')),
-              ListTile(title: Text('Lagos'), onTap: () => onSelected('Lagos')),
-              ListTile(title: Text('None'), onTap: () => onSelected('')),
+              ListTile(
+                title: Text('Abuja'),
+                onTap: () {
+                  onSelected('Abuja');
+                  context.pop();
+                },
+              ),
+              ListTile(
+                title: Text('Lagos'),
+                onTap: () {
+                  onSelected('Lagos');
+                  context.pop();
+                },
+              ),
+              ListTile(
+                title: Text('None'),
+                onTap: () {
+                  onSelected('');
+                  context.pop();
+                },
+              ),
             ],
           ),
         ),
@@ -213,6 +243,23 @@ class _SearchWidgetState extends ConsumerState<SearchWidget> {
                       ),
                       contentPadding: EdgeInsets.all(15),
                     ),
+                    onTap: () {
+                        Flushbar(
+                          message: 'Enugu is the only available departure state',
+                          messageSize: 12,
+                          duration: Duration(seconds: 1),
+                          flushbarPosition:
+                              FlushbarPosition.TOP, // Top of screen
+                          backgroundColor:
+                              Colors.red, // Optional: customize color
+                          margin: EdgeInsets.all(
+                            8,
+                          ), // Optional: margin for better look
+                          borderRadius: BorderRadius.circular(
+                            8,
+                          ), // Optional: rounded corners
+                        ).show(context);
+                    },
                   ),
                   TextFormField(
                     controller: destinationController,

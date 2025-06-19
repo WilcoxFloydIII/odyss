@@ -1,3 +1,4 @@
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -430,6 +431,23 @@ class _RideDetailsScreenState extends ConsumerState<RideDetailsScreen> {
                                           ),
                                         ),
                                       );
+                                    } else {
+                                      Flushbar(
+                                        message:
+                                            'Seat number is automatically set based on vehicle',
+                                        messageSize: 12,
+                                        duration: Duration(seconds: 1),
+                                        flushbarPosition: FlushbarPosition
+                                            .TOP, // Top of screen
+                                        backgroundColor: Colors
+                                            .red, // Optional: customize color
+                                        margin: EdgeInsets.all(
+                                          8,
+                                        ), // Optional: margin for better look
+                                        borderRadius: BorderRadius.circular(
+                                          8,
+                                        ), // Optional: rounded corners
+                                      ).show(context);
                                     }
                                   },
                                 ),
