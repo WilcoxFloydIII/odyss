@@ -219,32 +219,39 @@ class _SelectedRideDialogState extends State<SelectedRideDialog> {
                                       Container(
                                         width: 250,
                                         color: myColors.backgound,
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            Container(
-                                              width: 40,
-                                              height: 40,
-                                              decoration: BoxDecoration(
-                                                border: Border.all(
-                                                  width: 2,
-                                                  color: Colors.black,
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            context.push(
+                                              '/profile/${widget.members[indexnew].id}',
+                                            );
+                                          },
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              Container(
+                                                width: 40,
+                                                height: 40,
+                                                decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                    width: 2,
+                                                    color: Colors.black,
+                                                  ),
+                                                  color: Colors.grey.shade300,
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
                                                 ),
-                                                color: Colors.grey.shade300,
-                                                borderRadius:
-                                                    BorderRadius.circular(20),
                                               ),
-                                            ),
-                                            SizedBox(width: 10),
-                                            Text(
-                                              '${widget.members[indexnew].firstName} ${widget.members[indexnew].lastName} ',
-                                              style: TextStyle(
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.w500,
+                                              SizedBox(width: 10),
+                                              Text(
+                                                '${widget.members[indexnew].firstName} ${widget.members[indexnew].lastName} ',
+                                                style: TextStyle(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
                                               ),
-                                            ),
-                                          ],
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     ],

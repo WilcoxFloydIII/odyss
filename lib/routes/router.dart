@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
-import 'package:odyss/core/constraints.dart';
 import 'package:odyss/screens/chat_screen/chat_screen.dart';
+import 'package:odyss/screens/circles_screen/circles_screen.dart';
 import 'package:odyss/screens/curate_trip_screen/curate_trip_screen.dart';
-import 'package:odyss/screens/explore_screen/explore_screen.dart';
 import 'package:odyss/screens/login_screen/login_screen.dart';
 import 'package:odyss/screens/pricing_screen/pricing_screen.dart';
+import 'package:odyss/screens/profile_screen/general_profile_screen.dart';
 import 'package:odyss/screens/profile_screen/profile_screen.dart';
 import 'package:odyss/screens/profile_screen/profile_screen_widgets/edit_profile.dart';
 import 'package:odyss/screens/ride_details_screen/ride_details_screen.dart';
@@ -22,7 +22,7 @@ import 'package:odyss/screens/trip_vibe.dart/trip_vibe_screen.dart';
 import 'package:odyss/screens/welcome_screen/welcome_screen.dart';
 
 final GoRouter router = GoRouter(
-  initialLocation: initLocationFunc(),
+  initialLocation: '/',
   routes: [
     GoRoute(path: '/', builder: (context, state) => SplashScreen()),
     GoRoute(
@@ -208,8 +208,8 @@ final GoRouter router = GoRouter(
       pageBuilder: (context, state) => NoTransitionPage(child: ChatScreen()),
     ),
     GoRoute(
-      path: '/explore',
-      pageBuilder: (context, state) => NoTransitionPage(child: ExploreScreen()),
+      path: '/circles',
+      pageBuilder: (context, state) => NoTransitionPage(child: CirclesScreen()),
     ),
     GoRoute(
       path: '/rides',
@@ -329,6 +329,25 @@ final GoRouter router = GoRouter(
           return SlideTransition(position: offsetAnimation, child: child);
         },
       ),
+    ),
+    GoRoute(
+      path: '/profile/:id',
+      pageBuilder: (context, state) {
+        final id = state.pathParameters['id']!;
+        return CustomTransitionPage(
+          key: state.pageKey,
+          child: GeneralProfileScreen(userId: id),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return SlideTransition(
+              position: Tween<Offset>(
+                begin: const Offset(0, 1), // Start from bottom
+                end: Offset.zero,
+              ).animate(animation),
+              child: child,
+            );
+          },
+        );
+      },
     ),
   ],
 );

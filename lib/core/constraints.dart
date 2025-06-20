@@ -2,7 +2,7 @@ bool signedIn = true;
 
 initLocationFunc() {
   if (signedIn == false) {
-    return '/';
+    return '/satrt';
   } else {
     return '/rides';
   }

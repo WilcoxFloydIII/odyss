@@ -37,12 +37,12 @@ class _BottomAppBarWidgetState extends State<BottomAppBarWidget> {
             flex: 2,
             child: ElevatedButton(
               onPressed: () {
-                context.go('/explore');
+                context.go('/circles');
               },
               child: Image.asset(
                 widget.toggle1
-                    ? 'assets/icons/active_explore_icon.png.png'
-                    : 'assets/icons/explore_icon.png',
+                    ? 'assets/icons/active_circles_icon.png.png'
+                    : 'assets/icons/circles_icon.png',
                 width: 25,
                 height: 25,
               ),
