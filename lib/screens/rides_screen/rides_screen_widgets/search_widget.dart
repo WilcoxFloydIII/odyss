@@ -55,7 +55,11 @@ class _SearchWidgetState extends ConsumerState<SearchWidget> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              ListTile(title: Text('Morning')),
+              ListTile(title: Text('Morning'),
+                onTap: () {
+                  onSelected('Morning');
+                  context.pop();
+                },),
               ListTile(
                 title: Text('Afternoon'),
                 onTap: () {

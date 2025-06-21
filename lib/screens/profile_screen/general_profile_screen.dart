@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:odyss/core/colors.dart';
-import 'package:odyss/core/providers/ride_list_provider.dart';
+//import 'package:odyss/core/providers/ride_list_provider.dart';
 import 'package:odyss/core/providers/user_list_provider.dart';
-import 'package:odyss/data/models/ride_model.dart';
+//import 'package:odyss/data/models/ride_model.dart';
 
 class GeneralProfileScreen extends ConsumerStatefulWidget {
   const GeneralProfileScreen({super.key, required this.userId});
@@ -27,7 +27,7 @@ class _GeneralProfileScreenState extends ConsumerState<GeneralProfileScreen> {
 
     var user = users.firstWhere((element) => element.id == widget.userId);
 
-    var allRides = ref.watch(ridesListProvider);
+    //var allRides = ref.watch(ridesListProvider);
 
     showPic() {
       if (switchPic == false) {
@@ -51,9 +51,9 @@ class _GeneralProfileScreenState extends ConsumerState<GeneralProfileScreen> {
       }
     }
 
-    List<RideModel> rides = allRides
-        .where((element) => element.memberIds.contains(widget.userId))
-        .toList();
+    // List<RideModel> rides = allRides
+    //     .where((element) => element.memberIds.contains(widget.userId))
+    //     .toList();
 
     return Scaffold(
       appBar: PreferredSize(

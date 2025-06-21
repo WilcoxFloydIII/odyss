@@ -12,7 +12,18 @@ class CircleListNotifier extends StateNotifier<List<CircleModel>> {
           destination: 'Lagos',
           startDate: DateTime.now(),
           endDate: DateTime.now().add(Duration(days: 1)),
-          users: ['xxxx1'],
+          users: [],
+          description: 'This circle is for students in GOUNI travelling to Lagos after school closes',
+        ),
+        CircleModel(
+          id: '2',
+          name: 'GOUNI students travelling to Abuja after school',
+          description: 'This circle is for students in GOUNI travelling to Abuja after school closes',
+          departure: 'Enugu',
+          destination: 'Abuja',
+          startDate: DateTime.now(),
+          endDate: DateTime.now().add(Duration(days: 1)),
+          users: [],
         ),
       ]);
 
@@ -23,6 +34,7 @@ class CircleListNotifier extends StateNotifier<List<CircleModel>> {
   void updateCircle(
     String? id, {
     String? name,
+    String? description,
     String? departure,
     String? destination,
     DateTime? startDate,
@@ -34,6 +46,7 @@ class CircleListNotifier extends StateNotifier<List<CircleModel>> {
         return circle.copyWith(
           id: id,
           name: name,
+          description: description,
           departure: departure,
           destination: destination,
           startDate: startDate,

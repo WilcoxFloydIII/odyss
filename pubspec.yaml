@@ -84,6 +84,7 @@ flutter:
     - assets/logo/square-xxl.png
     - assets/icons/active_chat_icon.png 
     - assets/icons/active_circles_icon.png.png 
+    - assets/images/bell_icon.png
     - assets/icons/active_rides_icon.png 
     - assets/icons/chat_icon.png 
     - assets/icons/curate_icon.png 

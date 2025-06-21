@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:odyss/screens/chat_screen/chat_screen.dart';
 import 'package:odyss/screens/circles_screen/circles_screen.dart';
+import 'package:odyss/screens/circles_screen/circles_screen_widgets/circle_members_screen.dart';
 import 'package:odyss/screens/curate_trip_screen/curate_trip_screen.dart';
 import 'package:odyss/screens/login_screen/login_screen.dart';
 import 'package:odyss/screens/pricing_screen/pricing_screen.dart';
@@ -343,6 +344,31 @@ final GoRouter router = GoRouter(
                 begin: const Offset(0, 1), // Start from bottom
                 end: Offset.zero,
               ).animate(animation),
+              child: child,
+            );
+          },
+        );
+      },
+    ),
+    GoRoute(
+      path: '/circle/:id',
+      pageBuilder: (context, state) {
+        final id = state.pathParameters['id']!;
+        return CustomTransitionPage(
+          key: state.pageKey,
+          child: CircleMembersScreen(id: id),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+
+            const begin = Offset(1.0, 0.0); // Slide in from right
+            const end = Offset.zero;
+            const curve = Curves.ease;
+
+            final tween = Tween(
+              begin: begin,
+              end: end,
+            ).chain(CurveTween(curve: curve));
+            return SlideTransition(
+              position: tween.animate(animation),
               child: child,
             );
           },
