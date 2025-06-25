@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl_phone_field/intl_phone_field.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:intl_phone_field/countries.dart';
 import 'package:odyss/core/colors.dart';
+import 'package:odyss/core/constraints.dart';
 
 class SignupScreen2 extends StatefulWidget {
   const SignupScreen2({super.key});
@@ -10,7 +15,23 @@ class SignupScreen2 extends StatefulWidget {
 }
 
 class _SignupScreen2State extends State<SignupScreen2> {
-  final TextEditingController nickNameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController numberController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final phoneFormatter = MaskTextInputFormatter(
+    mask: '### ### ####',
+    filter: {"#": RegExp(r'[0-9]')},
+  );
+  final nigeria = Country(
+    minLength: 11,
+    name: 'Nigeria',
+    code: 'NG',
+    dialCode: '+234',
+    flag: '🇳🇬',
+    nameTranslations: {},
+    maxLength: 20,
+  );
+
   @override
   Widget build(BuildContext context) {
     final myColors = Theme.of(context).extension<MyColors>()!;
@@ -29,19 +50,38 @@ class _SignupScreen2State extends State<SignupScreen2> {
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         IconButton(
                           onPressed: () {
                             context.pop();
                           },
-                          icon: Icon(Icons.arrow_back_ios_rounded, size: 30),
+                          style: ButtonStyle(
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
+                          icon: Icon(Icons.arrow_back_ios_rounded, size: 25),
                         ),
-                        Text(
-                          'Hmm, add a pic,',
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                            fontSize: 25,
-                            fontWeight: FontWeight.w700,
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.8,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Stay in Touch,',
+                                textAlign: TextAlign.start,
+                                style: TextStyle(
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              Text(
+                                'How should we reach you? Drop your email and phone. Set a password to secure your space.',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
@@ -49,7 +89,7 @@ class _SignupScreen2State extends State<SignupScreen2> {
                     SizedBox(height: 50),
                     Container(
                       width: MediaQuery.of(context).size.width,
-                      height: 400,
+                      height: 450,
                       padding: EdgeInsets.all(
                         MediaQuery.sizeOf(context).width * 0.05,
                       ),
@@ -57,37 +97,8 @@ class _SignupScreen2State extends State<SignupScreen2> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Stack(
-                            alignment: Alignment.topCenter,
-                            children: [
-                              Container(
-                                width: MediaQuery.of(context).size.width*0.4,
-                                height: MediaQuery.of(context).size.width * 0.4,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(
-                                    MediaQuery.of(context).size.width * 0.2,
-                                  ),
-                                  border: Border.all(
-                                    width: 2,
-                                    color: Colors.blueGrey
-                                  ),
-                                  image: DecorationImage(image: AssetImage('')),
-                                  color: Colors.grey
-                                ),
-                              ),
-                              Container(
-                                padding: EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width*0.3),
-                                  color: const Color(0x83000000)
-                                ),
-                                child: Text('+ add a profile pic', style: TextStyle(color: myColors.backgound, fontWeight: FontWeight.w400),),
-                              )
-                            ],
-                          ),
                           Container(
-                            width:
-                                MediaQuery.of(context).size.width * 0.9,
+                            width: MediaQuery.of(context).size.width * 0.9,
                             padding: EdgeInsets.only(
                               top: 10,
                               bottom: 0,
@@ -99,22 +110,151 @@ class _SignupScreen2State extends State<SignupScreen2> {
                               borderRadius: BorderRadius.circular(20),
                             ),
                             child: Column(
-                              mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment:
-                                  CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('Nickname'),
+                                Text('Email'),
                                 TextFormField(
                                   keyboardType: TextInputType.name,
-                                  controller: nickNameController,
+                                  controller: emailController,
                                   textInputAction: TextInputAction.next,
                                   style: TextStyle(
                                     fontSize: 13,
                                     fontWeight: FontWeight.w400,
                                   ),
                                   decoration: InputDecoration(
-                                    hintText: 'Add a nickname',
+                                    hintText: 'johndoe@gmail.com',
+                                    hintStyle: TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                    border: InputBorder.none,
+                                    enabledBorder: InputBorder.none,
+                                    contentPadding: EdgeInsets.zero,
+                                    disabledBorder: InputBorder.none,
+                                    focusedBorder: InputBorder.none,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.9,
+                            padding: EdgeInsets.only(
+                              top: 10,
+                              bottom: 0,
+                              left: 10,
+                              right: 10,
+                            ),
+                            decoration: BoxDecoration(
+                              border: Border.all(width: 2),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Phone number'),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Column(
+                                      children: [
+                                        SizedBox(height: 0),
+                                        Text.rich(
+                                          TextSpan(
+                                            text: 'NG ',
+                                            style: TextStyle(
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                            children: [
+                                              TextSpan(
+                                                text: '+234 ',
+                                                style: TextStyle(
+                                                  fontSize: 13,
+                                                  fontWeight: FontWeight.w400,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Expanded(
+                                      child: TextFormField(
+                                        keyboardType: TextInputType.number,
+                                        inputFormatters: [phoneFormatter],
+                                        controller: numberController,
+                                        style: TextStyle(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                        decoration: InputDecoration(
+                                          isCollapsed: false,
+                                          hintText: '810 332 3454',
+                                          hintStyle: TextStyle(
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                          border: InputBorder.none,
+                                          enabledBorder: InputBorder.none,
+                                          contentPadding: EdgeInsets.zero,
+                                          disabledBorder: InputBorder.none,
+                                          focusedBorder: InputBorder.none,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.9,
+                            padding: EdgeInsets.only(
+                              top: 10,
+                              bottom: 0,
+                              left: 10,
+                              right: 10,
+                            ),
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                width: 2,
+                                color: myColors.primary,
+                              ),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Password'),
+                                TextFormField(
+                                  obscureText: true,
+                                  obscuringCharacter: '●',
+                                  inputFormatters: [
+                                    // Only allow letters, numbers, and common symbols
+                                    FilteringTextInputFormatter.allow(
+                                      RegExp(
+                                        r'[A-Za-z0-9!@#\$%^&*()_\-+=\[\]{}|;:,.<>?/~`]',
+                                      ),
+                                    ),
+                                    FilteringTextInputFormatter.deny(
+                                      RegExp(r'[ ]'),
+                                    ), // Disallow spaces
+                                  ],
+                                  enableSuggestions: false,
+                                  keyboardType: TextInputType.visiblePassword,
+                                  controller: passwordController,
+                                  textInputAction: TextInputAction.next,
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                  decoration: InputDecoration(
+                                    hintText: 'Input password',
                                     hintStyle: TextStyle(
                                       fontSize: 13,
                                       fontWeight: FontWeight.w400,
@@ -136,7 +276,76 @@ class _SignupScreen2State extends State<SignupScreen2> {
                                 width: 130,
                                 child: ElevatedButton(
                                   onPressed: () {
-                                    context.push('/signup3');
+                                    if (emailController.text.isEmpty ||
+                                        emailController.text.length < 7) {
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(
+                                          duration: Duration(seconds: 2),
+                                          backgroundColor: myColors.backgound,
+                                          content: Text(
+                                            'Input a vaild email',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.red,
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    } else if (numberController.text.isEmpty ||
+                                        numberController.text.length < 12) {
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(
+                                          duration: Duration(seconds: 2),
+                                          backgroundColor: myColors.backgound,
+                                          content: Text(
+                                            'Input a vaild phone number',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.red,
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    } else if (passwordController
+                                            .text
+                                            .isEmpty ||
+                                        passwordController.text.length < 6) {
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(
+                                          duration: Duration(seconds: 2),
+                                          backgroundColor: myColors.backgound,
+                                          content: Text(
+                                            'Password must be at least 6 characters',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.red,
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    } else {
+                                      print(numberController.text);
+                                      newUser['email'] = emailController.text;
+                                      newUser['phone'] =
+                                          '0${numberController.text[0]}${numberController.text[1]}${numberController.text[2]}${numberController.text[4]}${numberController.text[5]}${numberController.text[6]}${numberController.text[8]}${numberController.text[9]}${numberController.text[10]}${numberController.text[11]}';
+                                      newUser['password'] =
+                                          passwordController.text;
+                                      print(newUser['phone']);
+                                      context.push('/signup3');
+                                    }
+                                    
                                   },
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,

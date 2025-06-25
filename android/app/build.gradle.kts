@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.flox3.odyss"
+    namespace = "android_app"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = "27.0.12077973"
 
@@ -21,13 +21,21 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.flox3.odyss"
+        applicationId = "com.odyss.app"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+    }
+
+    // Add this ↓ for permission_handler if required
+    packaging {
+        resources {
+            pickFirsts.add("META-INF/AL2.0")
+            pickFirsts.add("META-INF/LGPL2.1")
+        }
     }
 
     buildTypes {

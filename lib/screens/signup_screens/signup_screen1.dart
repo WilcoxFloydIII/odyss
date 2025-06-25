@@ -49,19 +49,38 @@ class _SignupPage1State extends State<SignupScreen1> {
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           IconButton(
                             onPressed: () {
                               context.pop();
                             },
-                            icon: Icon(Icons.arrow_back_ios_rounded, size: 30),
+                            style: ButtonStyle(
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            ),
+                            icon: Icon(Icons.arrow_back_ios_rounded, size: 25),
                           ),
-                          Text(
-                            'Tell us abt yourself,',
-                            textAlign: TextAlign.start,
-                            style: TextStyle(
-                              fontSize: 25,
-                              fontWeight: FontWeight.w700,
+                          Container(
+                            width: MediaQuery.of(context).size.width*0.8,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Tell us abt yourself,',
+                                  textAlign: TextAlign.start,
+                                  style: TextStyle(
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                                Text(
+                                  'Just the basics - your name, your birthday and were good to go.',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ],
@@ -106,10 +125,9 @@ class _SignupPage1State extends State<SignupScreen1> {
                                       children: [
                                         Text('Firstname'),
                                         TextFormField(
-                                          keyboardType: TextInputType.number,
+                                          keyboardType: TextInputType.name,
                                           controller: firstNameController,
                                           textInputAction: TextInputAction.next,
-                                          inputFormatters: [],
                                           style: TextStyle(
                                             fontSize: 13,
                                             fontWeight: FontWeight.w400,

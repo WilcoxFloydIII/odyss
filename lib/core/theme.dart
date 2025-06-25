@@ -84,6 +84,7 @@ class AppTheme {
     extensions: <ThemeExtension<dynamic>>[
       MyColors(primary: Color(0xFF000000), backgound: Color(0xFFFFFFFF))
     ]
+    
   );
 
   static ThemeData darkTheme = ThemeData(

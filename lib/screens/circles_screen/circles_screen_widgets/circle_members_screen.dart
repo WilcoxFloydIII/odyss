@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:odyss/core/colors.dart';
 import 'package:odyss/core/providers/circles_list.dart';
+import 'package:odyss/core/providers/ride_list_provider.dart';
 import 'package:odyss/core/providers/user_list_provider.dart';
 import 'package:odyss/data/models/circle_model.dart';
+import 'package:odyss/data/models/ride_model.dart';
 import 'package:odyss/data/models/user_model.dart';
 
 class CircleMembersScreen extends ConsumerStatefulWidget {
@@ -29,6 +32,8 @@ class _CircleMembersScreenState extends ConsumerState<CircleMembersScreen> {
     CircleModel circle = allCircles.firstWhere(
       (circle) => circle.id == widget.id,
     );
+
+    List<RideModel> allRides = ref.watch(ridesListProvider);
 
     return Scaffold(
       appBar: PreferredSize(
@@ -196,7 +201,515 @@ class _CircleMembersScreenState extends ConsumerState<CircleMembersScreen> {
                         ),
                       ),
                       trailing: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          List<RideModel> rides = allRides
+                              .where((ride) => ride.memberIds.contains(user))
+                              .toList();
+
+                          void showRidePopup(BuildContext context) {
+                            showModalBottomSheet(
+                              context: context,
+                              isScrollControlled: true,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(20),
+                                ),
+                              ),
+                              builder: (context) {
+                                return FractionallySizedBox(
+                                  heightFactor: 0.5, // Half the screen
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      SizedBox(height: 20),
+                                      Padding(
+                                        padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.05),
+                                        child: Text(
+                                          'Select Trip',
+                                          style: TextStyle(
+                                            fontSize: 17,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                      Container(
+                                        height: MediaQuery.of(context)
+                                                .size
+                                                .height *
+                                            0.4, // Adjust height as needed
+                                        child: SingleChildScrollView(
+                                          padding: EdgeInsets.all(16),
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              SizedBox(height: 12),
+                                              ...List.generate(rides.length, (i) {
+                                                RideModel ride = rides[i];
+                                                int remainingSeats = ride.seats - ride.memberIds.length;
+                                                bool dayCheck =
+                                                    ride.departureDate.day
+                                                        .toString()
+                                                        .length ==
+                                                    2;
+                                        
+                                                cardLimit() {
+                                                  if (ride.memberIds
+                                                          .length >=
+                                                      3) {
+                                                    return 3;
+                                                  } else {
+                                                    return ride.memberIds
+                                                        .length;
+                                                  }
+                                                }
+                                        
+                                                return Container(
+                                                  padding: EdgeInsets.fromLTRB(
+                                                    0,
+                                                    0,
+                                                    0,
+                                                    40,
+                                                  ),
+                                                  child: Container(
+                                                    width: MediaQuery.of(
+                                                      context,
+                                                    ).size.width,
+                                                    padding: EdgeInsets.all(
+                                                      MediaQuery.of(
+                                                            context,
+                                                          ).size.width *
+                                                          0.05,
+                                                    ),
+                                                    decoration: BoxDecoration(
+                                                      border: Border.all(
+                                                        width: 1,
+                                                        color: Colors.black26,
+                                                      ),
+                                                      borderRadius:
+                                                          BorderRadius.circular(25),
+                                                    ),
+                                                    child: Column(
+                                                      children: [
+                                                        Container(
+                                                          width: double.infinity,
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: [
+                                                              Container(
+                                                                width: 200,
+                                                                child: Row(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .start,
+                                                                  children: [
+                                                                    Container(
+                                                                      width:
+                                                                          ((17 *
+                                                                              (cardLimit() -
+                                                                                  1)) +
+                                                                          43),
+                                                                      height: 40,
+                                                                      child: Stack(
+                                                                        children: [
+                                                                          ...List.generate(
+                                                                            cardLimit(),
+                                                                            (
+                                                                              indexnew,
+                                                                            ) {
+                                                                              // final member = rides[index].members[indexnew];
+                                                                              return Positioned(
+                                                                                left:
+                                                                                    indexnew *
+                                                                                    17,
+                                                                                child: Container(
+                                                                                  width: 40,
+                                                                                  height: 40,
+                                                                                  decoration: BoxDecoration(
+                                                                                    border: Border.all(
+                                                                                      width: 2,
+                                                                                      color: Colors.black,
+                                                                                    ),
+                                                                                    color: Colors.grey.shade300,
+                                                                                    borderRadius: BorderRadius.circular(
+                                                                                      20,
+                                                                                    ),
+                                                                                  ),
+                                                                                ),
+                                                                              );
+                                                                            },
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                    Text(
+                                                                      'You and ${ride.memberIds.length - 1} others',
+                                                                      style: TextStyle(
+                                                                        fontSize:
+                                                                            12,
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .w500,
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                              TextButton(
+                                                                onPressed: () {},
+                                                                style: ButtonStyle(
+                                                                  padding: WidgetStatePropertyAll(
+                                                                    EdgeInsets.symmetric(
+                                                                      vertical: 10,
+                                                                      horizontal:
+                                                                          20,
+                                                                    ),
+                                                                  ),
+                                                                  backgroundColor: WidgetStateColor.resolveWith((
+                                                                    states,
+                                                                  ) {
+                                                                    if (states.contains(
+                                                                      WidgetState
+                                                                          .pressed,
+                                                                    )) {
+                                                                      return myColors
+                                                                          .primary;
+                                                                    }
+                                                                    return myColors
+                                                                        .backgound;
+                                                                  }),
+                                                                  foregroundColor: WidgetStateColor.resolveWith((
+                                                                    states,
+                                                                  ) {
+                                                                    if (states.contains(
+                                                                      WidgetState
+                                                                          .pressed,
+                                                                    )) {
+                                                                      return myColors
+                                                                          .backgound;
+                                                                    }
+                                                                    return myColors
+                                                                        .primary;
+                                                                  }),
+                                                                  side: WidgetStatePropertyAll(
+                                                                    BorderSide(
+                                                                      width: 2,
+                                                                      color: myColors
+                                                                          .primary,
+                                                                    ),
+                                                                  ),
+                                                                  elevation:
+                                                                      WidgetStatePropertyAll(
+                                                                        0,
+                                                                      ),
+                                                                ),
+                                                                child: Text(
+                                                                  'Select',
+                                                                  style: TextStyle(
+                                                                    fontSize: 12,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        SizedBox(height: 20),
+                                                        Container(
+                                                          width: double.infinity,
+                                                          height: 70,
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Expanded(
+                                                                flex: 1,
+                                                                child: Column(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .end,
+                                                                  children: [
+                                                                    Icon(
+                                                                      Icons.circle,
+                                                                      size: 13,
+                                                                    ),
+                                                                    Text(
+                                                                      '|',
+                                                                      style: TextStyle(
+                                                                        fontSize: 6,
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .w900,
+                                                                      ),
+                                                                    ),
+                                                                    Text(
+                                                                      '|',
+                                                                      style: TextStyle(
+                                                                        fontSize: 6,
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .w900,
+                                                                      ),
+                                                                    ),
+                                                                    Text(
+                                                                      '|',
+                                                                      style: TextStyle(
+                                                                        fontSize: 6,
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .w900,
+                                                                      ),
+                                                                    ),
+                                                                    Icon(
+                                                                      Icons
+                                                                          .location_on_rounded,
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                              Expanded(
+                                                                flex: 15,
+                                                                child: Column(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .start,
+                                                                  children: [
+                                                                    Row(
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .spaceBetween,
+                                                                      children: [
+                                                                        Text(
+                                                                          ride.departureLoc,
+                                                                          style: TextStyle(
+                                                                            fontWeight:
+                                                                                FontWeight.w600,
+                                                                            fontSize:
+                                                                                12,
+                                                                          ),
+                                                                        ),
+                                                                        Text(
+                                                                          '${dayCheck ? ride.departureDate.day : '0${ride.departureDate.day}'} ${DateFormat.MMM().format(ride.departureDate)}, ${DateFormat.Hm().format(ride.departureDate)} ${DateFormat('a').format(ride.departureDate)}',
+                                                                          style: TextStyle(
+                                                                            fontWeight:
+                                                                                FontWeight.w400,
+                                                                            fontSize:
+                                                                                12,
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                    SizedBox(
+                                                                      height: 27,
+                                                                    ),
+                                                                    Row(
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .spaceBetween,
+                                                                      children: [
+                                                                        Text(
+                                                                          ride.arrivalLoc,
+                                                                          style: TextStyle(
+                                                                            fontWeight:
+                                                                                FontWeight.w600,
+                                                                            fontSize:
+                                                                                12,
+                                                                          ),
+                                                                        ),
+                                                                        Text(
+                                                                          '${dayCheck ? ride.arrivalDate.day : '0${ride.arrivalDate.day}'} ${DateFormat.MMM().format(ride.arrivalDate)}, ${DateFormat.Hm().format(ride.arrivalDate)} ${DateFormat('a').format(ride.arrivalDate)}',
+                                                                          style: TextStyle(
+                                                                            fontWeight:
+                                                                                FontWeight.w400,
+                                                                            fontSize:
+                                                                                12,
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        SizedBox(height: 20),
+                                                        Container(
+                                                          width: double.infinity,
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: [
+                                                              Container(
+                                                                width: 200,
+                                                                child: Row(
+                                                                  children: [
+                                                                    Container(
+                                                                      height: 25,
+                                                                      width: 25,
+                                                                      decoration: BoxDecoration(
+                                                                        color: Colors
+                                                                            .grey
+                                                                            .shade300,
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(
+                                                                              15,
+                                                                            ),
+                                                                      ),
+                                                                    ),
+                                                                    SizedBox(
+                                                                      width: 3,
+                                                                    ),
+                                                                    Text(
+                                                                      ride.company,
+                                                                      style: TextStyle(
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .w600,
+                                                                        fontSize:
+                                                                            12,
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                              Text.rich(
+                                                                TextSpan(
+                                                                  text: 'Vehicle: ',
+                                                                  style: TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w600,
+                                                                    fontSize: 12,
+                                                                  ),
+                                                                  children: [
+                                                                    TextSpan(
+                                                                      text: ride
+                                                                          .vehicle,
+                                                                      style: TextStyle(
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .w400,
+                                                                        fontSize:
+                                                                            12,
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        SizedBox(height: 20),
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          children: [
+                                                            Expanded(
+                                                              flex: 5,
+                                                              child: Column(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  Text(
+                                                                    '₦${ride.price.toString()}',
+                                                                    style: TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w600,
+                                                                      fontSize: 12,
+                                                                    ),
+                                                                  ),
+                                                                  Text(
+                                                                    'per seat',
+                                                                    style: TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w400,
+                                                                      fontSize: 10,
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                            Expanded(
+                                                              flex: 5,
+                                                              child: Column(
+                                                                children: [
+                                                                  Text(
+                                                                    remainingSeats.toString(),
+                                                                    style: TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w600,
+                                                                      fontSize: 12,
+                                                                    ),
+                                                                  ),
+                                                                  Text(
+                                                                    'available',
+                                                                    style: TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w400,
+                                                                      fontSize: 10,
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                            Expanded(
+                                                              flex: 5,
+                                                              child: Column(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .end,
+                                                                children: [
+                                                                  Text(
+                                                                    '${ride.days.toString()} days',
+                                                                    style: TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w600,
+                                                                      fontSize: 12,
+                                                                    ),
+                                                                  ),
+                                                                  Text(
+                                                                    'left to trip',
+                                                                    style: TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w400,
+                                                                      fontSize: 10,
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                );
+                                              }),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            );
+                          }
+
+                          showRidePopup(context);
+                        },
                         style: ButtonStyle(
                           padding: WidgetStatePropertyAll(
                             EdgeInsets.symmetric(vertical: 10, horizontal: 20),

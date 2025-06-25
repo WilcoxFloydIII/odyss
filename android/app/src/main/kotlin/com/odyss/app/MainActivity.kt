@@ -1,4 +1,4 @@
-package com.flox3.odyss
+package com.odyss.app
 
 import io.flutter.embedding.android.FlutterActivity
 

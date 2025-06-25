@@ -25,6 +25,8 @@ class _PricingScreenState extends ConsumerState<PricingScreen> {
     final partnerList = ref.watch(partnerListProvider);
     //final ridesList = ref.watch(ridesListProvider);
 
+    final List<RideModel> ridesList = ref.watch(ridesListProvider);
+
     PartnerModel currPartner = partnerList.firstWhere(
       (currPartner) => currPartner.name == newRide['partner'],
     );
@@ -266,7 +268,8 @@ class _PricingScreenState extends ConsumerState<PricingScreen> {
                                       departureTOD: newRide['time'],
                                       departureDate: DateTime(2),
                                       arrivalDate: DateTime(3),
-                                      id: '',
+                                      id: "rrrr${ridesList.length + 1}", creator: UID,
+                                      fill: '',
                                     );
                                     ref
                                         .read(ridesListProvider.notifier)

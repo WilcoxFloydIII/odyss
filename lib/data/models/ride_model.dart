@@ -11,6 +11,8 @@ class RideModel {
   final DateTime arrivalDate;
   final String departureTOD;
   final String vehicle;
+  final String creator;
+  final String fill;
 
   RideModel({
     required this.id,
@@ -25,6 +27,8 @@ class RideModel {
     required this.departureTOD,
     required this.departureDate,
     required this.arrivalDate,
+    required this.creator,
+    required this.fill,
   });
 
   RideModel copyWith({
@@ -40,6 +44,8 @@ class RideModel {
     DateTime? arrivalDate,
     String? departureTOD,
     String? vehicle,
+    String? creator,
+    String? fill,
   }) {
     return RideModel(
       id: id ?? this.id,
@@ -54,6 +60,8 @@ class RideModel {
       departureTOD: departureTOD ?? this.departureTOD,
       departureDate: departureDate ?? this.departureDate,
       arrivalDate: arrivalDate ?? this.arrivalDate,
+      creator: creator?? this.creator,
+      fill: fill ?? this.fill,
     );
   }
 }

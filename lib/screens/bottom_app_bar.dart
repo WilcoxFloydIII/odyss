@@ -25,7 +25,7 @@ class _BottomAppBarWidgetState extends State<BottomAppBarWidget> {
   Widget build(BuildContext context) {
     final myColors = Theme.of(context).extension<MyColors>()!;
     return BottomAppBar(
-      color: myColors.primary,
+      color: Colors.black,
       padding: EdgeInsets.all(0),
       notchMargin: 0,
       elevation: 0,
@@ -111,8 +111,8 @@ class _FloatingButtonWidgetState extends State<FloatingButtonWidget> {
   Widget build(BuildContext context) {
     final myColors = Theme.of(context).extension<MyColors>()!;
     return SizedBox(
-      width: MediaQuery.of(context).size.width * 0.17,
-      height: MediaQuery.of(context).size.width * 0.17,
+      width: 70,
+      height: 70,
       child: FloatingActionButton(
         onPressed: () {
           context.push('/curate');

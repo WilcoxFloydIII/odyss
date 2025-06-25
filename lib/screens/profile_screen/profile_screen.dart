@@ -1,13 +1,18 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:odyss/core/colors.dart';
 import 'package:odyss/core/constraints.dart';
+import 'package:odyss/core/providers/intro_video_provider.dart';
+import 'package:odyss/core/providers/profile_picture_provider.dart';
 import 'package:odyss/core/providers/ride_list_provider.dart';
 import 'package:odyss/core/providers/user_list_provider.dart';
 import 'package:odyss/data/models/ride_model.dart';
 import 'package:odyss/screens/bottom_app_bar.dart';
+import 'package:video_player/video_player.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});
@@ -17,9 +22,35 @@ class ProfileScreen extends ConsumerStatefulWidget {
 }
 
 class _ProfileScreenState extends ConsumerState<ProfileScreen> {
+  VideoPlayerController? _controller;
+  File? _lastFile;
+
+  @override
+  void dispose() {
+    _controller?.dispose();
+    super.dispose();
+  }
+
+  void _initializeVideo(File file) async {
+    _controller?.dispose();
+    _controller = VideoPlayerController.file(file);
+    await _controller!.initialize();
+    _controller!.play();
+    setState(() {});
+  }
+
   bool switchPic = false;
   @override
   Widget build(BuildContext context) {
+    ref.listen<File?>(videoFileProvider, (previous, next) {
+      if (next != null && next != _lastFile) {
+        _lastFile = next;
+        _initializeVideo(next);
+      }
+    });
+    final profilePic = ref.watch(imageFileProvider);
+    final video = ref.watch(videoFileProvider);
+
     final myColors = Theme.of(context).extension<MyColors>()!;
 
     final users = ref.watch(userListProvider);
@@ -36,6 +67,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(75),
             color: Colors.blueGrey.shade100,
+            image: profilePic != null
+                ? DecorationImage(
+                    image: FileImage(profilePic),
+                    fit: BoxFit.cover,
+                  )
+                : null,
           ),
         );
       } else {
@@ -46,6 +83,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             borderRadius: BorderRadius.circular(30),
             color: Colors.blueGrey.shade100,
           ),
+          child:
+              video != null &&
+                  _controller != null &&
+                  _controller!.value.isInitialized
+              ? VideoPlayer(_controller!)
+              : const Center(child: Icon(Icons.videocam, size: 50)),
         );
       }
     }
@@ -406,7 +449,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                     SizedBox(height: 20),
                                     Container(
                                       width: double.infinity,
-                                      height: 65,
+                                      height: 70,
                                       child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
@@ -421,14 +464,21 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                                 Text(
                                                   '|',
                                                   style: TextStyle(
-                                                    fontSize: 7,
+                                                    fontSize: 6,
                                                     fontWeight: FontWeight.w900,
                                                   ),
                                                 ),
                                                 Text(
                                                   '|',
                                                   style: TextStyle(
-                                                    fontSize: 7,
+                                                    fontSize: 6,
+                                                    fontWeight: FontWeight.w900,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  '|',
+                                                  style: TextStyle(
+                                                    fontSize: 6,
                                                     fontWeight: FontWeight.w900,
                                                   ),
                                                 ),
@@ -465,7 +515,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                                     ),
                                                   ],
                                                 ),
-                                                SizedBox(height: 23),
+                                                SizedBox(height: 27),
                                                 Row(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment
@@ -795,7 +845,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                     SizedBox(height: 20),
                                     Container(
                                       width: double.infinity,
-                                      height: 65,
+                                      height: 70,
                                       child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
@@ -810,14 +860,21 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                                 Text(
                                                   '|',
                                                   style: TextStyle(
-                                                    fontSize: 7,
+                                                    fontSize: 6,
                                                     fontWeight: FontWeight.w900,
                                                   ),
                                                 ),
                                                 Text(
                                                   '|',
                                                   style: TextStyle(
-                                                    fontSize: 7,
+                                                    fontSize: 6,
+                                                    fontWeight: FontWeight.w900,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  '|',
+                                                  style: TextStyle(
+                                                    fontSize: 6,
                                                     fontWeight: FontWeight.w900,
                                                   ),
                                                 ),
@@ -854,7 +911,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                                     ),
                                                   ],
                                                 ),
-                                                SizedBox(height: 23),
+                                                SizedBox(height: 27),
                                                 Row(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment

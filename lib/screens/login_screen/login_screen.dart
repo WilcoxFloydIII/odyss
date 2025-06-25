@@ -1,5 +1,6 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:odyss/core/colors.dart';
@@ -131,24 +132,38 @@ class _SignupScreen2State extends ConsumerState<LoginScreen> {
                               children: [
                                 Text('Password'),
                                 TextFormField(
+                                  obscureText: true,
+                                  obscuringCharacter: '●',
+                                  inputFormatters: [
+                                    // Only allow letters, numbers, and common symbols
+                                    FilteringTextInputFormatter.allow(
+                                      RegExp(
+                                        r'[A-Za-z0-9!@#\$%^&*()_\-+=\[\]{}|;:,.<>?/~`]',
+                                      ),
+                                    ),
+                                    FilteringTextInputFormatter.deny(
+                                      RegExp(r'[ ]'),
+                                    ), // Disallow spaces
+                                  ],
+                                  enableSuggestions: false,
                                   keyboardType: TextInputType.visiblePassword,
                                   controller: passwordController,
                                   textInputAction: TextInputAction.next,
                                   style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w400,
+                                  ),
+                                  decoration: InputDecoration(
+                                  hintText: 'Input password',
+                                  hintStyle: TextStyle(
                                     fontSize: 13,
                                     fontWeight: FontWeight.w400,
                                   ),
-                                  decoration: InputDecoration(
-                                    hintText: 'Input password',
-                                    hintStyle: TextStyle(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                    border: InputBorder.none,
-                                    enabledBorder: InputBorder.none,
-                                    contentPadding: EdgeInsets.zero,
-                                    disabledBorder: InputBorder.none,
-                                    focusedBorder: InputBorder.none,
+                                  border: InputBorder.none,
+                                  enabledBorder: InputBorder.none,
+                                  contentPadding: EdgeInsets.zero,
+                                  disabledBorder: InputBorder.none,
+                                  focusedBorder: InputBorder.none,
                                   ),
                                 ),
                               ],

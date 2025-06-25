@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:odyss/core/colors.dart';
+import 'package:odyss/core/constraints.dart';
 
 class VibeButton extends StatefulWidget {
   final String text;
@@ -23,6 +24,18 @@ class _VibeButtonState extends State<VibeButton> {
     if (widget.onPressed != null) {
       widget.onPressed!();
     }
+
+    final vibes = newUser['vibes'] ?? [];
+
+    if (vibes.contains(widget.text)) {
+      vibes.remove(widget.text);
+    } else {
+      vibes.add(widget.text);
+    }
+
+    newUser['vibes'] = vibes; // ✅ Update the map after change
+
+    print(newUser['vibes']);
   }
 
   @override
@@ -34,7 +47,7 @@ class _VibeButtonState extends State<VibeButton> {
         side: BorderSide(color: myColors.primary, width: 2),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-        foregroundColor: _isSelected? myColors.backgound: myColors.primary,
+        foregroundColor: _isSelected ? myColors.backgound : myColors.primary,
         textStyle: TextStyle(fontSize: 15),
       ),
       onPressed: _toggleSelection,

@@ -68,7 +68,9 @@ class _CirclesScreenState extends ConsumerState<CirclesScreen> {
                                 ),
                               ),
                               ElevatedButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  context.push('/createCircle');
+                                },
                                 style: ButtonStyle(
                                   shape: WidgetStatePropertyAll(CircleBorder()),
                                   padding: WidgetStatePropertyAll(
@@ -106,7 +108,6 @@ class _CirclesScreenState extends ConsumerState<CirclesScreen> {
                     children: [
                       Container(
                         height:
-                            
                             (((125 + MediaQuery.of(context).size.width * 0.05) *
                                 memberCircles.length) +
                             50),
@@ -120,8 +121,10 @@ class _CirclesScreenState extends ConsumerState<CirclesScreen> {
                             SizedBox(height: 10),
                             Container(
                               height:
-                                  (125  +
-                                  MediaQuery.of(context).size.width * 0.05 ) * memberCircles.length,
+                                  (125 +
+                                      MediaQuery.of(context).size.width *
+                                          0.05) *
+                                  memberCircles.length,
                               child: ListView.builder(
                                 physics: NeverScrollableScrollPhysics(),
                                 itemCount: memberCircles.length,
@@ -165,7 +168,7 @@ class _CirclesScreenState extends ConsumerState<CirclesScreen> {
                                           ),
                                           child: Row(
                                             mainAxisAlignment:
-                                                MainAxisAlignment.end,
+                                                MainAxisAlignment.spaceBetween,
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.center,
                                             children: [
@@ -310,13 +313,15 @@ class _CirclesScreenState extends ConsumerState<CirclesScreen> {
                             Container(
                               height:
                                   (125 +
-                                      MediaQuery.of(context).size.width * 0.05) *
+                                      MediaQuery.of(context).size.width *
+                                          0.05) *
                                   filteredAllCircles.length,
                               child: ListView.builder(
                                 physics: NeverScrollableScrollPhysics(),
                                 itemCount: filteredAllCircles.length,
                                 itemBuilder: (context, index) {
-                                  CircleModel circle = filteredAllCircles[index];
+                                  CircleModel circle =
+                                      filteredAllCircles[index];
                                   DateTime start = circle.startDate;
                                   DateTime end = circle.endDate;
                                   return Padding(
@@ -340,7 +345,7 @@ class _CirclesScreenState extends ConsumerState<CirclesScreen> {
                                       ),
                                       child: Row(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.end,
+                                            MainAxisAlignment.spaceBetween,
                                         crossAxisAlignment:
                                             CrossAxisAlignment.center,
                                         children: [

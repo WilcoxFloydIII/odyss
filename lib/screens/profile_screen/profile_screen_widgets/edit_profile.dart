@@ -23,44 +23,64 @@ class _EditProfileState extends ConsumerState<EditProfile> {
   TextEditingController facebookController = TextEditingController();
 
   @override
-    void initState() {
+  void initState() {
+    final users = ref.read(userListProvider);
 
-      final users = ref.read(userListProvider);
+    var user = users.firstWhere((element) => element.id == UID);
 
-      var user = users.firstWhere((element) => element.id == UID);
-
-      super.initState();
-      nickNameController = TextEditingController(text: user.nickName);
-      firstNameController = TextEditingController(text: user.firstName);
-      lastNameController = TextEditingController(text: user.lastName);
-      bioController = TextEditingController(text: user.bio);
-      tiktokController = TextEditingController(text: user.tiktok);
-      insatgramController = TextEditingController(text: user.insta);
-      twitterController = TextEditingController(text: user.x);
-      facebookController = TextEditingController(text: user.fb);
-    }
-
-    @override
-    void dispose() {
-      nickNameController.dispose();
-      firstNameController.dispose();
-      lastNameController.dispose();
-      bioController.dispose();
-      tiktokController.dispose();
-      insatgramController.dispose();
-      twitterController.dispose();
-      facebookController.dispose();
-      super.dispose();
+    super.initState();
+    nickNameController = TextEditingController(text: user.nickName);
+    firstNameController = TextEditingController(text: user.firstName);
+    lastNameController = TextEditingController(text: user.lastName);
+    bioController = TextEditingController(text: user.bio);
+    tiktokController = TextEditingController(text: user.tiktok);
+    insatgramController = TextEditingController(text: user.insta);
+    twitterController = TextEditingController(text: user.x);
+    facebookController = TextEditingController(text: user.fb);
   }
 
   @override
-  Widget build(BuildContext context,) {
+  void dispose() {
+    nickNameController.dispose();
+    firstNameController.dispose();
+    lastNameController.dispose();
+    bioController.dispose();
+    tiktokController.dispose();
+    insatgramController.dispose();
+    twitterController.dispose();
+    facebookController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final myColors = Theme.of(context).extension<MyColors>()!;
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Material(
         child: Scaffold(
           backgroundColor: myColors.backgound,
+          appBar: AppBar(
+            automaticallyImplyLeading: false,
+            title: SafeArea(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      context.pop();
+                    },
+                    icon: Icon(Icons.arrow_back_ios_rounded, size: 25),
+                  ),
+
+                  Text(
+                    'Edit your profile',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                  ),
+                ],
+              ),
+            ),
+          ),
           body: SafeArea(
             child: Container(
               width: MediaQuery.of(context).size.width,
@@ -77,20 +97,6 @@ class _EditProfileState extends ConsumerState<EditProfile> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        IconButton(
-                          onPressed: () {
-                            context.pop();
-                          },
-                          icon: Icon(Icons.arrow_back_ios_rounded, size: 25),
-                        ),
-                        
-                        Text('Edit your profile', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),)
-                      ],
-                    ),
-                    SizedBox(height: 10,),
                     Row(
                       children: [
                         Expanded(

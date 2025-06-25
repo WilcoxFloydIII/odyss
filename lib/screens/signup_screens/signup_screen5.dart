@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:odyss/core/colors.dart';
+import 'package:odyss/core/constraints.dart';
 // import 'package:odyss/core/colors.dart';
 import 'package:odyss/screens/signup_screens/signup_screens_widgets/signup5_button.dart';
 
@@ -13,7 +15,7 @@ class SignupScreen5 extends StatefulWidget {
 class _SignupScreen2State extends State<SignupScreen5> {
   @override
   Widget build(BuildContext context) {
-    // final myColors = Theme.of(context).extension<MyColors>()!;
+    final myColors = Theme.of(context).extension<MyColors>()!;
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
@@ -29,26 +31,40 @@ class _SignupScreen2State extends State<SignupScreen5> {
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         IconButton(
                           onPressed: () {
                             context.pop();
                           },
-                          icon: Icon(Icons.arrow_back_ios_rounded, size: 30),
+                          style: ButtonStyle(
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
+                          icon: Icon(Icons.arrow_back_ios_rounded, size: 25),
                         ),
                         Container(
-                          width: MediaQuery.of(context).size.width*0.87,
-                          child: Text(
-                            overflow: TextOverflow.clip,
-                            "Almost done...\nWhat's your vibe?",
-                            textAlign: TextAlign.start,
-                            style: TextStyle(
-                              fontSize: 25,
-                              fontWeight: FontWeight.w700,
-                            ),
+                          width: MediaQuery.of(context).size.width * 0.8,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "What's your Travel Energy?",
+                                textAlign: TextAlign.start,
+                                style: TextStyle(
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              Text(
+                                "Pick your vibe. Let's match you with the right crew.",
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        
                       ],
                     ),
                     SizedBox(height: 50),
@@ -67,14 +83,16 @@ class _SignupScreen2State extends State<SignupScreen5> {
                               spacing: 10,
                               runSpacing: 10,
                               alignment: WrapAlignment.center,
-                              children: [VibeButton(text: 'sing-along'),
+                              children: [
+                                VibeButton(text: 'sing-along'),
                                 VibeButton(text: 'chatty'),
                                 VibeButton(text: 'quiet'),
                                 VibeButton(text: 'social media'),
                                 VibeButton(text: 'explore'),
                                 VibeButton(text: 'games'),
                                 VibeButton(text: 'movies'),
-                              ])
+                              ],
+                            ),
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
@@ -83,13 +101,33 @@ class _SignupScreen2State extends State<SignupScreen5> {
                                 width: 130,
                                 child: ElevatedButton(
                                   onPressed: () {
-                                    context.go('/rides');
+                                    final List vibes = newUser['vibes'];
+                                    if (vibes.isEmpty) {
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(
+                                          backgroundColor: myColors.backgound,
+                                          content: const Text(
+                                            'Please pick a vibe',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.red,
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    } else {
+                                      context.push('/signup6');
+                                    }
                                   },
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(
-                                        'Done',
+                                        'Next',
                                         style: TextStyle(fontSize: 15),
                                       ),
                                       SizedBox(width: 10),

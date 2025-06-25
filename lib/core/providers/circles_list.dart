@@ -6,7 +6,7 @@ class CircleListNotifier extends StateNotifier<List<CircleModel>> {
   CircleListNotifier()
     : super([
         CircleModel(
-          id: '1',
+          id: '0',
           name: 'GOUNI students travelling to Lagos after school',
           departure: 'Enugu',
           destination: 'Lagos',
@@ -16,7 +16,7 @@ class CircleListNotifier extends StateNotifier<List<CircleModel>> {
           description: 'This circle is for students in GOUNI travelling to Lagos after school closes',
         ),
         CircleModel(
-          id: '2',
+          id: '1',
           name: 'GOUNI students travelling to Abuja after school',
           description: 'This circle is for students in GOUNI travelling to Abuja after school closes',
           departure: 'Enugu',

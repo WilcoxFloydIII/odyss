@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:odyss/screens/trip_vibe.dart/trip_vibe_screen_widgets/trip_vibe_button.dart';
+import 'package:odyss/screens/curate_trip_screen/curate_trip_widgets/trip_vibe_button.dart';
 
 class TripVibeScreen extends StatefulWidget {
   const TripVibeScreen({super.key});

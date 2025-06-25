@@ -3,24 +3,28 @@ import 'package:go_router/go_router.dart';
 import 'package:odyss/screens/chat_screen/chat_screen.dart';
 import 'package:odyss/screens/circles_screen/circles_screen.dart';
 import 'package:odyss/screens/circles_screen/circles_screen_widgets/circle_members_screen.dart';
+import 'package:odyss/screens/circles_screen/circles_screen_widgets/create_circle_screen.dart';
 import 'package:odyss/screens/curate_trip_screen/curate_trip_screen.dart';
+import 'package:odyss/screens/curate_trip_screen/trip_details_screen.dart';
 import 'package:odyss/screens/login_screen/login_screen.dart';
-import 'package:odyss/screens/pricing_screen/pricing_screen.dart';
+import 'package:odyss/screens/curate_trip_screen/pricing_screen.dart';
 import 'package:odyss/screens/profile_screen/general_profile_screen.dart';
 import 'package:odyss/screens/profile_screen/profile_screen.dart';
 import 'package:odyss/screens/profile_screen/profile_screen_widgets/edit_profile.dart';
-import 'package:odyss/screens/ride_details_screen/ride_details_screen.dart';
+import 'package:odyss/screens/curate_trip_screen/partner_details_screen.dart';
 import 'package:odyss/screens/rides_screen/rides_screen.dart';
 import 'package:odyss/screens/signup_screens/signup_screen1.dart';
 import 'package:odyss/screens/signup_screens/signup_screen2.dart';
 import 'package:odyss/screens/signup_screens/signup_screen3.dart';
 import 'package:odyss/screens/signup_screens/signup_screen4.dart';
 import 'package:odyss/screens/signup_screens/signup_screen5.dart';
+import 'package:odyss/screens/signup_screens/signup_screen6.dart';
 import 'package:odyss/screens/splash_screen.dart';
 import 'package:odyss/screens/start_screen/start_screen.dart';
-import 'package:odyss/screens/trip_details_screen/trip_details_screen.dart';
-import 'package:odyss/screens/trip_vibe.dart/trip_vibe_screen.dart';
+import 'package:odyss/screens/curate_trip_screen/trip_vibe_screen.dart';
 import 'package:odyss/screens/welcome_screen/welcome_screen.dart';
+
+import '../screens/rides_screen/rides_screen_widgets/selected_ride_dialog.dart';
 
 final GoRouter router = GoRouter(
   initialLocation: '/',
@@ -201,6 +205,28 @@ final GoRouter router = GoRouter(
       ),
     ),
     GoRoute(
+      path: '/signup6',
+      pageBuilder: (context, state) => CustomTransitionPage(
+        key: state.pageKey,
+        child: SignupScreen6(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          const begin = Offset(1.0, 0.0); // Slide in from right
+          const end = Offset.zero;
+          const curve = Curves.ease;
+
+          final tween = Tween(
+            begin: begin,
+            end: end,
+          ).chain(CurveTween(curve: curve));
+
+          return SlideTransition(
+            position: animation.drive(tween),
+            child: child,
+          );
+        },
+      ),
+    ),
+    GoRoute(
       path: '/profile',
       pageBuilder: (context, state) => NoTransitionPage(child: ProfileScreen()),
     ),
@@ -216,7 +242,32 @@ final GoRouter router = GoRouter(
       path: '/rides',
       pageBuilder: (context, state) => NoTransitionPage(child: RidesScreen()),
     ),
-    GoRoute(path: '/curate',
+    GoRoute(
+      path: '/ride/:id',
+      pageBuilder: (context, state) {
+        final id = state.pathParameters['id']!;
+        return CustomTransitionPage(
+          key: state.pageKey,
+          child: SelectedRideDialog(rideId: id),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            const begin = Offset(1.0, 0.0); // Slide in from right
+            const end = Offset.zero;
+            const curve = Curves.ease;
+
+            final tween = Tween(
+              begin: begin,
+              end: end,
+            ).chain(CurveTween(curve: curve));
+            return SlideTransition(
+              position: tween.animate(animation),
+              child: child,
+            );
+          },
+        );
+      },
+    ),
+    GoRoute(
+      path: '/curate',
       pageBuilder: (context, state) => CustomTransitionPage(
         key: state.pageKey,
         child: CurateTripScreen(),
@@ -252,10 +303,10 @@ final GoRouter router = GoRouter(
       ),
     ),
     GoRoute(
-      path: '/rideDetails',
+      path: '/partnerDetails',
       pageBuilder: (context, state) => CustomTransitionPage(
         key: state.pageKey,
-        child: RideDetailsScreen(),
+        child: PartnerDetailsScreen(),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           const begin = Offset(1.0, 0.0); // Slide in from right
           const end = Offset.zero;
@@ -358,7 +409,6 @@ final GoRouter router = GoRouter(
           key: state.pageKey,
           child: CircleMembersScreen(id: id),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
-
             const begin = Offset(1.0, 0.0); // Slide in from right
             const end = Offset.zero;
             const curve = Curves.ease;
@@ -374,6 +424,28 @@ final GoRouter router = GoRouter(
           },
         );
       },
+    ),
+    GoRoute(
+      path: '/createCircle',
+      pageBuilder: (context, state) => CustomTransitionPage(
+        key: state.pageKey,
+        child: CreateCircleScreen(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          const begin = Offset(1.0, 0.0); // Slide in from right
+          const end = Offset.zero;
+          const curve = Curves.ease;
+
+          final tween = Tween(
+            begin: begin,
+            end: end,
+          ).chain(CurveTween(curve: curve));
+
+          return SlideTransition(
+            position: animation.drive(tween),
+            child: child,
+          );
+        },
+      ),
     ),
   ],
 );

@@ -1,13 +1,14 @@
 bool signedIn = true;
 
+bool videoSet = false;
+
 initLocationFunc() {
   if (signedIn == false) {
-    return '/satrt';
+    return '/start';
   } else {
     return '/rides';
   }
 }
-
 
 Map<String, dynamic> newRide = {
   'depLoc': '',
@@ -28,10 +29,11 @@ Map<String, dynamic> newUser = {
   'lastName': '',
   'nickname': '',
   'email': '',
+  'bio': '',
   'phone': '',
   'password': '',
   'picture': '',
   'video': '',
   'DOB': '',
-  '': '',
+  'vibes' : [],
 };

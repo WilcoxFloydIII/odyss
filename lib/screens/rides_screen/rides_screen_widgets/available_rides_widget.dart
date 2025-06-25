@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:odyss/core/colors.dart';
 import 'package:odyss/core/providers/ride_list_provider.dart';
 import 'package:odyss/core/providers/user_list_provider.dart';
 import 'package:odyss/data/models/user_model.dart';
-import 'package:odyss/screens/rides_screen/rides_screen_widgets/selected_ride_dialog.dart';
 
 class AvailableRidesWidget extends ConsumerStatefulWidget {
   const AvailableRidesWidget({super.key});
@@ -33,10 +33,10 @@ class _AvailableRidesWidgetState extends ConsumerState<AvailableRidesWidget> {
             .toList();
 
         cardLimit() {
-          if (ride.memberIds.length >= 3) {
+          if (members.length >= 3) {
             return 3;
           } else {
-            return ride.memberIds.length;
+            return members.length;
           }
         }
 
@@ -95,7 +95,7 @@ class _AvailableRidesWidgetState extends ConsumerState<AvailableRidesWidget> {
                             ),
                           ),
                           Text(
-                            '${members[0].nickName} and ${ride.memberIds.length - 1} others',
+                            '${members[0].nickName} and ${members.length - 1} others',
                             style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
@@ -106,37 +106,7 @@ class _AvailableRidesWidgetState extends ConsumerState<AvailableRidesWidget> {
                     ),
                     TextButton(
                       onPressed: () {
-                        print(members);
-                        Navigator.push(
-                          context, PageRouteBuilder(pageBuilder: (context, animation, secondaryAnimation) => SelectedRideDialog(
-                                  arrLoc: ride.arrivalLoc,
-                                  company: ride.company,
-                                  days: ride.days,
-                                  depLoc: ride.departureLoc,
-                                  finalDate: ride.arrivalDate,
-                                  initDate: ride.departureDate,
-                                  members: members,
-                                  seats: ride.seats,
-                                  vehicle: ride.vehicle,
-                                  price: ride.price,
-                                ), transitionsBuilder:
-                                (
-                                  context,
-                                  animation,
-                                  secondaryAnimation,
-                                  child,
-                                ) {
-                                  final offsetAnimation = Tween<Offset>(
-                                    begin: const Offset(0, 1), // From bottom
-                                    end: Offset.zero,
-                                  ).animate(animation);
-                                  return SlideTransition(
-                                    position: offsetAnimation,
-                                    child: child,
-                                  );
-                                },
-                          )
-                        );
+                        context.push('/ride/${ride.id}');
                       },
                       style: ButtonStyle(
                         padding: WidgetStatePropertyAll(
@@ -169,9 +139,9 @@ class _AvailableRidesWidgetState extends ConsumerState<AvailableRidesWidget> {
               SizedBox(height: 20),
               Container(
                 width: double.infinity,
-                height: 65,
+                height: 70,
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Expanded(
                       flex: 1,
@@ -182,14 +152,21 @@ class _AvailableRidesWidgetState extends ConsumerState<AvailableRidesWidget> {
                           Text(
                             '|',
                             style: TextStyle(
-                              fontSize: 7,
+                              fontSize: 6,
                               fontWeight: FontWeight.w900,
                             ),
                           ),
                           Text(
                             '|',
                             style: TextStyle(
-                              fontSize: 7,
+                              fontSize: 6,
+                              fontWeight: FontWeight.w900,
+                            ),
+                          ),
+                          Text(
+                            '|',
+                            style: TextStyle(
+                              fontSize: 6,
                               fontWeight: FontWeight.w900,
                             ),
                           ),
@@ -221,7 +198,7 @@ class _AvailableRidesWidgetState extends ConsumerState<AvailableRidesWidget> {
                               ),
                             ],
                           ),
-                          SizedBox(height: 23),
+                          SizedBox(height: 27),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -328,7 +305,7 @@ class _AvailableRidesWidgetState extends ConsumerState<AvailableRidesWidget> {
                     child: Column(
                       children: [
                         Text(
-                          '${(ride.seats - ride.memberIds.length).toString()} seats',
+                          '${(ride.seats - members.length).toString()} seats',
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: 12,

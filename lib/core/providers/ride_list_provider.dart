@@ -16,7 +16,7 @@ class RideListNotifier extends StateNotifier<List<RideModel>> {
           departureDate: DateTime(2025, 5, 8, 9, 0),
           vehicle: 'Sienna',
           departureTOD: 'Morning',
-          id: '',
+          id: 'rrrr1', creator: 'xxxx2 ', fill: 'split',
         ),
         RideModel(
           memberIds: ['xxxx4', 'xxxx5', 'xxxx6', 'xxxx7'],
@@ -30,7 +30,7 @@ class RideListNotifier extends StateNotifier<List<RideModel>> {
           departureDate: DateTime(2025, 9, 7, 7, 0),
           vehicle: 'Bus',
           departureTOD: 'Morning',
-          id: '',
+          id: 'rrrr2', creator: 'xxxx3', fill: 'offline',
         ),
       ]);
 
