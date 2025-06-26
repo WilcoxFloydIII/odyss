@@ -61,7 +61,7 @@ class _SignupPage1State extends State<SignupScreen1> {
                             icon: Icon(Icons.arrow_back_ios_rounded, size: 25),
                           ),
                           Container(
-                            width: MediaQuery.of(context).size.width*0.8,
+                            width: MediaQuery.of(context).size.width * 0.8,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -316,7 +316,8 @@ class _SignupPage1State extends State<SignupScreen1> {
                                             newUser['lastName'] =
                                                 lastNameController.text;
                                             context.push('/signup2');
-                                            newUser['DOB'] = dateController.text;
+                                            newUser['date_of_birth'] =
+                                                dateController.text;
                                           }
                                         }
                                       }

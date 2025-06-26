@@ -1,11 +1,15 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl_phone_field/intl_phone_field.dart';
+import 'package:http/http.dart' as http;
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:intl_phone_field/countries.dart';
 import 'package:odyss/core/colors.dart';
 import 'package:odyss/core/constraints.dart';
+import 'package:odyss/screens/error_dialog_widget.dart';
+import 'package:odyss/screens/loading_animation_widget.dart';
 
 class SignupScreen2 extends StatefulWidget {
   const SignupScreen2({super.key});
@@ -31,6 +35,48 @@ class _SignupScreen2State extends State<SignupScreen2> {
     nameTranslations: {},
     maxLength: 20,
   );
+
+  Future<bool> _sendOtpRequest(BuildContext context) async {
+    showDialog(
+      context: context,
+      barrierColor: const Color(0x77F5F5F5),
+      barrierDismissible: false,
+      builder: (_) => LoadingAnimationWidget(),
+    );
+
+    try {
+      final response = await http.post(
+        Uri.parse(requestOTP),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'email': newUser['email']}),
+      );
+
+      Navigator.of(context).pop(); // Dismiss loading
+
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      Navigator.of(context).pop(); // Dismiss loading
+      return false;
+    }
+  }
+
+  void _handleValidate(BuildContext context) async {
+    final success = await _sendOtpRequest(context);
+
+    if (success) {
+      context.push('/emailConfirmation');
+    } else {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (_) => ErrorDialogWidget(error: 'Error'),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -115,7 +161,7 @@ class _SignupScreen2State extends State<SignupScreen2> {
                               children: [
                                 Text('Email'),
                                 TextFormField(
-                                  keyboardType: TextInputType.name,
+                                  keyboardType: TextInputType.emailAddress,
                                   controller: emailController,
                                   textInputAction: TextInputAction.next,
                                   style: TextStyle(
@@ -273,7 +319,7 @@ class _SignupScreen2State extends State<SignupScreen2> {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               Container(
-                                width: 130,
+                                width: 200,
                                 child: ElevatedButton(
                                   onPressed: () {
                                     if (emailController.text.isEmpty ||
@@ -343,15 +389,14 @@ class _SignupScreen2State extends State<SignupScreen2> {
                                       newUser['password'] =
                                           passwordController.text;
                                       print(newUser['phone']);
-                                      context.push('/signup3');
+                                      _handleValidate(context);
                                     }
-                                    
                                   },
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(
-                                        'Next',
+                                        'Validate',
                                         style: TextStyle(fontSize: 15),
                                       ),
                                       SizedBox(width: 10),

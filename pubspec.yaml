@@ -50,8 +50,6 @@ dependencies:
   path_provider: ^2.0.0
   permission_handler: ^11.0.0
   video_player: ^2.10.0
-  firebase_core: ^3.0.0
-  firebase_dynamic_links: ^6.0.8
 
 dev_dependencies:
   flutter_test:
@@ -104,6 +102,7 @@ flutter:
     - assets/images/tiktok_logo.png
     - assets/images/x_logo.png
     - assets/images/pen.png
+    - assets/icons/odyss_logo_loading.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

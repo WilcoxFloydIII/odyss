@@ -5,13 +5,16 @@ import 'package:go_router/go_router.dart';
 import 'package:odyss/core/colors.dart';
 import 'package:odyss/core/constraints.dart';
 import 'package:odyss/core/providers/company_list_provider.dart';
+import 'package:odyss/core/providers/route_list_provider.dart';
 import 'package:odyss/data/models/company_model.dart';
+import 'package:odyss/data/models/route_model.dart';
 
 class PartnerDetailsScreen extends ConsumerStatefulWidget {
   const PartnerDetailsScreen({super.key});
 
   @override
-  ConsumerState<PartnerDetailsScreen> createState() => _PartnerDetailsScreenState();
+  ConsumerState<PartnerDetailsScreen> createState() =>
+      _PartnerDetailsScreenState();
 }
 
 class _PartnerDetailsScreenState extends ConsumerState<PartnerDetailsScreen> {
@@ -26,19 +29,37 @@ class _PartnerDetailsScreenState extends ConsumerState<PartnerDetailsScreen> {
 
     final partnerList = ref.watch(partnerListProvider);
 
-    List<PartnerModel> partners = partnerList
+    final routesList = ref.watch(routesListProvider);
+
+    List<RouteModel> routes = routesList
         .where(
-          (partners) =>
-              partners.locations.contains(newRide['depLoc']) &&
-              partners.locations.contains(newRide['destLoc']),
+          (route) =>
+              route.departureLocation == newRide['depLoc'] &&
+              route.arrivalLocation == newRide['destLoc'],
         )
         .toList();
 
-    List<VehicleModel> vehiclePicker(String company) {
-      // this is for getting the vehicles for the specific company that has been chosen
-      final partner = partners.firstWhere((partner) => partner.name == company);
-      return partner.vehicles;
-    }
+    List<String> companyIds = List.generate(routes.length, (i) {
+      return routes[i].companyId;
+    });
+
+    List<PartnerModel> partners = partnerList
+        .where((partner) => companyIds.contains(partner.id))
+        .toList();
+
+    // List<PartnerModel> partners = partnerList.where((partner) => ,)
+    // .where(
+    //   (partners) =>
+    //       // partners.locations.contains(newRide['depLoc']) &&
+    //       // partners.locations.contains(newRide['destLoc']),
+    // )
+    // .toList();
+
+    // List<VehicleModel> vehiclePicker(String company) {
+    //   // this is for getting the vehicles for the specific company that has been chosen
+    //   final partner = partners.firstWhere((partner) => partner.name == company);
+    //   return partner.vehicles;
+    // }
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
@@ -300,6 +321,28 @@ class _PartnerDetailsScreenState extends ConsumerState<PartnerDetailsScreen> {
                                         ),
                                       );
                                     } else {
+                                      final PartnerModel selectedPartner =
+                                          partners.firstWhere(
+                                            (partnerInstance) =>
+                                                partnerInstance.name ==
+                                                partnerController.text,
+                                          );
+                                      final id = selectedPartner.id;
+
+                                      final RouteModel selectedRoute = routes
+                                          .firstWhere(
+                                            (routeInstance) =>
+                                                routeInstance.companyId == id,
+                                          );
+
+                                      final List<VehicleModel> vehicles =
+                                          List.generate(
+                                            selectedRoute.vehicles.length,
+                                            (i) {
+                                              return selectedRoute.vehicles[i];
+                                            },
+                                          );
+
                                       return setState(() {
                                         final RenderBox button =
                                             _vehicleKey.currentContext!
@@ -335,15 +378,11 @@ class _PartnerDetailsScreenState extends ConsumerState<PartnerDetailsScreen> {
                                             position.dy,
                                           ),
                                           items: List.generate(
-                                            vehiclePicker(
-                                              partnerController.text,
-                                            ).length,
+                                            vehicles.length,
                                             (index) {
                                               return PopupMenuItem(
                                                 child: Text(
-                                                  vehiclePicker(
-                                                    partnerController.text,
-                                                  )[index].type,
+                                                  vehicles[index].type,
                                                   style: TextStyle(
                                                     fontWeight: FontWeight.w500,
                                                     fontSize: 15,
@@ -352,13 +391,9 @@ class _PartnerDetailsScreenState extends ConsumerState<PartnerDetailsScreen> {
                                                 onTap: () {
                                                   setState(() {
                                                     vehicleController
-                                                        .text = vehiclePicker(
-                                                      partnerController.text,
-                                                    )[index].type;
+                                                        .text = vehicles[index].type;
                                                     numberController
-                                                        .text = vehiclePicker(
-                                                      partnerController.text,
-                                                    )[index].seats;
+                                                        .text = vehicles[index].seats;
                                                   });
                                                 },
                                               );

@@ -141,7 +141,7 @@ class _SignupScreen4State extends ConsumerState<SignupScreen4> {
                               child: ElevatedButton(
                                 onPressed: () {
                                   if (video != null && video.existsSync()) {
-                                    newUser['video'] = video.path;
+                                    newUser['intro_video'] = video.path;
                                     context.push('/signup5');
                                   } else {
                                     ScaffoldMessenger.of(context).showSnackBar(

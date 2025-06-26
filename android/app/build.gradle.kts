@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "android_app"
+    namespace = "com.odyss.app"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = "27.0.12077973"
 

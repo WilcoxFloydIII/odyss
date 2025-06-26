@@ -5,8 +5,10 @@ import 'package:go_router/go_router.dart';
 import 'package:odyss/core/constraints.dart';
 import 'package:odyss/core/providers/company_list_provider.dart';
 import 'package:odyss/core/providers/ride_list_provider.dart';
+import 'package:odyss/core/providers/route_list_provider.dart';
 import 'package:odyss/data/models/company_model.dart';
 import 'package:odyss/data/models/ride_model.dart';
+import 'package:odyss/data/models/route_model.dart';
 
 class PricingScreen extends ConsumerStatefulWidget {
   const PricingScreen({super.key});
@@ -27,17 +29,27 @@ class _PricingScreenState extends ConsumerState<PricingScreen> {
 
     final List<RideModel> ridesList = ref.watch(ridesListProvider);
 
+    final List<RouteModel> routesList = ref.watch(routesListProvider);
+
     PartnerModel currPartner = partnerList.firstWhere(
       (currPartner) => currPartner.name == newRide['partner'],
     );
 
-    VehicleModel currVehicle = currPartner.vehicles.firstWhere(
-      (currVehicle) => currVehicle.type == newRide['vehicle'],
+    List<RouteModel> routes = routesList
+        .where((route) => route.companyId == currPartner.id)
+        .toList();
+
+    RouteModel currRoute = routes.firstWhere(
+      (route) =>
+          route.arrivalLocation == newRide['destLoc'] &&
+          route.departureLocation == newRide['depLoc'],
     );
 
-    String price = currVehicle.price;
+    VehicleModel currVehicle = currRoute.vehicles.firstWhere(
+      (vehicle) => vehicle.type == newRide['vehicle'],
+    );
 
-    priceController.text = '₦$price';
+    priceController.text = currVehicle.price;
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
@@ -255,7 +267,7 @@ class _PricingScreenState extends ConsumerState<PricingScreen> {
                                 child: ElevatedButton(
                                   onPressed: () {
                                     newRide['members'].add(UID);
-                                    newRide['price'] = price;
+                                    newRide['price'] = priceController.text; //price;
                                     var newRideModel = RideModel(
                                       vehicle: newRide['vehicle'],
                                       memberIds: List.from(newRide['members']),
@@ -268,7 +280,8 @@ class _PricingScreenState extends ConsumerState<PricingScreen> {
                                       departureTOD: newRide['time'],
                                       departureDate: DateTime(2),
                                       arrivalDate: DateTime(3),
-                                      id: "rrrr${ridesList.length + 1}", creator: UID,
+                                      id: "rrrr${ridesList.length + 1}",
+                                      creator: UID,
                                       fill: '',
                                     );
                                     ref

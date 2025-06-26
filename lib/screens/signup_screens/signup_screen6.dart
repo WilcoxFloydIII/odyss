@@ -1,7 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:http/http.dart' as http;
+import 'package:odyss/core/constraints.dart';
+import 'package:odyss/screens/error_dialog_widget.dart';
+import 'package:odyss/screens/loading_animation_widget.dart';
 
 class SignupScreen6 extends ConsumerStatefulWidget {
   const SignupScreen6({super.key});
@@ -20,6 +26,8 @@ class _SignupScreen6State extends ConsumerState<SignupScreen6> {
     accessCodeController.dispose();
     super.dispose();
   }
+
+  
 
   @override
   Widget build(BuildContext context) {
@@ -171,16 +179,14 @@ class _SignupScreen6State extends ConsumerState<SignupScreen6> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             SizedBox(
-                              width: 130,
+                              width: 150,
                               child: ElevatedButton(
-                                onPressed: () {
-                                  context.go('/rides');
-                                },
+                                onPressed: () {},
                                 child: const Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
-                                      'Done',
+                                      'Validate',
                                       style: TextStyle(fontSize: 15),
                                     ),
                                     SizedBox(width: 10),

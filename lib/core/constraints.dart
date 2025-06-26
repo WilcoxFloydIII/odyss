@@ -1,6 +1,10 @@
-bool signedIn = true;
+bool signedIn = false;
 
 bool videoSet = false;
+
+String requestOTP = 'https://server.odyss.ng/auth/request-otp';
+String verifyOTP = 'https://server.odyss.ng/auth/verify-otp';
+String register = 'https://server.odyss.ng/auth/register';
 
 initLocationFunc() {
   if (signedIn == false) {
@@ -33,7 +37,7 @@ Map<String, dynamic> newUser = {
   'phone': '',
   'password': '',
   'picture': '',
-  'video': '',
-  'DOB': '',
-  'vibes' : [],
+  'intro_video': '',
+  'date_of_birth': '',
+  'vibes': [],
 };
