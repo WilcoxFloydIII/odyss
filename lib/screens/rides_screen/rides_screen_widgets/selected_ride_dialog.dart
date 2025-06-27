@@ -21,6 +21,9 @@ class SelectedRideDialog extends ConsumerStatefulWidget {
 }
 
 class _SelectedRideDialogState extends ConsumerState<SelectedRideDialog> {
+
+
+  
   bool splitCost = true;
   bool offlineFill = false;
 
@@ -34,6 +37,9 @@ class _SelectedRideDialogState extends ConsumerState<SelectedRideDialog> {
         .where((user) => ride.memberIds.contains(user.id))
         .toList();
     bool isMember = members.any((member) => member.id == UID);
+
+    ride.fill? splitCost = false : splitCost = true;
+    ride.fill? offlineFill = true : offlineFill = false;
     return Scaffold(
       backgroundColor: myColors.backgound,
       extendBodyBehindAppBar: false,
@@ -315,23 +321,13 @@ class _SelectedRideDialogState extends ConsumerState<SelectedRideDialog> {
                   children: [
                     Text('Smart Fill Policy', style: TextStyle(fontSize: 15)),
                     ListTile(
-                      onTap: () {
-                        setState(() {
-                          splitCost = !splitCost;
-                          offlineFill = !offlineFill;
-                        });
-                      },
+                      onTap: null,
                       contentPadding: EdgeInsets.all(0),
                       leading: Text('Split the Remaining Cost'),
                       trailing: splitCost ? Icon(Icons.check) : null,
                     ),
                     ListTile(
-                      onTap: () {
-                        setState(() {
-                          offlineFill = !offlineFill;
-                          splitCost = !splitCost;
-                        });
-                      },
+                      onTap: null,
                       contentPadding: EdgeInsets.all(0),
                       leading: Text('Allow Offline Fill-in'),
                       trailing: offlineFill ? Icon(Icons.check) : null,

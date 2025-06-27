@@ -12,7 +12,7 @@ class RideModel {
   final String departureTOD;
   final String vehicle;
   final String creator;
-  final String fill;
+  final bool fill;
 
   RideModel({
     required this.id,
@@ -31,6 +31,25 @@ class RideModel {
     required this.fill,
   });
 
+  factory RideModel.fromJson(Map<String, dynamic> json) {
+    return RideModel(
+      id: json['id'] ?? '',
+      vehicle: json['vehicle'] ?? '',
+      memberIds: List<String>.from(json['memberIds'] ?? []),
+      seats: json['seats'] ?? 0,
+      company: json['company'] ?? '',
+      price: json['price'] ?? 0,
+      days: json['days'] ?? 0,
+      departureLoc: json['departureLoc'] ?? '',
+      arrivalLoc: json['arrivalLoc'] ?? '',
+      departureTOD: json['departureTOD'] ?? '',
+      departureDate: DateTime.parse(json['departureDate'] ?? DateTime.now().toString()),
+      arrivalDate: DateTime.parse(json['arrivalDate'] ?? DateTime.now().toString()),
+      creator: json['creator'] ?? '',
+      fill: json['fill'] ?? false,
+    );
+  }
+
   RideModel copyWith({
     String? id,
     List? memberIds,
@@ -45,7 +64,7 @@ class RideModel {
     String? departureTOD,
     String? vehicle,
     String? creator,
-    String? fill,
+    bool? fill,
   }) {
     return RideModel(
       id: id ?? this.id,

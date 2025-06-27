@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:odyss/core/colors.dart';
+import 'package:odyss/core/constraints.dart';
 import 'package:odyss/screens/curate_trip_screen/curate_trip_widgets/trip_vibe_button.dart';
 
 class TripVibeScreen extends StatefulWidget {
@@ -12,6 +14,7 @@ class TripVibeScreen extends StatefulWidget {
 class _TripVibeScreenState extends State<TripVibeScreen> {
   @override
   Widget build(BuildContext context) {
+    final myColors = Theme.of(context).extension<MyColors>()!;
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
@@ -88,6 +91,7 @@ class _TripVibeScreenState extends State<TripVibeScreen> {
                       children: [
                         IconButton(
                           onPressed: () {
+                            newRide['vibes'] = [];
                             context.pop();
                           },
                           icon: Icon(Icons.arrow_back_ios_rounded, size: 30),
@@ -140,7 +144,27 @@ class _TripVibeScreenState extends State<TripVibeScreen> {
                                 width: 130,
                                 child: ElevatedButton(
                                   onPressed: () {
-                                    context.push('/pricing');
+                                    if (newRide['vibes'].isEmpty) {
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(
+                                          duration: Duration(seconds: 2),
+                                          backgroundColor: myColors.backgound,
+                                          content: Text(
+                                            textAlign: TextAlign.center,
+                                            'Pick a vibe to continue',
+                                            style: TextStyle(
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.red,
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    } else {
+                                      context.push('/pricing');
+                                    }
                                   },
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,

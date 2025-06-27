@@ -33,10 +33,10 @@ class _EditProfileState extends ConsumerState<EditProfile> {
     firstNameController = TextEditingController(text: user.firstName);
     lastNameController = TextEditingController(text: user.lastName);
     bioController = TextEditingController(text: user.bio);
-    tiktokController = TextEditingController(text: user.tiktok);
-    insatgramController = TextEditingController(text: user.insta);
-    twitterController = TextEditingController(text: user.x);
-    facebookController = TextEditingController(text: user.fb);
+    // tiktokController = TextEditingController(text: user.tiktok);
+    // insatgramController = TextEditingController(text: user.insta);
+    // twitterController = TextEditingController(text: user.x);
+    // facebookController = TextEditingController(text: user.fb);
   }
 
   @override
@@ -519,10 +519,10 @@ class _EditProfileState extends ConsumerState<EditProfile> {
                                     firstName: firstNameController.text,
                                     lastName: lastNameController.text,
                                     bio: bioController.text,
-                                    tiktok: tiktokController.text,
-                                    insta: insatgramController.text,
-                                    x: twitterController.text,
-                                    fb: facebookController.text,
+                                    // tiktok: tiktokController.text,
+                                    // insta: insatgramController.text,
+                                    // x: twitterController.text,
+                                    // fb: facebookController.text,
                                   );
                               context.pop();
                             },

@@ -20,7 +20,6 @@ import 'package:odyss/screens/signup_screens/signup_screen4.dart';
 import 'package:odyss/screens/signup_screens/signup_screen5.dart';
 import 'package:odyss/screens/signup_screens/signup_screen6.dart';
 import 'package:odyss/screens/signup_screens/email_confirmation_screen.dart';
-import 'package:odyss/screens/signup_screens/user_info_verification_screen.dart';
 import 'package:odyss/screens/splash_screen.dart';
 import 'package:odyss/screens/start_screen/start_screen.dart';
 import 'package:odyss/screens/curate_trip_screen/trip_vibe_screen.dart';
@@ -123,28 +122,6 @@ final GoRouter router = GoRouter(
       pageBuilder: (context, state) => CustomTransitionPage(
         key: state.pageKey,
         child: EmailConfirmationScreen(),
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          const begin = Offset(1.0, 0.0); // Slide in from right
-          const end = Offset.zero;
-          const curve = Curves.ease;
-
-          final tween = Tween(
-            begin: begin,
-            end: end,
-          ).chain(CurveTween(curve: curve));
-
-          return SlideTransition(
-            position: animation.drive(tween),
-            child: child,
-          );
-        },
-      ),
-    ),
-    GoRoute(
-      path: '/infoVer',
-      pageBuilder: (context, state) => CustomTransitionPage(
-        key: state.pageKey,
-        child: UserInfoVerificationScreen(),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           const begin = Offset(1.0, 0.0); // Slide in from right
           const end = Offset.zero;

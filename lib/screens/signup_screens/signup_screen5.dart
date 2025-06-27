@@ -35,6 +35,7 @@ class _SignupScreen2State extends State<SignupScreen5> {
                       children: [
                         IconButton(
                           onPressed: () {
+                            newUser['vibes'] = [];
                             context.pop();
                           },
                           style: ButtonStyle(

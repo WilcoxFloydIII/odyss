@@ -1,9 +1,14 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:odyss/core/colors.dart';
 import 'package:odyss/core/constraints.dart';
 import 'package:odyss/core/providers/profile_picture_provider.dart';
+import 'package:odyss/screens/error_dialog_widget.dart';
+import 'package:odyss/screens/loading_animation_widget.dart';
 import 'package:odyss/screens/signup_screens/signup_screens_widgets/image_picker_button.dart';
 
 class SignupScreen3 extends ConsumerStatefulWidget {
@@ -87,7 +92,7 @@ class _SignupScreen3State extends ConsumerState<SignupScreen3> {
                     SizedBox(height: 50),
                     Container(
                       width: MediaQuery.of(context).size.width,
-                      height: 500,
+                      height: 600,
                       padding: EdgeInsets.all(
                         MediaQuery.sizeOf(context).width * 0.05,
                       ),
@@ -95,29 +100,7 @@ class _SignupScreen3State extends ConsumerState<SignupScreen3> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Stack(
-                            alignment: Alignment.topCenter,
-                            children: [
-                              Container(
-                                width: MediaQuery.of(context).size.width * 0.4,
-                                height: MediaQuery.of(context).size.width * 0.4,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(
-                                    MediaQuery.of(context).size.width * 0.2,
-                                  ),
-                                  // image: DecorationImage(image: AssetImage('')),
-                                  color: Colors.grey.shade400,
-                                  image: profilePic != null
-                                      ? DecorationImage(
-                                          image: FileImage(profilePic),
-                                          fit: BoxFit.cover,
-                                        )
-                                      : null,
-                                ),
-                              ),
-                              ImagePickerButton(),
-                            ],
-                          ),
+                          
                           Container(
                             width: MediaQuery.of(context).size.width * 0.9,
                             padding: EdgeInsets.only(
@@ -208,6 +191,27 @@ class _SignupScreen3State extends ConsumerState<SignupScreen3> {
                                 ),
                               ],
                             ),
+                          ),
+                          Stack(
+                            alignment: Alignment.topCenter,
+                            children: [
+                              Container(
+                                width: 200,
+                                height: 200,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(100),
+                                  // image: DecorationImage(image: AssetImage('')),
+                                  color: Colors.grey.shade400,
+                                  image: profilePic != null
+                                      ? DecorationImage(
+                                          image: FileImage(profilePic),
+                                          fit: BoxFit.cover,
+                                        )
+                                      : null,
+                                ),
+                              ),
+                              ImagePickerButton(),
+                            ],
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,

@@ -171,7 +171,7 @@ class _CircleMembersScreenState extends ConsumerState<CircleMembersScreen> {
                 ),
               ),
               Container(
-                height: MediaQuery.of(context).size.height * 0.7,
+                height: MediaQuery.of(context).size.height * 0.65,
                 child: ListView.builder(
                   itemCount: circle.users.length,
                   itemBuilder: (context, index) {
@@ -219,11 +219,18 @@ class _CircleMembersScreenState extends ConsumerState<CircleMembersScreen> {
                                 return FractionallySizedBox(
                                   heightFactor: 0.5, // Half the screen
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       SizedBox(height: 20),
                                       Padding(
-                                        padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.05),
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal:
+                                              MediaQuery.of(
+                                                context,
+                                              ).size.width *
+                                              0.05,
+                                        ),
                                         child: Text(
                                           'Select Trip',
                                           style: TextStyle(
@@ -233,37 +240,42 @@ class _CircleMembersScreenState extends ConsumerState<CircleMembersScreen> {
                                         ),
                                       ),
                                       Container(
-                                        height: MediaQuery.of(context)
-                                                .size
-                                                .height *
+                                        height:
+                                            MediaQuery.of(context).size.height *
                                             0.4, // Adjust height as needed
                                         child: SingleChildScrollView(
                                           padding: EdgeInsets.all(16),
                                           child: Column(
-                                            mainAxisAlignment: MainAxisAlignment.start,
-                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
                                               SizedBox(height: 12),
-                                              ...List.generate(rides.length, (i) {
+                                              ...List.generate(rides.length, (
+                                                i,
+                                              ) {
                                                 RideModel ride = rides[i];
-                                                int remainingSeats = ride.seats - ride.memberIds.length;
+                                                int remainingSeats =
+                                                    ride.seats -
+                                                    ride.memberIds.length;
                                                 bool dayCheck =
                                                     ride.departureDate.day
                                                         .toString()
                                                         .length ==
                                                     2;
-                                        
+
                                                 cardLimit() {
-                                                  if (ride.memberIds
-                                                          .length >=
+                                                  if (ride.memberIds.length >=
                                                       3) {
                                                     return 3;
                                                   } else {
-                                                    return ride.memberIds
+                                                    return ride
+                                                        .memberIds
                                                         .length;
                                                   }
                                                 }
-                                        
+
                                                 return Container(
                                                   padding: EdgeInsets.fromLTRB(
                                                     0,
@@ -287,12 +299,15 @@ class _CircleMembersScreenState extends ConsumerState<CircleMembersScreen> {
                                                         color: Colors.black26,
                                                       ),
                                                       borderRadius:
-                                                          BorderRadius.circular(25),
+                                                          BorderRadius.circular(
+                                                            25,
+                                                          ),
                                                     ),
                                                     child: Column(
                                                       children: [
                                                         Container(
-                                                          width: double.infinity,
+                                                          width:
+                                                              double.infinity,
                                                           child: Row(
                                                             mainAxisAlignment:
                                                                 MainAxisAlignment
@@ -311,7 +326,8 @@ class _CircleMembersScreenState extends ConsumerState<CircleMembersScreen> {
                                                                               (cardLimit() -
                                                                                   1)) +
                                                                           43),
-                                                                      height: 40,
+                                                                      height:
+                                                                          40,
                                                                       child: Stack(
                                                                         children: [
                                                                           ...List.generate(
@@ -350,19 +366,20 @@ class _CircleMembersScreenState extends ConsumerState<CircleMembersScreen> {
                                                                         fontSize:
                                                                             12,
                                                                         fontWeight:
-                                                                            FontWeight
-                                                                                .w500,
+                                                                            FontWeight.w500,
                                                                       ),
                                                                     ),
                                                                   ],
                                                                 ),
                                                               ),
                                                               TextButton(
-                                                                onPressed: () {},
+                                                                onPressed:
+                                                                    () {},
                                                                 style: ButtonStyle(
                                                                   padding: WidgetStatePropertyAll(
                                                                     EdgeInsets.symmetric(
-                                                                      vertical: 10,
+                                                                      vertical:
+                                                                          10,
                                                                       horizontal:
                                                                           20,
                                                                     ),
@@ -407,9 +424,11 @@ class _CircleMembersScreenState extends ConsumerState<CircleMembersScreen> {
                                                                 ),
                                                                 child: Text(
                                                                   'Select',
-                                                                  style: TextStyle(
-                                                                    fontSize: 12,
-                                                                  ),
+                                                                  style:
+                                                                      TextStyle(
+                                                                        fontSize:
+                                                                            12,
+                                                                      ),
                                                                 ),
                                                               ),
                                                             ],
@@ -417,7 +436,8 @@ class _CircleMembersScreenState extends ConsumerState<CircleMembersScreen> {
                                                         ),
                                                         SizedBox(height: 20),
                                                         Container(
-                                                          width: double.infinity,
+                                                          width:
+                                                              double.infinity,
                                                           height: 70,
                                                           child: Row(
                                                             mainAxisAlignment:
@@ -432,34 +452,35 @@ class _CircleMembersScreenState extends ConsumerState<CircleMembersScreen> {
                                                                           .end,
                                                                   children: [
                                                                     Icon(
-                                                                      Icons.circle,
+                                                                      Icons
+                                                                          .circle,
                                                                       size: 13,
                                                                     ),
                                                                     Text(
                                                                       '|',
                                                                       style: TextStyle(
-                                                                        fontSize: 6,
+                                                                        fontSize:
+                                                                            6,
                                                                         fontWeight:
-                                                                            FontWeight
-                                                                                .w900,
+                                                                            FontWeight.w900,
                                                                       ),
                                                                     ),
                                                                     Text(
                                                                       '|',
                                                                       style: TextStyle(
-                                                                        fontSize: 6,
+                                                                        fontSize:
+                                                                            6,
                                                                         fontWeight:
-                                                                            FontWeight
-                                                                                .w900,
+                                                                            FontWeight.w900,
                                                                       ),
                                                                     ),
                                                                     Text(
                                                                       '|',
                                                                       style: TextStyle(
-                                                                        fontSize: 6,
+                                                                        fontSize:
+                                                                            6,
                                                                         fontWeight:
-                                                                            FontWeight
-                                                                                .w900,
+                                                                            FontWeight.w900,
                                                                       ),
                                                                     ),
                                                                     Icon(
@@ -502,7 +523,8 @@ class _CircleMembersScreenState extends ConsumerState<CircleMembersScreen> {
                                                                       ],
                                                                     ),
                                                                     SizedBox(
-                                                                      height: 27,
+                                                                      height:
+                                                                          27,
                                                                     ),
                                                                     Row(
                                                                       mainAxisAlignment:
@@ -537,7 +559,8 @@ class _CircleMembersScreenState extends ConsumerState<CircleMembersScreen> {
                                                         ),
                                                         SizedBox(height: 20),
                                                         Container(
-                                                          width: double.infinity,
+                                                          width:
+                                                              double.infinity,
                                                           child: Row(
                                                             mainAxisAlignment:
                                                                 MainAxisAlignment
@@ -548,7 +571,8 @@ class _CircleMembersScreenState extends ConsumerState<CircleMembersScreen> {
                                                                 child: Row(
                                                                   children: [
                                                                     Container(
-                                                                      height: 25,
+                                                                      height:
+                                                                          25,
                                                                       width: 25,
                                                                       decoration: BoxDecoration(
                                                                         color: Colors
@@ -567,8 +591,7 @@ class _CircleMembersScreenState extends ConsumerState<CircleMembersScreen> {
                                                                       ride.company,
                                                                       style: TextStyle(
                                                                         fontWeight:
-                                                                            FontWeight
-                                                                                .w600,
+                                                                            FontWeight.w600,
                                                                         fontSize:
                                                                             12,
                                                                       ),
@@ -578,12 +601,14 @@ class _CircleMembersScreenState extends ConsumerState<CircleMembersScreen> {
                                                               ),
                                                               Text.rich(
                                                                 TextSpan(
-                                                                  text: 'Vehicle: ',
+                                                                  text:
+                                                                      'Vehicle: ',
                                                                   style: TextStyle(
                                                                     fontWeight:
                                                                         FontWeight
                                                                             .w600,
-                                                                    fontSize: 12,
+                                                                    fontSize:
+                                                                        12,
                                                                   ),
                                                                   children: [
                                                                     TextSpan(
@@ -591,8 +616,7 @@ class _CircleMembersScreenState extends ConsumerState<CircleMembersScreen> {
                                                                           .vehicle,
                                                                       style: TextStyle(
                                                                         fontWeight:
-                                                                            FontWeight
-                                                                                .w400,
+                                                                            FontWeight.w400,
                                                                         fontSize:
                                                                             12,
                                                                       ),
@@ -622,7 +646,8 @@ class _CircleMembersScreenState extends ConsumerState<CircleMembersScreen> {
                                                                       fontWeight:
                                                                           FontWeight
                                                                               .w600,
-                                                                      fontSize: 12,
+                                                                      fontSize:
+                                                                          12,
                                                                     ),
                                                                   ),
                                                                   Text(
@@ -631,7 +656,8 @@ class _CircleMembersScreenState extends ConsumerState<CircleMembersScreen> {
                                                                       fontWeight:
                                                                           FontWeight
                                                                               .w400,
-                                                                      fontSize: 10,
+                                                                      fontSize:
+                                                                          10,
                                                                     ),
                                                                   ),
                                                                 ],
@@ -642,12 +668,14 @@ class _CircleMembersScreenState extends ConsumerState<CircleMembersScreen> {
                                                               child: Column(
                                                                 children: [
                                                                   Text(
-                                                                    remainingSeats.toString(),
+                                                                    remainingSeats
+                                                                        .toString(),
                                                                     style: TextStyle(
                                                                       fontWeight:
                                                                           FontWeight
                                                                               .w600,
-                                                                      fontSize: 12,
+                                                                      fontSize:
+                                                                          12,
                                                                     ),
                                                                   ),
                                                                   Text(
@@ -656,7 +684,8 @@ class _CircleMembersScreenState extends ConsumerState<CircleMembersScreen> {
                                                                       fontWeight:
                                                                           FontWeight
                                                                               .w400,
-                                                                      fontSize: 10,
+                                                                      fontSize:
+                                                                          10,
                                                                     ),
                                                                   ),
                                                                 ],
@@ -675,7 +704,8 @@ class _CircleMembersScreenState extends ConsumerState<CircleMembersScreen> {
                                                                       fontWeight:
                                                                           FontWeight
                                                                               .w600,
-                                                                      fontSize: 12,
+                                                                      fontSize:
+                                                                          12,
                                                                     ),
                                                                   ),
                                                                   Text(
@@ -684,7 +714,8 @@ class _CircleMembersScreenState extends ConsumerState<CircleMembersScreen> {
                                                                       fontWeight:
                                                                           FontWeight
                                                                               .w400,
-                                                                      fontSize: 10,
+                                                                      fontSize:
+                                                                          10,
                                                                     ),
                                                                   ),
                                                                 ],

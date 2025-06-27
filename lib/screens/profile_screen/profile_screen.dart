@@ -6,8 +6,6 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:odyss/core/colors.dart';
 import 'package:odyss/core/constraints.dart';
-import 'package:odyss/core/providers/intro_video_provider.dart';
-import 'package:odyss/core/providers/profile_picture_provider.dart';
 import 'package:odyss/core/providers/ride_list_provider.dart';
 import 'package:odyss/core/providers/user_list_provider.dart';
 import 'package:odyss/data/models/ride_model.dart';
@@ -31,26 +29,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     super.dispose();
   }
 
-  void _initializeVideo(File file) async {
-    _controller?.dispose();
-    _controller = VideoPlayerController.file(file);
-    await _controller!.initialize();
-    _controller!.play();
-    setState(() {});
-  }
-
   bool switchPic = false;
   @override
   Widget build(BuildContext context) {
-    ref.listen<File?>(videoFileProvider, (previous, next) {
-      if (next != null && next != _lastFile) {
-        _lastFile = next;
-        _initializeVideo(next);
-      }
-    });
-    final profilePic = ref.watch(imageFileProvider);
-    final video = ref.watch(videoFileProvider);
-
     final myColors = Theme.of(context).extension<MyColors>()!;
 
     final users = ref.watch(userListProvider);
@@ -59,21 +40,68 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
     var allRides = ref.watch(ridesListProvider);
 
-    showPic() {
+    Future<String?> getUserPicture() async {
+      final imagePath = user.picture;
+      final bucketName = 'user-media';
+
+      try {
+        final signedUrl = await supabase.storage
+            .from(bucketName)
+            .createSignedUrl(imagePath, 60); // 60 seconds expiry
+
+        if (signedUrl == null || signedUrl.isEmpty) {
+          print("Error generating signed URL: response is null or empty");
+          return null;
+        } else {
+          print("Signed URL: $signedUrl");
+          return signedUrl;
+        }
+      } catch (e) {
+        print("Error generating signed URL: $e");
+        return null;
+      }
+    }
+
+    Widget showPic() {
       if (switchPic == false) {
-        return Container(
-          width: 150,
-          height: 150,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(75),
-            color: Colors.blueGrey.shade100,
-            image: profilePic != null
-                ? DecorationImage(
-                    image: FileImage(profilePic),
+        return FutureBuilder<String?>(
+          future: getUserPicture(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Container(
+                width: 150,
+                height: 150,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(75),
+                  color: Colors.blueGrey.shade100,
+                ),
+                child: const Center(child: CircularProgressIndicator()),
+              );
+            } else if (snapshot.hasData && snapshot.data != null) {
+              return Container(
+                width: 150,
+                height: 150,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(75),
+                  color: Colors.blueGrey.shade100,
+                  image: DecorationImage(
+                    image: NetworkImage(snapshot.data!),
                     fit: BoxFit.cover,
-                  )
-                : null,
-          ),
+                  ),
+                ),
+              );
+            } else {
+              return Container(
+                width: 150,
+                height: 150,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(75),
+                  color: Colors.blueGrey.shade100,
+                ),
+                child: const Icon(Icons.person, size: 75, color: Colors.grey),
+              );
+            }
+          },
         );
       } else {
         return Container(
@@ -83,11 +111,33 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             borderRadius: BorderRadius.circular(30),
             color: Colors.blueGrey.shade100,
           ),
-          child:
-              video != null &&
-                  _controller != null &&
-                  _controller!.value.isInitialized
-              ? VideoPlayer(_controller!)
+          child: user.video != null
+              ? FutureBuilder(
+                  future: _controller == null || _lastFile != null
+                      ? VideoPlayerController.networkUrl(
+                          Uri.parse(user.video),
+                        ).initialize()
+                      : _controller!.initialize(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      if (_controller == null ||
+                          (_lastFile == null &&
+                              !_controller!.value.isInitialized)) {
+                        _controller = VideoPlayerController.networkUrl(
+                          Uri.parse(user.video),
+                        );
+                        _controller!.setLooping(true);
+                        _controller!.play();
+                      }
+                      return AspectRatio(
+                        aspectRatio: _controller!.value.aspectRatio,
+                        child: VideoPlayer(_controller!),
+                      );
+                    } else {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                  },
+                )
               : const Center(child: Icon(Icons.videocam, size: 50)),
         );
       }

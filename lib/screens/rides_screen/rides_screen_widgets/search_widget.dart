@@ -39,8 +39,7 @@ class _SearchWidgetState extends ConsumerState<SearchWidget> {
           selectedDateTime?.minute ?? 0,
         );
         dateController.text = '${picked.day}/${picked.month}/${picked.year}';
-        ref.read(dateQueryProvider.notifier).state =
-            '${picked.day}/${picked.month}/${picked.year}';
+        ref.read(dateQueryProvider.notifier).state = dateController.text;
       }
     }
 
@@ -55,11 +54,13 @@ class _SearchWidgetState extends ConsumerState<SearchWidget> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              ListTile(title: Text('Morning'),
+              ListTile(
+                title: Text('Morning'),
                 onTap: () {
                   onSelected('Morning');
                   context.pop();
-                },),
+                },
+              ),
               ListTile(
                 title: Text('Afternoon'),
                 onTap: () {
@@ -119,6 +120,13 @@ class _SearchWidgetState extends ConsumerState<SearchWidget> {
                 title: Text('Lagos'),
                 onTap: () {
                   onSelected('Lagos');
+                  context.pop();
+                },
+              ),
+              ListTile(
+                title: Text('Port Harcourt'),
+                onTap: () {
+                  onSelected('Port Harcourt');
                   context.pop();
                 },
               ),
@@ -248,21 +256,20 @@ class _SearchWidgetState extends ConsumerState<SearchWidget> {
                       contentPadding: EdgeInsets.all(15),
                     ),
                     onTap: () {
-                        Flushbar(
-                          message: 'Enugu is the only available departure state',
-                          messageSize: 12,
-                          duration: Duration(seconds: 1),
-                          flushbarPosition:
-                              FlushbarPosition.TOP, // Top of screen
-                          backgroundColor:
-                              Colors.red, // Optional: customize color
-                          margin: EdgeInsets.all(
-                            8,
-                          ), // Optional: margin for better look
-                          borderRadius: BorderRadius.circular(
-                            8,
-                          ), // Optional: rounded corners
-                        ).show(context);
+                      Flushbar(
+                        message: 'Enugu is the only available departure state',
+                        messageSize: 12,
+                        duration: Duration(seconds: 1),
+                        flushbarPosition: FlushbarPosition.TOP, // Top of screen
+                        backgroundColor:
+                            Colors.red, // Optional: customize color
+                        margin: EdgeInsets.all(
+                          8,
+                        ), // Optional: margin for better look
+                        borderRadius: BorderRadius.circular(
+                          8,
+                        ), // Optional: rounded corners
+                      ).show(context);
                     },
                   ),
                   TextFormField(
@@ -312,6 +319,28 @@ class _SearchWidgetState extends ConsumerState<SearchWidget> {
                               fontSize: 13,
                               fontWeight: FontWeight.w500,
                             ),
+                            suffixIcon: IconButton(
+                              onPressed: () {
+                                ref.read(dateQueryProvider.notifier).state = '';
+                                dateController.text = '';
+                              },
+                              style: ButtonStyle(
+                                padding: WidgetStatePropertyAll(
+                                  EdgeInsets.all(0),
+                                ),
+                                shape: WidgetStatePropertyAll(CircleBorder(eccentricity: 0)),
+                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                foregroundColor: WidgetStateProperty.resolveWith((
+                                  states,
+                                ) {
+                                  if (states.contains(WidgetState.pressed)) {
+                                    return Colors.pinkAccent;
+                                  }
+                                  return myColors.primary;
+                                }),
+                              ),
+                              icon: Icon(Icons.refresh),
+                            ),
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
                                 width: 1,
@@ -329,6 +358,7 @@ class _SearchWidgetState extends ConsumerState<SearchWidget> {
                             contentPadding: EdgeInsets.all(15),
                           ),
                           onTap: pickDate,
+                          onChanged: (value) {},
                         ),
                       ),
                       SizedBox(width: 10),

@@ -16,30 +16,35 @@ class _ErrorDialogWidgetState extends State<ErrorDialogWidget> {
     return Dialog(
       backgroundColor: Colors.transparent,
       child: Center(
-        child: Material(
-          child: Container(
-            decoration: BoxDecoration(
-              border: Border.all(width: 2, color: Colors.black),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            width: MediaQuery.of(context).size.width * 0.8,
-            height: 200,
-            padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.1),
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    widget.error,
-                    style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400),
-                  ),
-                  SizedBox(height: 20,),
-                  TextButton(
-                    onPressed: () => context.pop(),
-                    child: Text('Close', style: TextStyle(fontWeight: FontWeight.w700),),
-                  ),
-                ],
-              ),
+        child: Container(
+          decoration: BoxDecoration(
+            border: Border.all(width: 2, color: Colors.black),
+            borderRadius: BorderRadius.circular(20),
+            color: Colors.white
+          ),
+          width: MediaQuery.of(context).size.width * 0.8,
+          height: MediaQuery.of(context).size.height * 0.8,
+          padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.1),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  widget.error,
+                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400),
+                ),
+                SizedBox(height: 20,),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () => context.pop(),
+                        child: Text('Close', style: TextStyle(fontWeight: FontWeight.w700),),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
         ),

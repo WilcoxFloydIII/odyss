@@ -73,6 +73,7 @@ class _SignupScreen2State extends State<SignupScreen2> {
       showDialog(
         context: context,
         barrierDismissible: false,
+        barrierColor: const Color(0x77F5F5F5),
         builder: (_) => ErrorDialogWidget(error: 'Error'),
       );
     }
@@ -319,7 +320,7 @@ class _SignupScreen2State extends State<SignupScreen2> {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               Container(
-                                width: 200,
+                                width: 150,
                                 child: ElevatedButton(
                                   onPressed: () {
                                     if (emailController.text.isEmpty ||

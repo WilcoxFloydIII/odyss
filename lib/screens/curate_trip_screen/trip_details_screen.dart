@@ -17,6 +17,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
   TextEditingController departureController = TextEditingController();
   TextEditingController destinationController = TextEditingController();
   TextEditingController timeController = TextEditingController();
+  late final DateTime date;
   @override
   Widget build(BuildContext context) {
     final myColors = Theme.of(context).extension<MyColors>()!;
@@ -385,7 +386,6 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                                     focusedBorder: InputBorder.none,
                                   ),
                                   onTap: () async {
-
                                     DateTime today = DateTime.now();
                                     DateTime threeMonthsLater = DateTime(
                                       today.year,
@@ -402,6 +402,8 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                                         );
                                     if (picked != null) {
                                       setState(() {
+                                        date = picked;
+                                        
                                         timeController.text =
                                             "${picked.day}/${picked.month}/${picked.year}";
                                       });
@@ -480,7 +482,8 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                                           departureController.text;
                                       newRide['destLoc'] =
                                           destinationController.text;
-                                      newRide['time'] = timeController.text;
+                                      newRide['date'] = date;
+                                      print(newRide['date']);
                                       context.push('/partnerDetails');
                                     }
                                   },

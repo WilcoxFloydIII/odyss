@@ -20,9 +20,12 @@ class PartnerDetailsScreen extends ConsumerStatefulWidget {
 class _PartnerDetailsScreenState extends ConsumerState<PartnerDetailsScreen> {
   final GlobalKey _partnerKey = GlobalKey();
   final GlobalKey _vehicleKey = GlobalKey();
+  final GlobalKey _timeKey = GlobalKey();
   TextEditingController vehicleController = TextEditingController();
+  TextEditingController timeController = TextEditingController();
   TextEditingController numberController = TextEditingController();
   TextEditingController partnerController = TextEditingController();
+  DateTime time = DateTime.now();
   @override
   Widget build(BuildContext context) {
     final myColors = Theme.of(context).extension<MyColors>()!;
@@ -154,7 +157,7 @@ class _PartnerDetailsScreenState extends ConsumerState<PartnerDetailsScreen> {
                     ),
                     Container(
                       width: MediaQuery.of(context).size.width,
-                      height: 500,
+                      height: 600,
                       padding: EdgeInsets.all(
                         MediaQuery.sizeOf(context).width * 0.05,
                       ),
@@ -261,7 +264,9 @@ class _PartnerDetailsScreenState extends ConsumerState<PartnerDetailsScreen> {
                               ],
                             ),
                           ),
-                          SizedBox(height: 10),
+                          SizedBox(
+                            height: MediaQuery.of(context).size.width * 0.05,
+                          ),
                           Container(
                             width: MediaQuery.of(context).size.width * 0.9,
                             padding: EdgeInsets.only(
@@ -390,10 +395,10 @@ class _PartnerDetailsScreenState extends ConsumerState<PartnerDetailsScreen> {
                                                 ),
                                                 onTap: () {
                                                   setState(() {
-                                                    vehicleController
-                                                        .text = vehicles[index].type;
-                                                    numberController
-                                                        .text = vehicles[index].seats;
+                                                    vehicleController.text =
+                                                        vehicles[index].type;
+                                                    numberController.text =
+                                                        vehicles[index].seats;
                                                   });
                                                 },
                                               );
@@ -407,7 +412,9 @@ class _PartnerDetailsScreenState extends ConsumerState<PartnerDetailsScreen> {
                               ],
                             ),
                           ),
-                          SizedBox(height: 10),
+                          SizedBox(
+                            height: MediaQuery.of(context).size.width * 0.05,
+                          ),
                           Container(
                             width: MediaQuery.of(context).size.width * 0.9,
                             padding: EdgeInsets.only(
@@ -489,8 +496,181 @@ class _PartnerDetailsScreenState extends ConsumerState<PartnerDetailsScreen> {
                               ],
                             ),
                           ),
+                          SizedBox(
+                            height: MediaQuery.of(context).size.width * 0.05,
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.9,
+                            padding: EdgeInsets.only(
+                              top: 10,
+                              bottom: 0,
+                              left: 10,
+                              right: 10,
+                            ),
+                            decoration: BoxDecoration(
+                              border: Border.all(width: 2),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Time of departure'),
+                                TextFormField(
+                                  controller: timeController,
+                                  keyboardType: TextInputType.text,
+                                  textInputAction: TextInputAction.next,
+                                  key: _timeKey,
+                                  readOnly: true,
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                  decoration: InputDecoration(
+                                    hintText: 'What time are you leaving?',
+                                    hintStyle: TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                    border: InputBorder.none,
+                                    enabledBorder: InputBorder.none,
+                                    contentPadding: EdgeInsets.zero,
+                                    disabledBorder: InputBorder.none,
+                                    focusedBorder: InputBorder.none,
+                                  ),
+                                  onTap: () {
+                                    if (partnerController.text.isEmpty) {
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(
+                                          duration: Duration(seconds: 2),
+                                          backgroundColor: myColors.backgound,
+                                          content: Text(
+                                            textAlign: TextAlign.center,
+                                            'Choose a transport partner first',
+                                            style: TextStyle(
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.red,
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    } else {
+                                      final PartnerModel selectedPartner =
+                                          partners.firstWhere(
+                                            (partnerInstance) =>
+                                                partnerInstance.name ==
+                                                partnerController.text,
+                                          );
+                                      final id = selectedPartner.id;
 
-                          SizedBox(height: 40),
+                                      final RouteModel selectedRoute = routes
+                                          .firstWhere(
+                                            (routeInstance) =>
+                                                routeInstance.companyId == id,
+                                          );
+
+                                      return setState(() {
+                                        final RenderBox button =
+                                            _timeKey.currentContext!
+                                                    .findRenderObject()
+                                                as RenderBox;
+                                        final RenderBox overlay =
+                                            Overlay.of(
+                                                  context,
+                                                ).context.findRenderObject()
+                                                as RenderBox;
+
+                                        final Offset position = button
+                                            .localToGlobal(
+                                              Offset.zero,
+                                              ancestor: overlay,
+                                            );
+
+                                        showMenu(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadiusGeometry.circular(
+                                                  20,
+                                                ),
+                                          ),
+                                          context: context,
+                                          position: RelativeRect.fromLTRB(
+                                            position.dx,
+                                            position.dy +
+                                                button
+                                                    .size
+                                                    .height, // show just below
+                                            position.dx + button.size.width,
+                                            position.dy,
+                                          ),
+                                          items: List.generate(
+                                            selectedRoute.departureTime.length,
+                                            (index) {
+                                              bool hourDigitSmall = false;
+                                              bool minuteDigitSmall = false;
+                                              if (selectedRoute
+                                                      .departureTime[index]
+                                                      .hour <
+                                                  10) {
+                                                setState(() {
+                                                  hourDigitSmall = true;
+                                                });
+                                              }
+                                              if (selectedRoute
+                                                      .departureTime[index]
+                                                      .minute <
+                                                  10) {
+                                                setState(() {
+                                                  minuteDigitSmall = true;
+                                                });
+                                              }
+                                              return PopupMenuItem(
+                                                child: Text(
+                                                  hourDigitSmall
+                                                      ? '0${selectedRoute.departureTime[index].hour} : ${minuteDigitSmall ? '0${selectedRoute.departureTime[index].minute}' : '${selectedRoute.departureTime[index].minute}'}'
+                                                      : '${selectedRoute.departureTime[index].hour} : ${minuteDigitSmall ? '0${selectedRoute.departureTime[index].minute}' : '${selectedRoute.departureTime[index].minute}'}',
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.w500,
+                                                    fontSize: 15,
+                                                  ),
+                                                ),
+                                                onTap: () {
+                                                  setState(() {
+                                                    timeController.text =
+                                                        hourDigitSmall
+                                                        ? '0${selectedRoute.departureTime[index].hour} : ${minuteDigitSmall ? '0${selectedRoute.departureTime[index].minute}' : '${selectedRoute.departureTime[index].minute}'}'
+                                                        : '${selectedRoute.departureTime[index].hour} : ${minuteDigitSmall ? '0${selectedRoute.departureTime[index].minute}' : '${selectedRoute.departureTime[index].minute}'}';
+                                                    time = DateTime(
+                                                      0,
+                                                      0, 0, 
+                                                      selectedRoute
+                                                          .departureTime[index]
+                                                          .hour,
+                                                      selectedRoute
+                                                          .departureTime[index]
+                                                          .minute,
+                                                    );
+                                                    print(time);
+                                                  });
+                                                },
+                                              );
+                                            },
+                                          ),
+                                        );
+                                      });
+                                    }
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            height: MediaQuery.of(context).size.width * 0.05,
+                          ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
@@ -534,12 +714,50 @@ class _PartnerDetailsScreenState extends ConsumerState<PartnerDetailsScreen> {
                                           ),
                                         ),
                                       );
+                                    } else if (timeController.text.isEmpty) {
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(
+                                          duration: Duration(seconds: 2),
+                                          backgroundColor: myColors.backgound,
+                                          content: Text(
+                                            textAlign: TextAlign.center,
+                                            'Choose a time of departure',
+                                            style: TextStyle(
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.red,
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    } else if (numberController.text.isEmpty) {
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(
+                                          duration: Duration(seconds: 2),
+                                          backgroundColor: myColors.backgound,
+                                          content: Text(
+                                            textAlign: TextAlign.center,
+                                            'Enter number of seats',
+                                            style: TextStyle(
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.red,
+                                            ),
+                                          ),
+                                        ),
+                                      );
                                     } else {
                                       newRide['partner'] =
                                           partnerController.text;
                                       newRide['vehicle'] =
                                           vehicleController.text;
                                       newRide['seats'] = numberController.text;
+                                      newRide['time'] = time;
+                                      print(newRide['time']);
                                       context.push('/tripVibe');
                                     }
                                   },

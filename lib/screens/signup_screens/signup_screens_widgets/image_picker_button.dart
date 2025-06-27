@@ -62,7 +62,7 @@ class ImagePickerButton extends ConsumerWidget {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-          image.path,
+          'Profile picture updated successfully',
           textAlign: TextAlign.center,
           style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
         ),

@@ -1,11 +1,13 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 import 'package:odyss/core/constraints.dart';
+import 'package:odyss/core/providers/user_list_provider.dart';
+import 'package:odyss/data/models/user_model.dart';
 import 'package:odyss/screens/error_dialog_widget.dart';
 import 'package:odyss/screens/loading_animation_widget.dart';
 
@@ -27,7 +29,134 @@ class _SignupScreen6State extends ConsumerState<SignupScreen6> {
     super.dispose();
   }
 
-  
+  Future<void> registerAndLoginUserWithSupabaseMedia({
+    required BuildContext context,
+    required File profilePic,
+    required File introVideo,
+    required Map<String, dynamic> newUser,
+  }) async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      barrierColor: const Color(0x77F5F5F5),
+      builder: (_) => const LoadingAnimationWidget(),
+    );
+
+    try {
+      // Upload image & video to Supabase Storage
+      final profilePicUrl = await uploadFileToSupabase(
+        profilePic,
+        'profile_pics',
+      );
+      final introVideoUrl = await uploadFileToSupabase(
+        introVideo,
+        'intro_videos',
+      );
+
+      // Prepare full registration payload
+      final payload = {
+        "first_name": newUser['firstName'],
+        "last_name": newUser['lastName'],
+        "nickname": newUser['nickname'],
+        "email": newUser['email'],
+        "password": newUser['password'],
+        "bio": newUser['bio'],
+        "phone_number": newUser['phone'],
+        "profile_pic": profilePicUrl,
+        "intro_video": introVideoUrl,
+        "date_of_birth": newUser['date_of_birth'],
+        "vibes": newUser['vibes'],
+        "access_code": newUser['access_code'],
+      };
+
+      // Register user
+      final registerRes = await http.post(
+        Uri.parse('https://server.odyss.ng/auth/register'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(payload),
+      );
+
+      if (registerRes.statusCode != 201) {
+        final error =
+            jsonDecode(registerRes.body)['message'] ?? 'Registration failed';
+        throw Exception(error);
+      }
+
+      // Login user immediately
+      final loginRes = await http.post(
+        Uri.parse('https://server.odyss.ng/auth/login'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          "email": newUser['email'],
+          "password": newUser['password'],
+        }),
+      );
+
+      if (loginRes.statusCode == 401) {
+        throw Exception('Invalid credentials');
+      }
+
+      if (loginRes.statusCode != 200) {
+        throw Exception('Login failed');
+      }
+
+      final data = jsonDecode(loginRes.body);
+      print('Login response data: $data'); // <-- Add this line
+      final tokens = data['tokens'];
+      final user = data['user'];
+
+      // Save tokens to secure storage
+      await secureStorage.write(
+        key: 'access_token',
+        value: tokens['access_token'],
+      );
+      await secureStorage.write(
+        key: 'refresh_token',
+        value: tokens['refresh_token'],
+      );
+      final token = await secureStorage.read(key: 'access_token');
+      print('Saved token: $token');
+
+      // Fetch user data and add to userListProvider
+      try {
+        final userResponse = await http.get(
+          Uri.parse('https://server.odyss.ng/users/me'),
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Content-Type': 'application/json',
+          },
+        );
+        if (userResponse.statusCode == 200) {
+          final userData = jsonDecode(userResponse.body);
+          final userModel = UserModel.fromJson(userData);
+          ref.read(userListProvider.notifier).addUser(userModel);
+        } else {
+          print('Failed to fetch user data: ${userResponse.body}');
+        }
+      } catch (e) {
+        print('Error fetching user data: $e');
+      }
+
+      // Save user info to shared preferences
+      final prefs = await getSharedPrefs();
+      await prefs.setString('user_id', user['id']);
+      await prefs.setString('user_name', user['name']);
+      await prefs.setString('user_email', user['email']);
+      await prefs.setString('user_role', user['role']);
+      await prefs.setString('user_avatar', user['avatar']);
+
+      Navigator.pop(context); // Dismiss loading
+      context.go('/rides'); // Navigate to rides screen
+    } catch (e) {
+      Navigator.pop(context);
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        barrierColor: const Color(0x77F5F5F5),
+        builder: (_) => ErrorDialogWidget(error: e.toString()),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -134,6 +263,14 @@ class _SignupScreen6State extends ConsumerState<SignupScreen6> {
                             ],
                           ),
                         ),
+                        Text(
+                          'OR',
+                          style: TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.w900,
+                            color: Colors.grey,
+                          ),
+                        ),
                         Container(
                           width: MediaQuery.of(context).size.width * 0.9,
                           padding: EdgeInsets.only(
@@ -181,7 +318,17 @@ class _SignupScreen6State extends ConsumerState<SignupScreen6> {
                             SizedBox(
                               width: 150,
                               child: ElevatedButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  newUser['access_code'] = accessCodeController
+                                      .text
+                                      .trim();
+                                  registerAndLoginUserWithSupabaseMedia(
+                                    context: context,
+                                    profilePic: File(newUser['picture']),
+                                    introVideo: File(newUser['intro_video']),
+                                    newUser: newUser,
+                                  );
+                                },
                                 child: const Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [

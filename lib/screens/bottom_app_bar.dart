@@ -23,7 +23,7 @@ class BottomAppBarWidget extends StatefulWidget {
 class _BottomAppBarWidgetState extends State<BottomAppBarWidget> {
   @override
   Widget build(BuildContext context) {
-    final myColors = Theme.of(context).extension<MyColors>()!;
+    //final myColors = Theme.of(context).extension<MyColors>()!;
     return BottomAppBar(
       color: Colors.black,
       padding: EdgeInsets.all(0),

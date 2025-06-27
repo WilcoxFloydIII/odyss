@@ -3,36 +3,7 @@ import 'package:odyss/data/models/ride_model.dart';
 
 class RideListNotifier extends StateNotifier<List<RideModel>> {
   RideListNotifier()
-    : super([
-        RideModel(
-          memberIds: ['xxxx1', 'xxxx2', 'xxxx3'],
-          seats: 6,
-          company: 'Peace Mass Transit',
-          price: 18000,
-          days: 3,
-          departureLoc: 'Enugu',
-          arrivalLoc: 'Abuja',
-          arrivalDate: DateTime(2025, 5, 8, 14, 0),
-          departureDate: DateTime(2025, 5, 8, 9, 0),
-          vehicle: 'Sienna',
-          departureTOD: 'Morning',
-          id: 'rrrr1', creator: 'xxxx2 ', fill: 'split',
-        ),
-        RideModel(
-          memberIds: ['xxxx4', 'xxxx5', 'xxxx6', 'xxxx7'],
-          seats: 11,
-          company: 'God Is Good Motors',
-          price: 10000,
-          days: 7,
-          departureLoc: 'Enugu',
-          arrivalLoc: 'Lagos',
-          arrivalDate: DateTime(2025, 7, 9, 15, 0),
-          departureDate: DateTime(2025, 9, 7, 7, 0),
-          vehicle: 'Bus',
-          departureTOD: 'Morning',
-          id: 'rrrr2', creator: 'xxxx3', fill: 'offline',
-        ),
-      ]);
+    : super([]);
 
   void addRide(RideModel ride) {
     state = [...state, ride];

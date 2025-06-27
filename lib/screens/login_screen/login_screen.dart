@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,15 +8,18 @@ import 'package:odyss/core/colors.dart';
 import 'package:odyss/core/constraints.dart';
 import 'package:odyss/core/providers/user_list_provider.dart';
 import 'package:odyss/data/models/user_model.dart';
+import 'package:http/http.dart' as http;
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:odyss/screens/loading_animation_widget.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  ConsumerState<LoginScreen> createState() => _SignupScreen2State();
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _SignupScreen2State extends ConsumerState<LoginScreen> {
+class _LoginScreenState extends ConsumerState<LoginScreen> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
@@ -150,20 +154,20 @@ class _SignupScreen2State extends ConsumerState<LoginScreen> {
                                   controller: passwordController,
                                   textInputAction: TextInputAction.next,
                                   style: TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w400,
-                                  ),
-                                  decoration: InputDecoration(
-                                  hintText: 'Input password',
-                                  hintStyle: TextStyle(
                                     fontSize: 13,
                                     fontWeight: FontWeight.w400,
                                   ),
-                                  border: InputBorder.none,
-                                  enabledBorder: InputBorder.none,
-                                  contentPadding: EdgeInsets.zero,
-                                  disabledBorder: InputBorder.none,
-                                  focusedBorder: InputBorder.none,
+                                  decoration: InputDecoration(
+                                    hintText: 'Input password',
+                                    hintStyle: TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                    border: InputBorder.none,
+                                    enabledBorder: InputBorder.none,
+                                    contentPadding: EdgeInsets.zero,
+                                    disabledBorder: InputBorder.none,
+                                    focusedBorder: InputBorder.none,
                                   ),
                                 ),
                               ],
@@ -215,55 +219,7 @@ class _SignupScreen2State extends ConsumerState<LoginScreen> {
                                         ),
                                       );
                                     } else {
-                                      if (users.any(
-                                        (user) =>
-                                            user.email == emailController.text,
-                                      )) {
-                                        UserModel validatedUser = users
-                                            .firstWhere(
-                                              (user) =>
-                                                  user.email ==
-                                                  emailController.text,
-                                            );
-
-                                        if (validatedUser.password ==
-                                            passwordController.text) {
-                                          UID = validatedUser.id;
-                                          context.go('/rides');
-                                        } else {
-                                          Flushbar(
-                                            message:
-                                                'Invalid username or password',
-                                            duration: Duration(seconds: 2),
-                                            flushbarPosition: FlushbarPosition
-                                                .TOP, // Top of screen
-                                            backgroundColor: Colors
-                                                .red, // Optional: customize color
-                                            margin: EdgeInsets.all(
-                                              8,
-                                            ), // Optional: margin for better look
-                                            borderRadius: BorderRadius.circular(
-                                              8,
-                                            ), // Optional: rounded corners
-                                          ).show(context);
-                                        }
-                                      } else {
-                                        Flushbar(
-                                          message:
-                                              'Invalid username or password',
-                                          duration: Duration(seconds: 2),
-                                          flushbarPosition: FlushbarPosition
-                                              .TOP, // Top of screen
-                                          backgroundColor: Colors
-                                              .red, // Optional: customize color
-                                          margin: EdgeInsets.all(
-                                            8,
-                                          ), // Optional: margin for better look
-                                          borderRadius: BorderRadius.circular(
-                                            8,
-                                          ), // Optional: rounded corners
-                                        ).show(context);
-                                      }
+                                      loginAndFetchUser(context, ref);
                                     }
                                   },
                                   child: Row(
@@ -293,6 +249,99 @@ class _SignupScreen2State extends ConsumerState<LoginScreen> {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+Future<void> loginAndFetchUser(BuildContext context, WidgetRef ref) async {
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    barrierColor: const Color(0x77F5F5F5),
+    builder: (_) => const LoadingAnimationWidget(),
+  );
+
+  try {
+    // Login user
+    final loginRes = await http.post(
+      Uri.parse('https://server.odyss.ng/auth/login'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        "email": (context as StatefulElement).state is _LoginScreenState
+            ? ((context).state as _LoginScreenState).emailController.text.trim()
+            : "",
+        "password": (context).state is _LoginScreenState
+            ? ((context).state as _LoginScreenState).passwordController.text
+                  .trim()
+            : "",
+      }),
+    );
+
+    if (loginRes.statusCode == 401) {
+      throw Exception('Invalid credentials');
+    }
+    if (loginRes.statusCode != 200) {
+      throw Exception('Login failed');
+    }
+
+    final data = jsonDecode(loginRes.body);
+    final tokens = data['tokens'];
+    final user = data['user'];
+
+    // Save tokens to secure storage
+    await secureStorage.write(
+      key: 'access_token',
+      value: tokens['access_token'],
+    );
+    await secureStorage.write(
+      key: 'refresh_token',
+      value: tokens['refresh_token'],
+    );
+    final token = await secureStorage.read(key: 'access_token');
+
+    // Fetch user data and add to userListProvider
+    try {
+      final userResponse = await http.get(
+        Uri.parse('https://server.odyss.ng/users/me'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+      if (userResponse.statusCode == 200) {
+        final userData = jsonDecode(userResponse.body);
+        final userModel = UserModel.fromJson(userData);
+        ref.read(userListProvider.notifier).addUser(userModel);
+
+        UID = userModel.id; // Store UID globally
+        print('User ID: $UID');
+        print('User Email: ${userModel.email}');
+        print('User Name: ${userModel.firstName} ${userModel.lastName}');
+      } else {
+        print('Failed to fetch user data: ${userResponse.body}');
+      }
+    } catch (e) {
+      print('Error fetching user data: $e');
+    }
+
+    Navigator.pop(context); // Dismiss loading
+    context.go('/rides'); // Navigate to rides screen
+  } catch (e) {
+    Navigator.pop(context);
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      barrierColor: const Color(0x77F5F5F5),
+      builder: (_) => AlertDialog(
+        title: const Text('Login Error'),
+        content: Text(e.toString()),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('OK'),
+          ),
+        ],
       ),
     );
   }

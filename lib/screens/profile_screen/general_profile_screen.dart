@@ -37,6 +37,10 @@ class _GeneralProfileScreenState extends ConsumerState<GeneralProfileScreen> {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(75),
             color: Colors.blueGrey.shade100,
+            image: DecorationImage(
+              image: NetworkImage(user.picture),
+              fit: BoxFit.cover,
+            ),
           ),
         );
       } else {
@@ -57,7 +61,9 @@ class _GeneralProfileScreenState extends ConsumerState<GeneralProfileScreen> {
 
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(70),
+        preferredSize: Size.fromHeight(
+          MediaQuery.of(context).size.width * 0.2,
+        ),
         child: SafeArea(
           child: Container(
             width: MediaQuery.of(context).size.width,

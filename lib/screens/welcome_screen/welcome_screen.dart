@@ -28,7 +28,15 @@ class WelcomeScreen extends StatelessWidget {
                   style: TextStyle(fontWeight: FontWeight.w700, fontSize: 25),
                 ),
               ),
-              Image.asset('assets/images/introimg2.png'),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    child: Image.asset('assets/images/introimg2.png', fit: BoxFit.contain,),
+                  ),
+                ],
+              ),
               Container(
                 height: 300,
                 width: MediaQuery.of(context).size.width * 1,

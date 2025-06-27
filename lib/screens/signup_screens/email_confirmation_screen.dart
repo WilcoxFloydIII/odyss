@@ -90,8 +90,9 @@ class _EmailConfirmationScreenState extends State<EmailConfirmationScreen> {
 
     final isValid = await _verifyOtpRequest(email, otp);
 
+    if (!mounted) return;
     if (isValid) {
-      context.go('/signup3');
+      context.replace('/signup3');
     } else {
       _showErrorDialog('Invalid OTP. Please try again.');
       print(otpController.text);
