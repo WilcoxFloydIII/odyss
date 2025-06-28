@@ -43,7 +43,7 @@ dependencies:
   flutter_multi_formatter: ^2.6.0
   mask_text_input_formatter: ^2.4.0
   flutter_launcher_icons: ^0.13.1
-  intl: ^0.18.0
+  intl: ^0.17.0
   another_flushbar: ^1.10.30
   http: ^1.0.0
   image_picker: ^1.0.0
@@ -51,6 +51,8 @@ dependencies:
   permission_handler: ^11.0.0
   video_player: ^2.10.0
   supabase_flutter: ^2.3.4
+  webview_flutter: ^4.7.0
+
 
 dev_dependencies:
   flutter_test:

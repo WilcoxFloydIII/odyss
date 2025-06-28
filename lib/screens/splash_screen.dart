@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,6 +19,7 @@ class SplashScreen extends ConsumerStatefulWidget {
 
 class _SplashScreenState extends ConsumerState<SplashScreen> {
   bool _loadingUser = false;
+  Timer? _refreshTimer;
 
   Future<void> fetchAndAddUserToProvider(WidgetRef ref) async {
     final accessToken = await secureStorage.read(key: 'access_token');
@@ -53,9 +55,37 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     // Optionally handle errors here
   }
 
+  Future<void> refreshAccessToken() async {
+    final refreshToken = await secureStorage.read(key: 'refresh_token');
+    if (refreshToken == null) return;
+
+    final response = await http.post(
+      Uri.parse('https://server.odyss.ng/auth/token/refresh'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'refresh_token': refreshToken}),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      final newAccessToken = data['access_token'];
+      if (newAccessToken != null) {
+        await secureStorage.write(key: 'access_token', value: newAccessToken);
+        print('Access token refreshed!');
+      }
+    } else {
+      print('Failed to refresh access token: ${response.body}');
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+
+    // Start periodic refresh every 40 minutes
+    _refreshTimer = Timer.periodic(const Duration(minutes: 40), (_) {
+      refreshAccessToken();
+    });
+
     Future.microtask(() async {
       await ref.read(authStateProvider.notifier).checkTokenValidity();
       final isAuthenticated = ref.read(authStateProvider);
@@ -70,6 +100,12 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
         context.go('/start');
       }
     });
+  }
+
+  @override
+  void dispose() {
+    _refreshTimer?.cancel();
+    super.dispose();
   }
 
   @override

@@ -1,18 +1,17 @@
-import 'dart:convert';
-
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:http/http.dart' as http;
 import 'package:odyss/core/colors.dart';
 import 'package:odyss/core/constraints.dart';
 import 'package:odyss/core/providers/company_list_provider.dart';
-import 'package:odyss/core/providers/ride_list_provider.dart';
 import 'package:odyss/core/providers/route_list_provider.dart';
+import 'package:odyss/core/providers/user_list_provider.dart';
 import 'package:odyss/data/models/company_model.dart';
 import 'package:odyss/data/models/ride_model.dart';
 import 'package:odyss/data/models/route_model.dart';
+import 'package:odyss/data/models/user_model.dart';
+import 'package:odyss/screens/curate_trip_screen/curate_trip_widgets/initiate_trip_function.dart';
 import 'package:odyss/screens/error_dialog_widget.dart';
 import 'package:odyss/screens/loading_animation_widget.dart';
 
@@ -29,31 +28,11 @@ class _PricingScreenState extends ConsumerState<PricingScreen> {
   late bool fill;
   final GlobalKey _fillKey = GlobalKey();
 
-  Future<void> postRide(RideModel ride) async {
-    final response = await http.post(
-      Uri.parse(tripsUrl),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ${await secureStorage.read(key: 'access_token')}',
-      },
-      body: jsonEncode(ride.toJson()), // Ensure RideModel has a toJson() method
-    );
-
-    if (response.statusCode != 201 && response.statusCode != 200) {
-      // Optionally parse error message from response
-      final error =
-          jsonDecode(response.body)['message'] ?? 'Failed to post ride';
-      throw Exception(error);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final myColors = Theme.of(context).extension<MyColors>()!;
 
     final partnerList = ref.watch(partnerListProvider);
-
-    final List<RideModel> ridesList = ref.watch(ridesListProvider);
 
     final List<RouteModel> routesList = ref.watch(routesListProvider);
 
@@ -74,6 +53,10 @@ class _PricingScreenState extends ConsumerState<PricingScreen> {
     VehicleModel currVehicle = currRoute.vehicles.firstWhere(
       (vehicle) => vehicle.type == newRide['vehicle'],
     );
+
+    List<UserModel> users = ref.watch(userListProvider);
+
+    UserModel user = users.firstWhere((user) => user.id == UID);
 
     priceController.text = currVehicle.price;
 
@@ -405,110 +388,89 @@ class _PricingScreenState extends ConsumerState<PricingScreen> {
                               Container(
                                 child: ElevatedButton(
                                   onPressed: () async {
-                                    if (fillController.text.isEmpty) {
-                                      ScaffoldMessenger.of(
-                                        context,
-                                      ).showSnackBar(
-                                        SnackBar(
-                                          duration: Duration(seconds: 2),
-                                          backgroundColor: myColors.backgound,
-                                          content: Text(
-                                            textAlign: TextAlign.center,
-                                            'Select a fill-in preference to continue',
-                                            style: TextStyle(
-                                              fontSize: 13,
-                                              fontWeight: FontWeight.w500,
-                                              color: Colors.red,
-                                            ),
-                                          ),
-                                        ),
-                                      );
+                                  if (fillController.text.isEmpty) {
+                                    ScaffoldMessenger.of(
+                                    context,
+                                    ).showSnackBar(
+                                    SnackBar(
+                                      duration: Duration(seconds: 2),
+                                      backgroundColor: myColors.backgound,
+                                      content: Text(
+                                      textAlign: TextAlign.center,
+                                      'Select a fill-in preference to continue',
+                                      style: TextStyle(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.red,
+                                      ),
+                                      ),
+                                    ),
+                                    );
+                                  }
+
+                                  newRide['members'].add(UID);
+                                  newRide['price'] = priceController.text;
+                                  newRide['fill'] = fill;
+                                  DateTime date = newRide['date'];
+                                  DateTime time = newRide['time'];
+
+                                  String tod() {
+                                    if (time.hour < 12) {
+                                    return 'Morning';
+                                    } else if (time.hour < 18) {
+                                    return 'Afternoon';
                                     } else {
-                                      newRide['members'].add(UID);
-                                      newRide['price'] = priceController.text;
-                                      newRide['fill'] = fill;
-                                      DateTime date = newRide['date'];
-                                      DateTime time = newRide['time'];
-
-                                      tod() {
-                                        if (time.hour < 12) {
-                                          return 'Morning';
-                                        } else if (time.hour < 18) {
-                                          return 'Afternoon';
-                                        } else {
-                                          return 'Evening';
-                                        }
-                                      }
-
-                                      var newRideModel = RideModel(
-                                        vehicle: newRide['vehicle'],
-                                        memberIds: [UID],
-                                        seats: int.parse(newRide['seats']),
-                                        company: newRide['partner'],
-                                        price: int.parse(newRide['price']),
-                                        departureLoc: newRide['depLoc'],
-                                        arrivalLoc: newRide['destLoc'],
-                                        departureTOD: tod(),
-                                        departureDate: DateTime(
-                                          date.year,
-                                          date.month,
-                                          date.day,
-                                          time.hour,
-                                          time.minute,
-                                        ),
-                                        arrivalDate: DateTime(
-                                          date.year,
-                                          date.month,
-                                          date.day,
-                                          time.hour + 8,
-                                          time.minute,
-                                        ),
-                                        id: "",
-                                        creator: UID,
-                                        fill: newRide['fill'],
-                                        vibes: List.from(newRide['vibes']),
-                                      );
-
-                                      // Show loading animation
-                                      showDialog(
-                                        context: context,
-                                        barrierDismissible: false,
-                                        barrierColor: const Color(0x77F5F5F5),
-                                        builder: (_) =>
-                                            const LoadingAnimationWidget(),
-                                      );
-
-                                      try {
-                                        await postRide(newRideModel);
-                                        Navigator.pop(
-                                          context,
-                                        ); // Dismiss loading
-                                        context.go('/profile');
-                                      } catch (e) {
-                                        Navigator.pop(
-                                          context,
-                                        ); // Dismiss loading
-                                        showDialog(
-                                          context: context,
-                                          barrierDismissible: true,
-                                          builder: (_) =>  ErrorDialogWidget(error: e.toString()), 
-                                        );
-                                      }
+                                    return 'Evening';
                                     }
+                                  }
+
+                                  var newRideModel = RideModel(
+                                    vehicle: newRide['vehicle'],
+                                    memberIds: [UID],
+                                    seats: int.parse(newRide['seats']),
+                                    company: newRide['partner'],
+                                    price: int.parse(newRide['price']),
+                                    departureLoc: newRide['depLoc'],
+                                    arrivalLoc: newRide['destLoc'],
+                                    departureTOD: tod(),
+                                    departureDate: DateTime(
+                                    date.year,
+                                    date.month,
+                                    date.day,
+                                    time.hour,
+                                    time.minute,
+                                    ),
+                                    arrivalDate: DateTime(
+                                    date.year,
+                                    date.month,
+                                    date.day,
+                                    time.hour + 8,
+                                    time.minute,
+                                    ),
+                                    id: "",
+                                    creator: UID,
+                                    fill: newRide['fill'],
+                                    vibes: List.from(newRide['vibes']),
+                                  );
+                                  initiateTripAndPay(
+                                    context: context,
+                                    ride: newRideModel,
+                                    userEmail: user.email,
+                                  ); // Dismiss loading
                                   },
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        'Book your seat',
-                                        style: TextStyle(fontSize: 15),
-                                      ),
-                                      SizedBox(width: 10),
-                                      Icon(
-                                        Icons.arrow_forward_rounded,
-                                        size: 20,
-                                      ),
-                                    ],
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                    'Book your seat',
+                                    style: TextStyle(fontSize: 15),
+                                    ),
+                                    SizedBox(width: 10),
+                                    Icon(
+                                    Icons.arrow_forward_rounded,
+                                    size: 20,
+                                    ),
+                                  ],
                                   ),
                                 ),
                               ),

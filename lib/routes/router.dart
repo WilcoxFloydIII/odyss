@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
+import 'package:odyss/core/providers/all_set_screen.dart';
 import 'package:odyss/screens/chat_screen/chat_screen.dart';
 import 'package:odyss/screens/circles_screen/circles_screen.dart';
 import 'package:odyss/screens/circles_screen/circles_screen_widgets/circle_members_screen.dart';
@@ -374,6 +375,28 @@ final GoRouter router = GoRouter(
       pageBuilder: (context, state) => CustomTransitionPage(
         key: state.pageKey,
         child: PricingScreen(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          const begin = Offset(1.0, 0.0); // Slide in from right
+          const end = Offset.zero;
+          const curve = Curves.ease;
+
+          final tween = Tween(
+            begin: begin,
+            end: end,
+          ).chain(CurveTween(curve: curve));
+
+          return SlideTransition(
+            position: animation.drive(tween),
+            child: child,
+          );
+        },
+      ),
+    ),
+    GoRoute(
+      path: '/allSet',
+      pageBuilder: (context, state) => CustomTransitionPage(
+        key: state.pageKey,
+        child: AllSetScreen(),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           const begin = Offset(1.0, 0.0); // Slide in from right
           const end = Offset.zero;

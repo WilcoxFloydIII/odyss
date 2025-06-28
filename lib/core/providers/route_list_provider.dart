@@ -13,8 +13,8 @@ final routesListProvider = Provider<List<RouteModel>>(
       ],
       duration: DateTime(0, 0, 0, 8, 0),
       vehicles: [
-        VehicleModel(type: 'Lorry', seats: '30', price: '15000'),
-        VehicleModel(type: 'Sienna', seats: '6', price: '30000'),
+        VehicleModel(type: 'Lorry', seats: '30', price: '0'),
+        VehicleModel(type: 'Sienna', seats: '6', price: '0'),
       ],
       companyId: 'cccc1',
     ),

@@ -9,9 +9,9 @@ String verifyOTP = 'https://server.odyss.ng/auth/verify-otp';
 String register = 'https://server.odyss.ng/auth/register';
 String login = 'https://server.odyss.ng/auth/login';
 String usersUrl = 'https://server.odyss.ng/users/me';
-String tripsUrl = 'https://server.odyss.ng/trips/';
-String initPayment = 'https://server.odyss.ng/payments/initiate';
-String verifyPayment = 'https://server.odyss.ng/payments/verify';
+String tripsUrl = 'https://server.odyss.ng/payments/initiate-trip';
+// String initPayment = 'https://server.odyss.ng/payments/initiate';
+// String verifyPayment = 'https://server.odyss.ng/payments/verify';
 
 final supabase = SupabaseClient(
   'https://vxsikirblhcmcjmsoyvz.supabase.co',

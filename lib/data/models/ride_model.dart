@@ -1,3 +1,7 @@
+import 'package:http/http.dart' as ref;
+import 'package:odyss/core/providers/user_list_provider.dart';
+import 'package:odyss/data/models/user_model.dart';
+
 class RideModel {
   final String id;
   final List memberIds;
@@ -88,7 +92,8 @@ class RideModel {
     );
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJson({required String email}) {
+    // Ensure memberIds is a list of strings
     return {
       'vehicle': vehicle,
       'memberIds': memberIds,
@@ -103,6 +108,26 @@ class RideModel {
       'creator': creator,
       'fill': fill,
       'vibes': vibes,
+      'email': email, // Assuming email is not part of the ride model
+    };
+  }
+
+  Map<String, dynamic> toTripJson() {
+    // Ensure memberIds is a list of strings
+    return {
+      'vehicle': vehicle,
+      'memberIds': memberIds,
+      'seats': seats,
+      'company': company,
+      'price': price,
+      'departureLoc': departureLoc,
+      'arrivalLoc': arrivalLoc,
+      'departureTOD': departureTOD,
+      'departureDate': departureDate.toIso8601String(),
+      'arrivalDate': arrivalDate.toIso8601String(),
+      'creator': creator,
+      'fill': fill,
+      'vibes': vibes,// Assuming email is not part of the ride model
     };
   }
 }
