@@ -9,8 +9,14 @@ String verifyOTP = 'https://server.odyss.ng/auth/verify-otp';
 String register = 'https://server.odyss.ng/auth/register';
 String login = 'https://server.odyss.ng/auth/login';
 String usersUrl = 'https://server.odyss.ng/users/me';
+String tripsUrl = 'https://server.odyss.ng/trips/';
+String initPayment = 'https://server.odyss.ng/payments/initiate';
+String verifyPayment = 'https://server.odyss.ng/payments/verify';
 
-final supabase = SupabaseClient('https://vxsikirblhcmcjmsoyvz.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ4c2lraXJibGhjbWNqbXNveXZ6Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0NzYxNDQ1NSwiZXhwIjoyMDYzMTkwNDU1fQ.c04bo4Kcpjfv4M0R2wxr8hkWJVnnmpggz12th4ZfQGA');
+final supabase = SupabaseClient(
+  'https://vxsikirblhcmcjmsoyvz.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ4c2lraXJibGhjbWNqbXNveXZ6Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0NzYxNDQ1NSwiZXhwIjoyMDYzMTkwNDU1fQ.c04bo4Kcpjfv4M0R2wxr8hkWJVnnmpggz12th4ZfQGA',
+);
 
 Future<String> uploadFileToSupabase(File file, String path) async {
   final supabase = Supabase.instance.client;
@@ -39,7 +45,7 @@ Future<SharedPreferences> getSharedPrefs() async {
 Map<String, dynamic> newRide = {
   'depLoc': '',
   'destLoc': '',
-  'date' : DateTime,
+  'date': DateTime,
   'time': DateTime,
   'partner': '',
   'vehicle': '',
@@ -47,7 +53,7 @@ Map<String, dynamic> newRide = {
   'vibes': [],
   'price': '',
   'members': [],
-  'fill' : false,
+  'fill': false,
 };
 
 late String UID;
@@ -64,5 +70,5 @@ Map<String, dynamic> newUser = {
   'intro_video': '',
   'date_of_birth': '',
   'vibes': [],
-  'access_code' : '',
+  'access_code': '',
 };

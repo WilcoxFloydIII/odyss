@@ -699,7 +699,7 @@ class _CircleMembersScreenState extends ConsumerState<CircleMembersScreen> {
                                                                         .end,
                                                                 children: [
                                                                   Text(
-                                                                    '${ride.days.toString()} days',
+                                                                    '${ride.departureDate.day - DateTime.now().day} days',
                                                                     style: TextStyle(
                                                                       fontWeight:
                                                                           FontWeight

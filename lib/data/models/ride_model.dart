@@ -4,7 +4,6 @@ class RideModel {
   final int seats;
   final String company;
   final int price;
-  final int days;
   final String departureLoc;
   final String arrivalLoc;
   final DateTime departureDate;
@@ -13,6 +12,7 @@ class RideModel {
   final String vehicle;
   final String creator;
   final bool fill;
+  final List vibes;
 
   RideModel({
     required this.id,
@@ -21,7 +21,6 @@ class RideModel {
     required this.seats,
     required this.company,
     required this.price,
-    required this.days,
     required this.departureLoc,
     required this.arrivalLoc,
     required this.departureTOD,
@@ -29,6 +28,7 @@ class RideModel {
     required this.arrivalDate,
     required this.creator,
     required this.fill,
+    required this.vibes,
   });
 
   factory RideModel.fromJson(Map<String, dynamic> json) {
@@ -39,24 +39,28 @@ class RideModel {
       seats: json['seats'] ?? 0,
       company: json['company'] ?? '',
       price: json['price'] ?? 0,
-      days: json['days'] ?? 0,
       departureLoc: json['departureLoc'] ?? '',
       arrivalLoc: json['arrivalLoc'] ?? '',
       departureTOD: json['departureTOD'] ?? '',
-      departureDate: DateTime.parse(json['departureDate'] ?? DateTime.now().toString()),
-      arrivalDate: DateTime.parse(json['arrivalDate'] ?? DateTime.now().toString()),
+      departureDate: DateTime.parse(
+        json['departureDate'] ?? DateTime.now().toString(),
+      ),
+      arrivalDate: DateTime.parse(
+        json['arrivalDate'] ?? DateTime.now().toString(),
+      ),
       creator: json['creator'] ?? '',
       fill: json['fill'] ?? false,
+      vibes: List<String>.from(json['vibes'] ?? []),
     );
   }
 
   RideModel copyWith({
     String? id,
+    List<String>? vibes,
     List? memberIds,
     int? seats,
     String? company,
     int? price,
-    int? days,
     String? departureLoc,
     String? arrivalLoc,
     DateTime? departureDate,
@@ -73,14 +77,32 @@ class RideModel {
       seats: seats ?? this.seats,
       company: company ?? this.company,
       price: price ?? this.price,
-      days: days ?? this.days,
       departureLoc: departureLoc ?? this.departureLoc,
       arrivalLoc: arrivalLoc ?? this.arrivalLoc,
       departureTOD: departureTOD ?? this.departureTOD,
       departureDate: departureDate ?? this.departureDate,
       arrivalDate: arrivalDate ?? this.arrivalDate,
-      creator: creator?? this.creator,
+      creator: creator ?? this.creator,
       fill: fill ?? this.fill,
+      vibes: vibes ?? this.vibes,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'vehicle': vehicle,
+      'memberIds': memberIds,
+      'seats': seats,
+      'company': company,
+      'price': price,
+      'departureLoc': departureLoc,
+      'arrivalLoc': arrivalLoc,
+      'departureTOD': departureTOD,
+      'departureDate': departureDate.toIso8601String(),
+      'arrivalDate': arrivalDate.toIso8601String(),
+      'creator': creator,
+      'fill': fill,
+      'vibes': vibes,
+    };
   }
 }

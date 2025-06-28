@@ -49,6 +49,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             .from(bucketName)
             .createSignedUrl(imagePath, 60); // 60 seconds expiry
 
+        // ignore: unnecessary_null_comparison
         if (signedUrl == null || signedUrl.isEmpty) {
           print("Error generating signed URL: response is null or empty");
           return null;
@@ -111,6 +112,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             borderRadius: BorderRadius.circular(30),
             color: Colors.blueGrey.shade100,
           ),
+          // ignore: unnecessary_null_comparison
           child: user.video != null
               ? FutureBuilder(
                   future: _controller == null || _lastFile != null
@@ -705,7 +707,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                                 CrossAxisAlignment.end,
                                             children: [
                                               Text(
-                                                '${rides[index].days.toString()} days',
+                                                '${rides[index].departureDate.day - DateTime.now().day} days',
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.w600,
                                                   fontSize: 12,
@@ -1101,7 +1103,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                                 CrossAxisAlignment.end,
                                             children: [
                                               Text(
-                                                '${rides[index].days.toString()} days',
+                                                '${rides[index].departureDate.day - DateTime.now().day} days',
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.w600,
                                                   fontSize: 12,

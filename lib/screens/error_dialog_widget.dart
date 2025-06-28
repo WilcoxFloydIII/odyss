@@ -23,12 +23,14 @@ class _ErrorDialogWidgetState extends State<ErrorDialogWidget> {
             color: Colors.white
           ),
           width: MediaQuery.of(context).size.width * 0.8,
-          height: MediaQuery.of(context).size.height * 0.8,
+          height: MediaQuery.of(context).size.height * 0.3,
           padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.1),
           child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                Text('Error', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),),
+                SizedBox(height: 10,),
                 Text(
                   widget.error,
                   style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400),

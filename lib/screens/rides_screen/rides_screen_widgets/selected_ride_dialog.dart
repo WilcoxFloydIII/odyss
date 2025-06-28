@@ -487,7 +487,7 @@ class _SelectedRideDialogState extends ConsumerState<SelectedRideDialog> {
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               Text(
-                                '${ride.days.toString()} days',
+                                '${ride.departureDate.day - DateTime.now().day} days',
                                 style: TextStyle(
                                   fontWeight: FontWeight.w600,
                                   fontSize: 12,

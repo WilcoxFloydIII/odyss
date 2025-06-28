@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:http/http.dart' as http;
 import 'package:odyss/core/colors.dart';
 import 'package:odyss/core/constraints.dart';
 import 'package:odyss/core/providers/company_list_provider.dart';
@@ -10,6 +13,8 @@ import 'package:odyss/core/providers/route_list_provider.dart';
 import 'package:odyss/data/models/company_model.dart';
 import 'package:odyss/data/models/ride_model.dart';
 import 'package:odyss/data/models/route_model.dart';
+import 'package:odyss/screens/error_dialog_widget.dart';
+import 'package:odyss/screens/loading_animation_widget.dart';
 
 class PricingScreen extends ConsumerStatefulWidget {
   const PricingScreen({super.key});
@@ -23,6 +28,24 @@ class _PricingScreenState extends ConsumerState<PricingScreen> {
   TextEditingController fillController = TextEditingController();
   late bool fill;
   final GlobalKey _fillKey = GlobalKey();
+
+  Future<void> postRide(RideModel ride) async {
+    final response = await http.post(
+      Uri.parse(tripsUrl),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${await secureStorage.read(key: 'access_token')}',
+      },
+      body: jsonEncode(ride.toJson()), // Ensure RideModel has a toJson() method
+    );
+
+    if (response.statusCode != 201 && response.statusCode != 200) {
+      // Optionally parse error message from response
+      final error =
+          jsonDecode(response.body)['message'] ?? 'Failed to post ride';
+      throw Exception(error);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -381,7 +404,7 @@ class _PricingScreenState extends ConsumerState<PricingScreen> {
                             children: [
                               Container(
                                 child: ElevatedButton(
-                                  onPressed: () {
+                                  onPressed: () async {
                                     if (fillController.text.isEmpty) {
                                       ScaffoldMessenger.of(
                                         context,
@@ -402,8 +425,7 @@ class _PricingScreenState extends ConsumerState<PricingScreen> {
                                       );
                                     } else {
                                       newRide['members'].add(UID);
-                                      newRide['price'] =
-                                          priceController.text; //price;
+                                      newRide['price'] = priceController.text;
                                       newRide['fill'] = fill;
                                       DateTime date = newRide['date'];
                                       DateTime time = newRide['time'];
@@ -417,15 +439,13 @@ class _PricingScreenState extends ConsumerState<PricingScreen> {
                                           return 'Evening';
                                         }
                                       }
+
                                       var newRideModel = RideModel(
                                         vehicle: newRide['vehicle'],
-                                        memberIds: List.from(
-                                          newRide['members'],
-                                        ),
+                                        memberIds: [UID],
                                         seats: int.parse(newRide['seats']),
                                         company: newRide['partner'],
                                         price: int.parse(newRide['price']),
-                                        days: 3,
                                         departureLoc: newRide['depLoc'],
                                         arrivalLoc: newRide['destLoc'],
                                         departureTOD: tod(),
@@ -443,17 +463,37 @@ class _PricingScreenState extends ConsumerState<PricingScreen> {
                                           time.hour + 8,
                                           time.minute,
                                         ),
-                                        id: "rrrr${ridesList.length + 1}",
+                                        id: "",
                                         creator: UID,
                                         fill: newRide['fill'],
+                                        vibes: List.from(newRide['vibes']),
                                       );
-                                      ref
-                                          .read(ridesListProvider.notifier)
-                                          .addRide(newRideModel);
-                                      print(
-                                        ref.watch(ridesListProvider).length,
+
+                                      // Show loading animation
+                                      showDialog(
+                                        context: context,
+                                        barrierDismissible: false,
+                                        barrierColor: const Color(0x77F5F5F5),
+                                        builder: (_) =>
+                                            const LoadingAnimationWidget(),
                                       );
-                                      context.go('/rides');
+
+                                      try {
+                                        await postRide(newRideModel);
+                                        Navigator.pop(
+                                          context,
+                                        ); // Dismiss loading
+                                        context.go('/profile');
+                                      } catch (e) {
+                                        Navigator.pop(
+                                          context,
+                                        ); // Dismiss loading
+                                        showDialog(
+                                          context: context,
+                                          barrierDismissible: true,
+                                          builder: (_) =>  ErrorDialogWidget(error: e.toString()), 
+                                        );
+                                      }
                                     }
                                   },
                                   child: Row(
