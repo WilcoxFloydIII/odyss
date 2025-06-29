@@ -42,25 +42,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
     Future<String?> getUserPicture() async {
       final imagePath = user.picture;
-      final bucketName = 'user-media';
-
-      try {
-        final signedUrl = await supabase.storage
-            .from(bucketName)
-            .createSignedUrl(imagePath, 60); // 60 seconds expiry
-
-        // ignore: unnecessary_null_comparison
-        if (signedUrl == null || signedUrl.isEmpty) {
-          print("Error generating signed URL: response is null or empty");
-          return null;
-        } else {
-          print("Signed URL: $signedUrl");
-          return signedUrl;
-        }
-      } catch (e) {
-        print("Error generating signed URL: $e");
-        return null;
-      }
+      return imagePath.isNotEmpty
+          ? imagePath
+          : null; // Return null if no picture is set
     }
 
     Widget showPic() {
@@ -105,42 +89,49 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           },
         );
       } else {
-        return Container(
-          width: 150,
-          height: 150,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(30),
-            color: Colors.blueGrey.shade100,
-          ),
-          // ignore: unnecessary_null_comparison
-          child: user.video != null
-              ? FutureBuilder(
-                  future: _controller == null || _lastFile != null
-                      ? VideoPlayerController.networkUrl(
-                          Uri.parse(user.video),
-                        ).initialize()
-                      : _controller!.initialize(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.done) {
-                      if (_controller == null ||
-                          (_lastFile == null &&
-                              !_controller!.value.isInitialized)) {
-                        _controller = VideoPlayerController.networkUrl(
-                          Uri.parse(user.video),
-                        );
-                        _controller!.setLooping(true);
-                        _controller!.play();
-                      }
-                      return AspectRatio(
-                        aspectRatio: _controller!.value.aspectRatio,
-                        child: VideoPlayer(_controller!),
-                      );
-                    } else {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-                  },
-                )
-              : const Center(child: Icon(Icons.videocam, size: 50)),
+        return FutureBuilder(
+          future: _controller == null || _lastFile != null
+              ? VideoPlayerController.networkUrl(
+                  Uri.parse(user.video),
+                ).initialize()
+              : _controller!.initialize(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              if (_controller == null ||
+                  (_lastFile == null && !_controller!.value.isInitialized)) {
+                _controller = VideoPlayerController.networkUrl(
+                  Uri.parse(user.video),
+                );
+                _controller!.setLooping(true);
+                _controller!.play();
+              }
+              return ClipRRect(
+                borderRadius: BorderRadius.circular(30),
+                child: Container(
+                  width: 150,
+                  height: 150,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(30),
+                    color: Colors.blueGrey.shade100,
+                  ),
+                  child: AspectRatio(
+                    aspectRatio: _controller!.value.aspectRatio,
+                    child: VideoPlayer(_controller!),
+                  ),
+                ),
+              );
+            } else {
+              return Container(
+                width: 150,
+                height: 150,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30),
+                  color: Colors.blueGrey.shade100,
+                ),
+                child: const Center(child: CircularProgressIndicator()),
+              );
+            }
+          },
         );
       }
     }

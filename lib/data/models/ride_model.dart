@@ -1,7 +1,3 @@
-import 'package:http/http.dart' as ref;
-import 'package:odyss/core/providers/user_list_provider.dart';
-import 'package:odyss/data/models/user_model.dart';
-
 class RideModel {
   final String id;
   final List memberIds;
@@ -127,7 +123,6 @@ class RideModel {
       'arrivalDate': arrivalDate.toIso8601String(),
       'creator': creator,
       'fill': fill,
-      'vibes': vibes,// Assuming email is not part of the ride model
     };
   }
 }

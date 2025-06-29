@@ -12,8 +12,6 @@ import 'package:odyss/data/models/ride_model.dart';
 import 'package:odyss/data/models/route_model.dart';
 import 'package:odyss/data/models/user_model.dart';
 import 'package:odyss/screens/curate_trip_screen/curate_trip_widgets/initiate_trip_function.dart';
-import 'package:odyss/screens/error_dialog_widget.dart';
-import 'package:odyss/screens/loading_animation_widget.dart';
 
 class PricingScreen extends ConsumerStatefulWidget {
   const PricingScreen({super.key});

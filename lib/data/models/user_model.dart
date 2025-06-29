@@ -34,6 +34,7 @@ class UserModel {
     required this.vibes,
     // required this.rides,
   });
+  
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(

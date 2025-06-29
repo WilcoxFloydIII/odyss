@@ -40,8 +40,8 @@ Future<void> initiateTripAndPay({
 
     final data = jsonDecode(response.body);
     final reference = data['reference']; // Rename for clarity
-    final amount = data['amount'];
-    final currency = data['currency'];
+    // final amount = data['amount'];
+    // final currency = data['currency'];
 
     final authorizationUrl = data['authorization_url'];
     Navigator.push(

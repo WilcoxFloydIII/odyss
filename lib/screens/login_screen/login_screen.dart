@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,7 +8,6 @@ import 'package:odyss/core/constraints.dart';
 import 'package:odyss/core/providers/user_list_provider.dart';
 import 'package:odyss/data/models/user_model.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:odyss/screens/loading_animation_widget.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -25,7 +23,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    List<UserModel> users = ref.watch(userListProvider);
+    // List<UserModel> users = ref.watch(userListProvider);
 
     final myColors = Theme.of(context).extension<MyColors>()!;
     return GestureDetector(
@@ -287,7 +285,7 @@ Future<void> loginAndFetchUser(BuildContext context, WidgetRef ref) async {
 
     final data = jsonDecode(loginRes.body);
     final tokens = data['tokens'];
-    final user = data['user'];
+    // final user = data['user'];
 
     // Save tokens to secure storage
     await secureStorage.write(

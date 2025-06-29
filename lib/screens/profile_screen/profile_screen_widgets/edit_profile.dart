@@ -1,9 +1,17 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:http/http.dart' as http;
 import 'package:odyss/core/colors.dart';
 import 'package:odyss/core/constraints.dart';
+import 'package:odyss/core/providers/intro_video_provider.dart';
+import 'package:odyss/core/providers/profile_picture_provider.dart';
 import 'package:odyss/core/providers/user_list_provider.dart';
+import 'package:odyss/screens/profile_screen/profile_screen_widgets/image_changer_button.dart';
+import 'package:odyss/screens/profile_screen/profile_screen_widgets/video_changer_button.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:video_player/video_player.dart';
 
 class EditProfile extends ConsumerStatefulWidget {
   const EditProfile({super.key});
@@ -22,21 +30,32 @@ class _EditProfileState extends ConsumerState<EditProfile> {
   TextEditingController twitterController = TextEditingController();
   TextEditingController facebookController = TextEditingController();
 
+  Future<File> downloadFileFromUrl(String url, String filename) async {
+    final response = await http.get(Uri.parse(url));
+    final dir = await getTemporaryDirectory();
+    final file = File('${dir.path}/$filename');
+    await file.writeAsBytes(response.bodyBytes);
+    return file;
+  }
+
   @override
   void initState() {
+    super.initState();
     final users = ref.read(userListProvider);
-
     var user = users.firstWhere((element) => element.id == UID);
 
-    super.initState();
     nickNameController = TextEditingController(text: user.nickName);
     firstNameController = TextEditingController(text: user.firstName);
     lastNameController = TextEditingController(text: user.lastName);
     bioController = TextEditingController(text: user.bio);
-    // tiktokController = TextEditingController(text: user.tiktok);
-    // insatgramController = TextEditingController(text: user.insta);
-    // twitterController = TextEditingController(text: user.x);
-    // facebookController = TextEditingController(text: user.fb);
+
+    // Delay provider update until after the first frame
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (user.video.isNotEmpty) {
+        final file = await downloadFileFromUrl(user.video, 'profile_video.mp4');
+        ref.read(imageFileProvider.notifier).setImage(file);
+      }
+    });
   }
 
   @override
@@ -49,12 +68,36 @@ class _EditProfileState extends ConsumerState<EditProfile> {
     insatgramController.dispose();
     twitterController.dispose();
     facebookController.dispose();
+    _controller?.dispose();
     super.dispose();
+  }
+
+  VideoPlayerController? _controller;
+  File? _lastFile;
+
+  void _initializeVideo(File file) async {
+    _controller?.dispose();
+    _controller = VideoPlayerController.file(file);
+    await _controller!.initialize();
+    _controller!.play();
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
+    ref.listen<File?>(videoFileProvider, (previous, next) {
+      if (next != null && next != _lastFile) {
+        _lastFile = next;
+        _initializeVideo(next);
+      }
+    });
+
     final myColors = Theme.of(context).extension<MyColors>()!;
+
+    final video = ref.watch(videoFileProvider);
+
+    final profilePic = ref.watch(imageFileProvider);
+
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Material(
@@ -112,33 +155,38 @@ class _EditProfileState extends ConsumerState<EditProfile> {
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(60),
                                   color: Colors.blueGrey.shade100,
-                                ),
-                                child: Center(
-                                  child: TextButton(
-                                    onPressed: () {},
-                                    child: Image.asset(
-                                      'assets/images/pen.png',
-                                      height: 25,
-                                    ),
+                                  image: DecorationImage(
+                                    image: FileImage(profilePic!),
+                                    fit: BoxFit.cover,
                                   ),
                                 ),
+                                child: Center(child: ImageChangerButton()),
                               ),
-                              Container(
-                                width: 120,
-                                height: 120,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  color: Colors.blueGrey.shade100,
-                                ),
-                                child: Center(
-                                  child: TextButton(
-                                    onPressed: () {},
-                                    child: Image.asset(
-                                      'assets/images/pen.png',
-                                      height: 25,
+                              Stack(
+                                alignment: Alignment.topCenter,
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(20),
+                                    child: Container(
+                                      width: 120,
+                                      height: 120,
+                                      color: Colors.blueGrey.shade100,
+                                      child:
+                                          video != null &&
+                                              _controller != null &&
+                                              _controller!.value.isInitialized
+                                          ? VideoPlayer(_controller!)
+                                          : const Center(
+                                              child:
+                                                  CircularProgressIndicator(),
+                                            ),
                                     ),
                                   ),
-                                ),
+                                  Positioned(
+                                    top: 420,
+                                    child: const VideoChangerButton(),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
