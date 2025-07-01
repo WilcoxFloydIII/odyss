@@ -6,10 +6,11 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:odyss/core/colors.dart';
 import 'package:odyss/core/constraints.dart';
-import 'package:odyss/core/providers/ride_list_provider.dart';
-import 'package:odyss/core/providers/user_list_provider.dart';
+import 'package:odyss/core/providers/list_providers/ride_list_provider.dart';
+import 'package:odyss/core/providers/list_providers/user_list_provider.dart';
 import 'package:odyss/data/models/ride_model.dart';
 import 'package:odyss/screens/bottom_app_bar.dart';
+import 'package:odyss/screens/error_dialog_widget.dart';
 import 'package:video_player/video_player.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {
@@ -34,17 +35,87 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   Widget build(BuildContext context) {
     final myColors = Theme.of(context).extension<MyColors>()!;
 
-    final users = ref.watch(userListProvider);
+    final userListAsync = ref.watch(userListProvider);
+    final ridesListAsync = ref.watch(ridesListProvider);
 
-    var user = users.firstWhere((element) => element.id == UID);
+    if (userListAsync is AsyncLoading || ridesListAsync is AsyncLoading) {
+      return Scaffold(
+        body: const Center(child: CircularProgressIndicator()),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: const FloatingButtonWidget(),
+        bottomNavigationBar: ClipRRect(
+          borderRadius: const BorderRadiusGeometry.only(
+            topLeft: Radius.circular(25),
+            topRight: Radius.circular(25),
+          ),
+          child: BottomAppBarWidget(
+            toggle1: false,
+            toggle2: false,
+            toggle3: false,
+            toggle4: true,
+          ),
+        ),
+      );
+    }
 
-    var allRides = ref.watch(ridesListProvider);
+    if (userListAsync is AsyncError) {
+      // Print the full error for debugging
+      print('User data error: ${userListAsync.error}');
+      return Scaffold(
+        body: ErrorDialogWidget(
+          error: userListAsync.error.toString(),
+          onRetry: () => setState(() {}),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: FloatingButtonWidget(),
+        bottomNavigationBar: ClipRRect(
+          borderRadius: BorderRadiusGeometry.only(
+            topLeft: Radius.circular(25),
+            topRight: Radius.circular(25),
+          ),
+          child: BottomAppBarWidget(
+            toggle1: false,
+            toggle2: false,
+            toggle3: false,
+            toggle4: true,
+          ),
+        ),
+      );
+    }
+
+    if (ridesListAsync is AsyncError) {
+      // Print the full error for debugging
+      print('Rides data error: ${ridesListAsync.error}');
+      return Scaffold(
+        body: ErrorDialogWidget(
+          error: 'Failed to load rides data.',
+          onRetry: () => setState(() {}),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: FloatingButtonWidget(),
+        bottomNavigationBar: ClipRRect(
+          borderRadius: BorderRadiusGeometry.only(
+            topLeft: Radius.circular(25),
+            topRight: Radius.circular(25),
+          ),
+          child: BottomAppBarWidget(
+            toggle1: false,
+            toggle2: false,
+            toggle3: false,
+            toggle4: true,
+          ),
+        ),
+      );
+    }
+
+    final users = userListAsync.value ?? [];
+    final user = users.firstWhere((element) => element.id == UID);
+
+    final allRides = ridesListAsync.value ?? [];
 
     Future<String?> getUserPicture() async {
       final imagePath = user.picture;
-      return imagePath.isNotEmpty
-          ? imagePath
-          : null; // Return null if no picture is set
+      return imagePath.isNotEmpty ? imagePath : null;
     }
 
     Widget showPic() {
@@ -1071,14 +1142,14 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                           child: Column(
                                             children: [
                                               Text(
-                                                '${(rides[index].seats - rides[index].memberIds.length).toString()} seats',
+                                                '1 seat',
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.w600,
                                                   fontSize: 12,
                                                 ),
                                               ),
                                               Text(
-                                                'available',
+                                                'booked',
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.w400,
                                                   fontSize: 10,
@@ -1119,9 +1190,26 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                           },
                         ),
                       ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: () async {
+                                await secureStorage.delete(key: 'access_token');
+                                await secureStorage.delete(
+                                  key: 'refresh_token',
+                                );
+                                context.go('/start');
+                              },
+                              child: Text('Log out'),
+                            ),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 ),
+                
               ],
             ),
           ),

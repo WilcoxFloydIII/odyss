@@ -3,7 +3,7 @@ class RideModel {
   final List memberIds;
   final int seats;
   final String company;
-  final int price;
+  final double price;
   final String departureLoc;
   final String arrivalLoc;
   final DateTime departureDate;
@@ -60,7 +60,7 @@ class RideModel {
     List? memberIds,
     int? seats,
     String? company,
-    int? price,
+    double? price,
     String? departureLoc,
     String? arrivalLoc,
     DateTime? departureDate,
@@ -104,7 +104,6 @@ class RideModel {
       'creator': creator,
       'fill': fill,
       'vibes': vibes,
-      'email': email, // Assuming email is not part of the ride model
     };
   }
 
@@ -123,6 +122,7 @@ class RideModel {
       'arrivalDate': arrivalDate.toIso8601String(),
       'creator': creator,
       'fill': fill,
+      'vibes': vibes,
     };
   }
 }

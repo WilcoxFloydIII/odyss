@@ -5,11 +5,11 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:odyss/core/colors.dart';
 import 'package:odyss/core/constraints.dart';
-import 'package:odyss/core/providers/ride_list_provider.dart';
-import 'package:odyss/core/providers/user_list_provider.dart';
+import 'package:odyss/core/providers/list_providers/ride_list_provider.dart';
+import 'package:odyss/core/providers/list_providers/user_list_provider.dart';
 import 'package:odyss/data/models/ride_model.dart';
 import 'package:odyss/data/models/user_model.dart';
-import 'package:odyss/screens/rides_screen/rides_screen_widgets/make_payment_widget.dart';
+import 'package:odyss/screens/rides_screen/rides_screen_widgets/almost_done_screen.dart';
 
 class SelectedRideDialog extends ConsumerStatefulWidget {
   const SelectedRideDialog({super.key, required this.rideId});
@@ -21,25 +21,47 @@ class SelectedRideDialog extends ConsumerStatefulWidget {
 }
 
 class _SelectedRideDialogState extends ConsumerState<SelectedRideDialog> {
-
-
-  
   bool splitCost = true;
   bool offlineFill = false;
 
   @override
   Widget build(BuildContext context) {
     final myColors = Theme.of(context).extension<MyColors>()!;
-    List<UserModel> allUsers = ref.watch(userListProvider);
-    List<RideModel> allRides = ref.watch(ridesListProvider);
+
+    final userListAsync = ref.watch(userListProvider);
+    final ridesListAsync = ref.watch(ridesListProvider);
+
+    if (userListAsync is AsyncLoading || ridesListAsync is AsyncLoading) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
+    if (userListAsync is AsyncError) {
+      return Scaffold(
+        body: Center(
+          child: Text('Failed to load user data: ${userListAsync.error}'),
+        ),
+      );
+    }
+
+    if (ridesListAsync is AsyncError) {
+      return Scaffold(
+        body: Center(
+          child: Text('Failed to load rides data: ${ridesListAsync.error}'),
+        ),
+      );
+    }
+
+    List<UserModel> allUsers = userListAsync.value ?? [];
+    List<RideModel> allRides = ridesListAsync.value ?? [];
     RideModel ride = allRides.firstWhere((ride) => ride.id == widget.rideId);
     List<UserModel> members = allUsers
         .where((user) => ride.memberIds.contains(user.id))
         .toList();
     bool isMember = members.any((member) => member.id == UID);
 
-    ride.fill? splitCost = false : splitCost = true;
-    ride.fill? offlineFill = true : offlineFill = false;
+    ride.fill ? splitCost = false : splitCost = true;
+    ride.fill ? offlineFill = true : offlineFill = false;
+
     return Scaffold(
       backgroundColor: myColors.backgound,
       extendBodyBehindAppBar: false,
@@ -132,8 +154,7 @@ class _SelectedRideDialogState extends ConsumerState<SelectedRideDialog> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Row(
-                              mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
                                   ride.departureLoc,
@@ -153,8 +174,7 @@ class _SelectedRideDialogState extends ConsumerState<SelectedRideDialog> {
                             ),
                             SizedBox(height: 27),
                             Row(
-                              mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
                                   ride.arrivalLoc,
@@ -242,6 +262,12 @@ class _SelectedRideDialogState extends ConsumerState<SelectedRideDialog> {
                                                   color: Colors.black,
                                                 ),
                                                 color: Colors.grey.shade300,
+                                                image: DecorationImage(
+                                                  image: NetworkImage(
+                                                    members[indexnew].picture,
+                                                  ),
+                                                  fit: BoxFit.cover,
+                                                ),
                                                 borderRadius:
                                                     BorderRadius.circular(20),
                                               ),
@@ -348,10 +374,7 @@ class _SelectedRideDialogState extends ConsumerState<SelectedRideDialog> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Refund Eligibility',
-                      style: TextStyle(fontSize: 15),
-                    ),
+                    Text('Refund Eligibility', style: TextStyle(fontSize: 15)),
                     SizedBox(height: 10),
                     ListTile(
                       leading: Icon(Icons.circle, size: 5),
@@ -542,12 +565,8 @@ class _SelectedRideDialogState extends ConsumerState<SelectedRideDialog> {
                                     milliseconds: 300,
                                   ),
                                   pageBuilder:
-                                      (
-                                        context,
-                                        animation,
-                                        secondaryAnimation,
-                                      ) {
-                                        return MakePaymentWidget();
+                                      (context, animation, secondaryAnimation) {
+                                        return AlmostDoneScreen();
                                       },
                                   transitionBuilder:
                                       (
@@ -562,12 +581,12 @@ class _SelectedRideDialogState extends ConsumerState<SelectedRideDialog> {
                                         ); // Slide in from right
                                         const end = Offset.zero;
                                         const curve = Curves.ease;
-    
+
                                         final tween = Tween(
                                           begin: begin,
                                           end: end,
                                         ).chain(CurveTween(curve: curve));
-    
+
                                         return SlideTransition(
                                           position: animation.drive(tween),
                                           child: child,

@@ -4,9 +4,11 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:odyss/core/colors.dart';
 import 'package:odyss/core/constraints.dart';
-import 'package:odyss/core/providers/circles_list.dart';
+import 'package:odyss/core/providers/list_providers/circles_list.dart';
 import 'package:odyss/data/models/circle_model.dart';
 import 'package:odyss/screens/bottom_app_bar.dart';
+import 'package:odyss/screens/error_dialog_widget.dart';
+import 'package:odyss/screens/loading_animation_widget.dart';
 
 class CirclesScreen extends ConsumerStatefulWidget {
   const CirclesScreen({super.key});
@@ -20,7 +22,52 @@ class _CirclesScreenState extends ConsumerState<CirclesScreen> {
   Widget build(BuildContext context) {
     final myColors = Theme.of(context).extension<MyColors>()!;
 
-    List<CircleModel> allCircles = ref.watch(CircleListProvider);
+    final allCirclesAsync = ref.watch(CircleListProvider);
+
+    if (allCirclesAsync is AsyncLoading) {
+      return Scaffold(
+        body: Center(child: LoadingAnimationWidget()),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: FloatingButtonWidget(),
+        bottomNavigationBar: ClipRRect(
+          borderRadius: BorderRadiusGeometry.only(
+            topLeft: Radius.circular(25),
+            topRight: Radius.circular(25),
+          ),
+          child: BottomAppBarWidget(
+            toggle1: true,
+            toggle2: false,
+            toggle3: false,
+            toggle4: false,
+          ),
+        ),
+      );
+    }
+
+    if (allCirclesAsync is AsyncError) {
+      return Scaffold(
+        body: ErrorDialogWidget(
+          error: allCirclesAsync.error.toString(),
+          onRetry: () => setState(() {}),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: FloatingButtonWidget(),
+        bottomNavigationBar: ClipRRect(
+          borderRadius: BorderRadiusGeometry.only(
+            topLeft: Radius.circular(25),
+            topRight: Radius.circular(25),
+          ),
+          child: BottomAppBarWidget(
+            toggle1: true,
+            toggle2: false,
+            toggle3: false,
+            toggle4: false,
+          ),
+        ),
+      );
+    }
+
+    List<CircleModel> allCircles = allCirclesAsync.value ?? [];
 
     List<CircleModel> memberCircles = allCircles
         .where((circle) => circle.users.contains(UID))
@@ -445,17 +492,6 @@ class _CirclesScreenState extends ConsumerState<CirclesScreen> {
                                           ),
                                           TextButton(
                                             onPressed: () {
-                                              ref
-                                                  .read(
-                                                    CircleListProvider.notifier,
-                                                  )
-                                                  .updateCircle(
-                                                    circle.id,
-                                                    users: [
-                                                      ...circle.users,
-                                                      UID,
-                                                    ],
-                                                  );
                                               context.push(
                                                 '/circle/${circle.id}',
                                               );

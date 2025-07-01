@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 import 'package:odyss/core/constraints.dart';
-import 'package:odyss/core/providers/user_list_provider.dart';
+import 'package:odyss/core/providers/list_providers/user_list_provider.dart';
 import 'package:odyss/data/models/user_model.dart';
 import 'package:odyss/screens/error_dialog_widget.dart';
 import 'package:odyss/screens/loading_animation_widget.dart';
@@ -128,22 +128,12 @@ class _SignupScreen6State extends ConsumerState<SignupScreen6> {
         );
         if (userResponse.statusCode == 200) {
           final userData = jsonDecode(userResponse.body);
-          final userModel = UserModel.fromJson(userData);
-          ref.read(userListProvider.notifier).addUser(userModel);
         } else {
           print('Failed to fetch user data: ${userResponse.body}');
         }
       } catch (e) {
         print('Error fetching user data: $e');
       }
-
-      // Save user info to shared preferences
-      final prefs = await getSharedPrefs();
-      await prefs.setString('user_id', user['id']);
-      await prefs.setString('user_name', user['name']);
-      await prefs.setString('user_email', user['email']);
-      await prefs.setString('user_role', user['role']);
-      await prefs.setString('user_avatar', user['avatar']);
 
       Navigator.pop(context); // Dismiss loading
       context.go('/rides'); // Navigate to rides screen

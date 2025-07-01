@@ -3,12 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:odyss/core/colors.dart';
-import 'package:odyss/core/providers/circles_list.dart';
-import 'package:odyss/core/providers/ride_list_provider.dart';
-import 'package:odyss/core/providers/user_list_provider.dart';
+import 'package:odyss/core/providers/list_providers/circles_list.dart';
+import 'package:odyss/core/providers/list_providers/ride_list_provider.dart';
+import 'package:odyss/core/providers/list_providers/user_list_provider.dart';
 import 'package:odyss/data/models/circle_model.dart';
 import 'package:odyss/data/models/ride_model.dart';
 import 'package:odyss/data/models/user_model.dart';
+import 'package:odyss/screens/error_dialog_widget.dart';
+import 'package:odyss/screens/loading_animation_widget.dart';
 
 class CircleMembersScreen extends ConsumerStatefulWidget {
   const CircleMembersScreen({Key? key, required this.id}) : super(key: key);
@@ -25,15 +27,50 @@ class _CircleMembersScreenState extends ConsumerState<CircleMembersScreen> {
   Widget build(BuildContext context) {
     final myColors = Theme.of(context).extension<MyColors>()!;
 
-    List<CircleModel> allCircles = ref.watch(CircleListProvider);
+    final allCirclesAsync = ref.watch(CircleListProvider);
+    final allUsersAsync = ref.watch(userListProvider);
+    final allRidesAsync = ref.watch(ridesListProvider);
 
-    List<UserModel> allUsers = ref.watch(userListProvider);
+    // Handle loading and error for all providers
+    if (allCirclesAsync is AsyncLoading ||
+        allUsersAsync is AsyncLoading ||
+        allRidesAsync is AsyncLoading) {
+      return const Scaffold(body: Center(child: LoadingAnimationWidget()));
+    }
+
+    if (allCirclesAsync is AsyncError) {
+      return Scaffold(
+        body: ErrorDialogWidget(
+          error: allCirclesAsync.error.toString(),
+          onRetry: () => setState(() {}),
+        ),
+      );
+    }
+    if (allUsersAsync is AsyncError) {
+      return Scaffold(
+        body: ErrorDialogWidget(
+          error: allUsersAsync.error.toString(),
+          onRetry: () => setState(() {}),
+        ),
+      );
+    }
+    if (allRidesAsync is AsyncError) {
+      return Scaffold(
+        body: ErrorDialogWidget(
+          error: allRidesAsync.error.toString(),
+          onRetry: () => setState(() {}),
+        ),
+      );
+    }
+
+    // Extract data after loading/error checks
+    List<CircleModel> allCircles = allCirclesAsync.value ?? [];
+    List<UserModel> allUsers = allUsersAsync.value ?? [];
+    List<RideModel> allRides = allRidesAsync.value ?? [];
 
     CircleModel circle = allCircles.firstWhere(
       (circle) => circle.id == widget.id,
     );
-
-    List<RideModel> allRides = ref.watch(ridesListProvider);
 
     return Scaffold(
       appBar: PreferredSize(

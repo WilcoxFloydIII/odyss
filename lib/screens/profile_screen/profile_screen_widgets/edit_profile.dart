@@ -7,7 +7,7 @@ import 'package:odyss/core/colors.dart';
 import 'package:odyss/core/constraints.dart';
 import 'package:odyss/core/providers/intro_video_provider.dart';
 import 'package:odyss/core/providers/profile_picture_provider.dart';
-import 'package:odyss/core/providers/user_list_provider.dart';
+import 'package:odyss/core/providers/list_providers/user_list_provider.dart';
 import 'package:odyss/screens/profile_screen/profile_screen_widgets/image_changer_button.dart';
 import 'package:odyss/screens/profile_screen/profile_screen_widgets/video_changer_button.dart';
 import 'package:path_provider/path_provider.dart';
@@ -38,24 +38,15 @@ class _EditProfileState extends ConsumerState<EditProfile> {
     return file;
   }
 
-  @override
-  void initState() {
-    super.initState();
-    final users = ref.read(userListProvider);
-    var user = users.firstWhere((element) => element.id == UID);
+  VideoPlayerController? _controller;
+  File? _lastFile;
 
-    nickNameController = TextEditingController(text: user.nickName);
-    firstNameController = TextEditingController(text: user.firstName);
-    lastNameController = TextEditingController(text: user.lastName);
-    bioController = TextEditingController(text: user.bio);
-
-    // Delay provider update until after the first frame
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      if (user.video.isNotEmpty) {
-        final file = await downloadFileFromUrl(user.video, 'profile_video.mp4');
-        ref.read(imageFileProvider.notifier).setImage(file);
-      }
-    });
+  void _initializeVideo(File file) async {
+    _controller?.dispose();
+    _controller = VideoPlayerController.file(file);
+    await _controller!.initialize();
+    _controller!.play();
+    setState(() {});
   }
 
   @override
@@ -72,17 +63,6 @@ class _EditProfileState extends ConsumerState<EditProfile> {
     super.dispose();
   }
 
-  VideoPlayerController? _controller;
-  File? _lastFile;
-
-  void _initializeVideo(File file) async {
-    _controller?.dispose();
-    _controller = VideoPlayerController.file(file);
-    await _controller!.initialize();
-    _controller!.play();
-    setState(() {});
-  }
-
   @override
   Widget build(BuildContext context) {
     ref.listen<File?>(videoFileProvider, (previous, next) {
@@ -93,9 +73,37 @@ class _EditProfileState extends ConsumerState<EditProfile> {
     });
 
     final myColors = Theme.of(context).extension<MyColors>()!;
+    final userListAsync = ref.watch(userListProvider);
+
+    if (userListAsync is AsyncLoading) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
+    if (userListAsync is AsyncError) {
+      return Scaffold(
+        body: Center(
+          child: Text('Failed to load user data: ${userListAsync.error}'),
+        ),
+      );
+    }
+
+    final users = userListAsync.value ?? [];
+    final user = users.firstWhere((element) => element.id == UID);
+
+    // Initialize controllers only if they are empty (to avoid overwriting edits on rebuild)
+    nickNameController.text = user.nickName;
+    firstNameController.text = user.firstName;
+    lastNameController.text = user.lastName;
+    bioController.text = user.bio;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (user.video.isNotEmpty) {
+        final file = await downloadFileFromUrl(user.video, 'profile_video.mp4');
+        ref.read(imageFileProvider.notifier).setImage(file);
+      }
+    });
 
     final video = ref.watch(videoFileProvider);
-
     final profilePic = ref.watch(imageFileProvider);
 
     return GestureDetector(
@@ -115,7 +123,6 @@ class _EditProfileState extends ConsumerState<EditProfile> {
                     },
                     icon: Icon(Icons.arrow_back_ios_rounded, size: 25),
                   ),
-
                   Text(
                     'Edit your profile',
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
@@ -156,7 +163,12 @@ class _EditProfileState extends ConsumerState<EditProfile> {
                                   borderRadius: BorderRadius.circular(60),
                                   color: Colors.blueGrey.shade100,
                                   image: DecorationImage(
-                                    image: FileImage(profilePic!),
+                                    image: profilePic != null
+                                        ? FileImage(profilePic)
+                                        : const AssetImage(
+                                                'assets/images/default_profile.png',
+                                              )
+                                              as ImageProvider,
                                     fit: BoxFit.cover,
                                   ),
                                 ),
@@ -559,20 +571,7 @@ class _EditProfileState extends ConsumerState<EditProfile> {
                         Expanded(
                           child: ElevatedButton(
                             onPressed: () {
-                              ref
-                                  .read(userListProvider.notifier)
-                                  .updateUser(
-                                    UID,
-                                    nickName: nickNameController.text,
-                                    firstName: firstNameController.text,
-                                    lastName: lastNameController.text,
-                                    bio: bioController.text,
-                                    // tiktok: tiktokController.text,
-                                    // insta: insatgramController.text,
-                                    // x: twitterController.text,
-                                    // fb: facebookController.text,
-                                  );
-                              context.pop();
+                            
                             },
                             child: Text('Update'),
                           ),

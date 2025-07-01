@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class MakePaymentWidget extends StatefulWidget {
-  const MakePaymentWidget({super.key});
+class AlmostDoneScreen extends StatefulWidget {
+  const AlmostDoneScreen({super.key});
 
   @override
-  State<MakePaymentWidget> createState() => _MakePaymentWidgetState();
+  State<AlmostDoneScreen> createState() => _AlmostDoneState();
 }
 
-class _MakePaymentWidgetState extends State<MakePaymentWidget> {
+class _AlmostDoneState extends State<AlmostDoneScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

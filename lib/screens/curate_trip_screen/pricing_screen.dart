@@ -4,14 +4,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:odyss/core/colors.dart';
 import 'package:odyss/core/constraints.dart';
-import 'package:odyss/core/providers/company_list_provider.dart';
-import 'package:odyss/core/providers/route_list_provider.dart';
-import 'package:odyss/core/providers/user_list_provider.dart';
+import 'package:odyss/core/providers/list_providers/company_list_provider.dart';
+import 'package:odyss/core/providers/list_providers/route_list_provider.dart';
+import 'package:odyss/core/providers/list_providers/user_list_provider.dart';
 import 'package:odyss/data/models/company_model.dart';
 import 'package:odyss/data/models/ride_model.dart';
 import 'package:odyss/data/models/route_model.dart';
 import 'package:odyss/data/models/user_model.dart';
 import 'package:odyss/screens/curate_trip_screen/curate_trip_widgets/initiate_trip_function.dart';
+import 'package:odyss/screens/error_dialog_widget.dart';
 
 class PricingScreen extends ConsumerStatefulWidget {
   const PricingScreen({super.key});
@@ -30,9 +31,55 @@ class _PricingScreenState extends ConsumerState<PricingScreen> {
   Widget build(BuildContext context) {
     final myColors = Theme.of(context).extension<MyColors>()!;
 
-    final partnerList = ref.watch(partnerListProvider);
+    final partnerListAsync = ref.watch(partnerListProvider);
+    final routesListAsync = ref.watch(routesListProvider);
+    final userListAsync = ref.watch(userListProvider);
+    final vehiclesListAsync = ref.watch(vehiclesListProvider);
 
-    final List<RouteModel> routesList = ref.watch(routesListProvider);
+    if (partnerListAsync is AsyncLoading ||
+        routesListAsync is AsyncLoading ||
+        userListAsync is AsyncLoading ||
+        vehiclesListAsync is AsyncLoading) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
+    if (partnerListAsync is AsyncError) {
+      return Scaffold(
+        body: ErrorDialogWidget(
+          error: partnerListAsync.error.toString(),
+          onRetry: () => setState(() {}),
+        ),
+      );
+    }
+    if (routesListAsync is AsyncError) {
+      return Scaffold(
+        body: ErrorDialogWidget(
+          error: routesListAsync.error.toString(),
+          onRetry: () => setState(() {}),
+        ),
+      );
+    }
+    if (userListAsync is AsyncError) {
+      return Scaffold(
+        body: ErrorDialogWidget(
+          error: userListAsync.error.toString(),
+          onRetry: () => setState(() {}),
+        ),
+      );
+    }
+    if (vehiclesListAsync is AsyncError) {
+      return Scaffold(
+        body: ErrorDialogWidget(
+          error: vehiclesListAsync.error.toString(),
+          onRetry: () => setState(() {}),
+        ),
+      );
+    }
+
+    final partnerList = partnerListAsync.value ?? [];
+    final List<RouteModel> routesList = routesListAsync.value ?? [];
+    final List<UserModel> users = userListAsync.value ?? [];
+    final List<VehicleModel> vehicles = vehiclesListAsync.value ?? [];
 
     PartnerModel currPartner = partnerList.firstWhere(
       (currPartner) => currPartner.name == newRide['partner'],
@@ -48,15 +95,13 @@ class _PricingScreenState extends ConsumerState<PricingScreen> {
           route.departureLocation == newRide['depLoc'],
     );
 
-    VehicleModel currVehicle = currRoute.vehicles.firstWhere(
+    VehicleModel currVehicle = vehicles.firstWhere(
       (vehicle) => vehicle.type == newRide['vehicle'],
     );
 
-    List<UserModel> users = ref.watch(userListProvider);
-
     UserModel user = users.firstWhere((user) => user.id == UID);
 
-    priceController.text = currVehicle.price;
+    priceController.text = currRoute.price;
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
@@ -386,89 +431,89 @@ class _PricingScreenState extends ConsumerState<PricingScreen> {
                               Container(
                                 child: ElevatedButton(
                                   onPressed: () async {
-                                  if (fillController.text.isEmpty) {
-                                    ScaffoldMessenger.of(
-                                    context,
-                                    ).showSnackBar(
-                                    SnackBar(
-                                      duration: Duration(seconds: 2),
-                                      backgroundColor: myColors.backgound,
-                                      content: Text(
-                                      textAlign: TextAlign.center,
-                                      'Select a fill-in preference to continue',
-                                      style: TextStyle(
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.red,
-                                      ),
-                                      ),
-                                    ),
-                                    );
-                                  }
-
-                                  newRide['members'].add(UID);
-                                  newRide['price'] = priceController.text;
-                                  newRide['fill'] = fill;
-                                  DateTime date = newRide['date'];
-                                  DateTime time = newRide['time'];
-
-                                  String tod() {
-                                    if (time.hour < 12) {
-                                    return 'Morning';
-                                    } else if (time.hour < 18) {
-                                    return 'Afternoon';
-                                    } else {
-                                    return 'Evening';
+                                    if (fillController.text.isEmpty) {
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(
+                                          duration: Duration(seconds: 2),
+                                          backgroundColor: myColors.backgound,
+                                          content: Text(
+                                            textAlign: TextAlign.center,
+                                            'Select a fill-in preference to continue',
+                                            style: TextStyle(
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.red,
+                                            ),
+                                          ),
+                                        ),
+                                      );
                                     }
-                                  }
 
-                                  var newRideModel = RideModel(
-                                    vehicle: newRide['vehicle'],
-                                    memberIds: [UID],
-                                    seats: int.parse(newRide['seats']),
-                                    company: newRide['partner'],
-                                    price: int.parse(newRide['price']),
-                                    departureLoc: newRide['depLoc'],
-                                    arrivalLoc: newRide['destLoc'],
-                                    departureTOD: tod(),
-                                    departureDate: DateTime(
-                                    date.year,
-                                    date.month,
-                                    date.day,
-                                    time.hour,
-                                    time.minute,
-                                    ),
-                                    arrivalDate: DateTime(
-                                    date.year,
-                                    date.month,
-                                    date.day,
-                                    time.hour + 8,
-                                    time.minute,
-                                    ),
-                                    id: "",
-                                    creator: UID,
-                                    fill: newRide['fill'],
-                                    vibes: List.from(newRide['vibes']),
-                                  );
-                                  initiateTripAndPay(
-                                    context: context,
-                                    ride: newRideModel,
-                                    userEmail: user.email,
-                                  ); // Dismiss loading
+                                    newRide['members'].add(UID);
+                                    newRide['price'] = priceController.text;
+                                    newRide['fill'] = fill;
+                                    DateTime date = newRide['date'];
+                                    DateTime time = newRide['time'];
+
+                                    String tod() {
+                                      if (time.hour < 12) {
+                                        return 'Morning';
+                                      } else if (time.hour < 18) {
+                                        return 'Afternoon';
+                                      } else {
+                                        return 'Evening';
+                                      }
+                                    }
+
+                                    var newRideModel = RideModel(
+                                      vehicle: newRide['vehicle'],
+                                      memberIds: [UID],
+                                      seats: int.parse(newRide['seats']),
+                                      company: newRide['partner'],
+                                      price: double.parse(newRide['price']),
+                                      departureLoc: newRide['depLoc'],
+                                      arrivalLoc: newRide['destLoc'],
+                                      departureTOD: tod(),
+                                      departureDate: DateTime(
+                                        date.year,
+                                        date.month,
+                                        date.day,
+                                        time.hour,
+                                        time.minute,
+                                      ),
+                                      arrivalDate: DateTime(
+                                        date.year,
+                                        date.month,
+                                        date.day,
+                                        time.hour + 8,
+                                        time.minute,
+                                      ),
+                                      id: "",
+                                      creator: UID,
+                                      fill: newRide['fill'],
+                                      vibes: List.from(newRide['vibes']),
+                                    );
+                                    initiateTripAndPay(
+                                      context: context,
+                                      ride: newRideModel,
+                                      userEmail: user.email,
+                                    ); // Dismiss loading
                                   },
                                   child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                    'Book your seat',
-                                    style: TextStyle(fontSize: 15),
-                                    ),
-                                    SizedBox(width: 10),
-                                    Icon(
-                                    Icons.arrow_forward_rounded,
-                                    size: 20,
-                                    ),
-                                  ],
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        'Book your seat',
+                                        style: TextStyle(fontSize: 15),
+                                      ),
+                                      SizedBox(width: 10),
+                                      Icon(
+                                        Icons.arrow_forward_rounded,
+                                        size: 20,
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),

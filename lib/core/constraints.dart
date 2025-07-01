@@ -9,7 +9,12 @@ String verifyOTP = 'https://server.odyss.ng/auth/verify-otp';
 String register = 'https://server.odyss.ng/auth/register';
 String login = 'https://server.odyss.ng/auth/login';
 String usersUrl = 'https://server.odyss.ng/users/me';
+String usersUrl2 = 'https://server.odyss.ng/users';
 String tripsUrl = 'https://server.odyss.ng/payments/initiate-trip';
+String tripsUrl2 = 'https://server.odyss.ng/trips';
+String partnerUrl = 'https://server.odyss.ng/users/companies';
+String routesUrl = 'https://server.odyss.ng/users/company_routes';
+String vehiclesUrl = 'https://server.odyss.ng/users/company_vehicles';
 // String initPayment = 'https://server.odyss.ng/payments/initiate';
 // String verifyPayment = 'https://server.odyss.ng/payments/verify';
 

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -5,10 +6,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:odyss/core/colors.dart';
 import 'package:odyss/core/constraints.dart';
-import 'package:odyss/core/providers/user_list_provider.dart';
+import 'package:odyss/core/providers/list_providers/user_list_provider.dart';
+import 'package:odyss/core/providers/list_providers/ride_list_provider.dart';
+import 'package:odyss/data/models/ride_model.dart';
 import 'package:odyss/data/models/user_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:odyss/screens/loading_animation_widget.dart';
+import 'package:odyss/screens/error_dialog_widget.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -285,7 +289,6 @@ Future<void> loginAndFetchUser(BuildContext context, WidgetRef ref) async {
 
     final data = jsonDecode(loginRes.body);
     final tokens = data['tokens'];
-    // final user = data['user'];
 
     // Save tokens to secure storage
     await secureStorage.write(
@@ -310,17 +313,16 @@ Future<void> loginAndFetchUser(BuildContext context, WidgetRef ref) async {
       if (userResponse.statusCode == 200) {
         final userData = jsonDecode(userResponse.body);
         final userModel = UserModel.fromJson(userData);
-        ref.read(userListProvider.notifier).addUser(userModel);
 
         UID = userModel.id; // Store UID globally
         print('User ID: $UID');
         print('User Email: ${userModel.email}');
         print('User Name: ${userModel.firstName} ${userModel.lastName}');
       } else {
-        print('Failed to fetch user data: ${userResponse.body}');
+        throw Exception('Failed to fetch user data: ${userResponse.body}');
       }
     } catch (e) {
-      print('Error fetching user data: $e');
+      throw Exception('Error fetching user data: $e');
     }
 
     Navigator.pop(context); // Dismiss loading
@@ -331,15 +333,12 @@ Future<void> loginAndFetchUser(BuildContext context, WidgetRef ref) async {
       context: context,
       barrierDismissible: false,
       barrierColor: const Color(0x77F5F5F5),
-      builder: (_) => AlertDialog(
-        title: const Text('Login Error'),
-        content: Text(e.toString()),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('OK'),
-          ),
-        ],
+      builder: (_) => ErrorDialogWidget(
+        error: e.toString(),
+        onRetry: () {
+          Navigator.pop(context);
+          loginAndFetchUser(context, ref);
+        },
       ),
     );
   }

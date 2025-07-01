@@ -4,8 +4,9 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:odyss/core/colors.dart';
 import 'package:odyss/core/constraints.dart';
-import 'package:odyss/core/providers/circles_list.dart';
+import 'package:odyss/core/providers/list_providers/circles_list.dart';
 import 'package:odyss/data/models/circle_model.dart';
+import 'package:odyss/screens/error_dialog_widget.dart';
 
 class CreateCircleScreen extends ConsumerStatefulWidget {
   const CreateCircleScreen({super.key});
@@ -43,9 +44,24 @@ class _CreateCircleScreenState extends ConsumerState<CreateCircleScreen> {
 
   @override
   Widget build(BuildContext context) {
-    List<CircleModel> allCircles = ref.watch(CircleListProvider);
-
     final myColors = Theme.of(context).extension<MyColors>()!;
+    final allCirclesAsync = ref.watch(CircleListProvider);
+
+    if (allCirclesAsync is AsyncLoading) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
+    if (allCirclesAsync is AsyncError) {
+      return Scaffold(
+        body: ErrorDialogWidget(
+          error: allCirclesAsync.error.toString(),
+          onRetry: () => setState(() {}),
+        ),
+      );
+    }
+
+    List<CircleModel> allCircles = allCirclesAsync.value ?? [];
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -545,10 +561,6 @@ class _CreateCircleScreenState extends ConsumerState<CreateCircleScreen> {
                                     endDate: selectedRange!.end,
                                     users: [UID],
                                   );
-                                  ref
-                                      .read(CircleListProvider.notifier)
-                                      .addCircle(newCircle);
-                                  context.go('/circles');
                                 }
                               },
                               child: Row(

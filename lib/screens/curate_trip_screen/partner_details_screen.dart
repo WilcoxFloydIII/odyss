@@ -4,10 +4,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:odyss/core/colors.dart';
 import 'package:odyss/core/constraints.dart';
-import 'package:odyss/core/providers/company_list_provider.dart';
-import 'package:odyss/core/providers/route_list_provider.dart';
+import 'package:odyss/core/providers/list_providers/company_list_provider.dart';
+import 'package:odyss/core/providers/list_providers/route_list_provider.dart';
 import 'package:odyss/data/models/company_model.dart';
 import 'package:odyss/data/models/route_model.dart';
+import 'package:odyss/screens/error_dialog_widget.dart';
+import 'package:odyss/screens/loading_animation_widget.dart';
 
 class PartnerDetailsScreen extends ConsumerStatefulWidget {
   const PartnerDetailsScreen({super.key});
@@ -30,9 +32,44 @@ class _PartnerDetailsScreenState extends ConsumerState<PartnerDetailsScreen> {
   Widget build(BuildContext context) {
     final myColors = Theme.of(context).extension<MyColors>()!;
 
-    final partnerList = ref.watch(partnerListProvider);
+    final partnerListAsync = ref.watch(partnerListProvider);
+    final routesListAsync = ref.watch(routesListProvider);
+    final vehiclesListAsync = ref.watch(vehiclesListProvider);
 
-    final routesList = ref.watch(routesListProvider);
+    if (partnerListAsync is AsyncLoading ||
+        routesListAsync is AsyncLoading ||
+        vehiclesListAsync is AsyncLoading) {
+      return const Scaffold(body: Center(child: LoadingAnimationWidget()));
+    }
+
+    if (partnerListAsync is AsyncError) {
+      return Scaffold(
+        body: ErrorDialogWidget(
+          error: partnerListAsync.error.toString(),
+          onRetry: () => setState(() {}),
+        ),
+      );
+    }
+    if (routesListAsync is AsyncError) {
+      return Scaffold(
+        body: ErrorDialogWidget(
+          error: routesListAsync.error.toString(),
+          onRetry: () => setState(() {}),
+        ),
+      );
+    }
+    if (vehiclesListAsync is AsyncError) {
+      return Scaffold(
+        body: ErrorDialogWidget(
+          error: vehiclesListAsync.error.toString(),
+          onRetry: () => setState(() {}),
+        ),
+      );
+    }
+
+    final partnerList = partnerListAsync.value ?? [];
+    final routesList = routesListAsync.value ?? [];
+    final allVehicles = vehiclesListAsync.value ?? [];
 
     List<RouteModel> routes = routesList
         .where(
@@ -344,7 +381,11 @@ class _PartnerDetailsScreenState extends ConsumerState<PartnerDetailsScreen> {
                                           List.generate(
                                             selectedRoute.vehicles.length,
                                             (i) {
-                                              return selectedRoute.vehicles[i];
+                                              return allVehicles.firstWhere(
+                                                (vehicle) =>
+                                                    vehicle.id ==
+                                                    selectedRoute.vehicles[i],
+                                              );
                                             },
                                           );
 
@@ -646,7 +687,8 @@ class _PartnerDetailsScreenState extends ConsumerState<PartnerDetailsScreen> {
                                                         : '${selectedRoute.departureTime[index].hour} : ${minuteDigitSmall ? '0${selectedRoute.departureTime[index].minute}' : '${selectedRoute.departureTime[index].minute}'}';
                                                     time = DateTime(
                                                       0,
-                                                      0, 0, 
+                                                      0,
+                                                      0,
                                                       selectedRoute
                                                           .departureTime[index]
                                                           .hour,

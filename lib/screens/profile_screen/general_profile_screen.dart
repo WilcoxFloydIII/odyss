@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:odyss/core/colors.dart';
 //import 'package:odyss/core/providers/ride_list_provider.dart';
-import 'package:odyss/core/providers/user_list_provider.dart';
+import 'package:odyss/core/providers/list_providers/user_list_provider.dart';
 //import 'package:odyss/data/models/ride_model.dart';
 
 class GeneralProfileScreen extends ConsumerStatefulWidget {
@@ -23,11 +23,22 @@ class _GeneralProfileScreenState extends ConsumerState<GeneralProfileScreen> {
   Widget build(BuildContext context) {
     final myColors = Theme.of(context).extension<MyColors>()!;
 
-    final users = ref.watch(userListProvider);
+    final userListAsync = ref.watch(userListProvider);
 
-    var user = users.firstWhere((element) => element.id == widget.userId);
+    if (userListAsync is AsyncLoading) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
 
-    //var allRides = ref.watch(ridesListProvider);
+    if (userListAsync is AsyncError) {
+      return Scaffold(
+        body: Center(
+          child: Text('Failed to load user data: ${userListAsync.error}'),
+        ),
+      );
+    }
+
+    final users = userListAsync.value ?? [];
+    final user = users.firstWhere((element) => element.id == widget.userId);
 
     showPic() {
       if (switchPic == false) {
@@ -61,9 +72,7 @@ class _GeneralProfileScreenState extends ConsumerState<GeneralProfileScreen> {
 
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(
-          MediaQuery.of(context).size.width * 0.2,
-        ),
+        preferredSize: Size.fromHeight(MediaQuery.of(context).size.width * 0.2),
         child: SafeArea(
           child: Container(
             width: MediaQuery.of(context).size.width,
@@ -118,9 +127,7 @@ class _GeneralProfileScreenState extends ConsumerState<GeneralProfileScreen> {
               children: [
                 Container(
                   padding: EdgeInsets.fromLTRB(0, 0, 0, 40),
-                  decoration: BoxDecoration(
-                    color: myColors.backgound
-                  ),
+                  decoration: BoxDecoration(color: myColors.backgound),
                   child: Column(
                     children: [
                       Stack(
