@@ -1,15 +1,15 @@
 import 'dart:convert';
 import 'dart:io';
-
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 import 'package:odyss/core/constraints.dart';
-import 'package:odyss/core/providers/list_providers/user_list_provider.dart';
-import 'package:odyss/data/models/user_model.dart';
 import 'package:odyss/screens/error_dialog_widget.dart';
 import 'package:odyss/screens/loading_animation_widget.dart';
+import 'package:odyss/core/providers/list_providers/ride_list_provider.dart';
+import 'package:odyss/core/providers/list_providers/user_list_provider.dart';
 
 class SignupScreen6 extends ConsumerStatefulWidget {
   const SignupScreen6({super.key});
@@ -101,9 +101,11 @@ class _SignupScreen6State extends ConsumerState<SignupScreen6> {
       }
 
       final data = jsonDecode(loginRes.body);
-      print('Login response data: $data'); // <-- Add this line
+      if (kDebugMode) {
+        print('Login response data: $data');
+      }
       final tokens = data['tokens'];
-      final user = data['user'];
+      // final user = data['user'];
 
       // Save tokens to secure storage
       await secureStorage.write(
@@ -115,7 +117,9 @@ class _SignupScreen6State extends ConsumerState<SignupScreen6> {
         value: tokens['refresh_token'],
       );
       final token = await secureStorage.read(key: 'access_token');
-      print('Saved token: $token');
+      if (kDebugMode) {
+        print('Saved token: $token');
+      }
 
       // Fetch user data and add to userListProvider
       try {
@@ -127,19 +131,29 @@ class _SignupScreen6State extends ConsumerState<SignupScreen6> {
           },
         );
         if (userResponse.statusCode == 200) {
+          // ignore: unused_local_variable
           final userData = jsonDecode(userResponse.body);
         } else {
-          print('Failed to fetch user data: ${userResponse.body}');
+          if (kDebugMode) {
+            print('Failed to fetch user data: ${userResponse.body}');
+          }
         }
       } catch (e) {
-        print('Error fetching user data: $e');
+        if (kDebugMode) {
+          print('Error fetching user data: $e');
+        }
       }
 
-      Navigator.pop(context); // Dismiss loading
+      // Before Navigator.pop(context);
+      ref.invalidate(ridesListProvider);
+      ref.invalidate(userListProvider);
+      Navigator.pop(context);
+      // ignore: use_build_context_synchronously
       context.go('/rides'); // Navigate to rides screen
     } catch (e) {
       Navigator.pop(context);
       showDialog(
+        // ignore: use_build_context_synchronously
         context: context,
         barrierDismissible: false,
         barrierColor: const Color(0x77F5F5F5),

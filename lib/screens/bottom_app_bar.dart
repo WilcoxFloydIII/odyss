@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:odyss/core/colors.dart';
+import 'package:odyss/core/providers/list_providers/circles_list.dart';
+import 'package:odyss/core/providers/list_providers/ride_list_provider.dart';
+import 'package:odyss/core/providers/list_providers/user_list_provider.dart';
+import 'package:odyss/core/providers/list_providers/company_list_provider.dart';
+import 'package:odyss/core/providers/list_providers/route_list_provider.dart';
+import 'package:odyss/core/providers/list_providers/bookings_list_provider.dart';
 
-class BottomAppBarWidget extends StatefulWidget {
+class BottomAppBarWidget extends ConsumerStatefulWidget {
   BottomAppBarWidget({
     super.key,
     required this.toggle1,
@@ -17,10 +24,10 @@ class BottomAppBarWidget extends StatefulWidget {
   final bool toggle4;
 
   @override
-  State<BottomAppBarWidget> createState() => _BottomAppBarWidgetState();
+  ConsumerState<BottomAppBarWidget> createState() => _BottomAppBarWidgetState();
 }
 
-class _BottomAppBarWidgetState extends State<BottomAppBarWidget> {
+class _BottomAppBarWidgetState extends ConsumerState<BottomAppBarWidget> {
   @override
   Widget build(BuildContext context) {
     //final myColors = Theme.of(context).extension<MyColors>()!;
@@ -37,6 +44,13 @@ class _BottomAppBarWidgetState extends State<BottomAppBarWidget> {
             flex: 2,
             child: ElevatedButton(
               onPressed: () {
+                ref.invalidate(CircleListProvider);
+                ref.invalidate(ridesListProvider);
+                ref.invalidate(userListProvider);
+                ref.invalidate(partnerListProvider);
+                ref.invalidate(routesListProvider);
+                ref.invalidate(vehiclesListProvider);
+                ref.invalidate(bookingsListProvider);
                 context.go('/circles');
               },
               child: Image.asset(
@@ -52,6 +66,13 @@ class _BottomAppBarWidgetState extends State<BottomAppBarWidget> {
             flex: 2,
             child: ElevatedButton(
               onPressed: () {
+                ref.invalidate(CircleListProvider);
+                ref.invalidate(ridesListProvider);
+                ref.invalidate(userListProvider);
+                ref.invalidate(partnerListProvider);
+                ref.invalidate(routesListProvider);
+                ref.invalidate(vehiclesListProvider);
+                ref.invalidate(bookingsListProvider);
                 context.go('/rides');
               },
               child: Image.asset(
@@ -67,6 +88,13 @@ class _BottomAppBarWidgetState extends State<BottomAppBarWidget> {
             flex: 2,
             child: ElevatedButton(
               onPressed: () {
+                ref.invalidate(CircleListProvider);
+                ref.invalidate(ridesListProvider);
+                ref.invalidate(userListProvider);
+                ref.invalidate(partnerListProvider);
+                ref.invalidate(routesListProvider);
+                ref.invalidate(vehiclesListProvider);
+                ref.invalidate(bookingsListProvider);
                 context.go('/chat');
               },
               child: Image.asset(
@@ -82,6 +110,13 @@ class _BottomAppBarWidgetState extends State<BottomAppBarWidget> {
             flex: 2,
             child: ElevatedButton(
               onPressed: () {
+                ref.invalidate(CircleListProvider);
+                ref.invalidate(ridesListProvider);
+                ref.invalidate(userListProvider);
+                ref.invalidate(partnerListProvider);
+                ref.invalidate(routesListProvider);
+                ref.invalidate(vehiclesListProvider);
+                ref.invalidate(bookingsListProvider);
                 context.go('/profile');
               },
               child: Image.asset(

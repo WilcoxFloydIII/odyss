@@ -6,13 +6,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:odyss/core/colors.dart';
 import 'package:odyss/core/constraints.dart';
-import 'package:odyss/core/providers/list_providers/user_list_provider.dart';
-import 'package:odyss/core/providers/list_providers/ride_list_provider.dart';
-import 'package:odyss/data/models/ride_model.dart';
 import 'package:odyss/data/models/user_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:odyss/screens/loading_animation_widget.dart';
 import 'package:odyss/screens/error_dialog_widget.dart';
+import 'package:odyss/core/providers/list_providers/ride_list_provider.dart';
+import 'package:odyss/core/providers/list_providers/user_list_provider.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -325,6 +324,8 @@ Future<void> loginAndFetchUser(BuildContext context, WidgetRef ref) async {
       throw Exception('Error fetching user data: $e');
     }
 
+    ref.invalidate(ridesListProvider);
+    ref.invalidate(userListProvider);
     Navigator.pop(context); // Dismiss loading
     context.go('/rides'); // Navigate to rides screen
   } catch (e) {

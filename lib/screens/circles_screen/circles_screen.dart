@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:odyss/core/colors.dart';
 import 'package:odyss/core/constraints.dart';
@@ -18,6 +21,50 @@ class CirclesScreen extends ConsumerStatefulWidget {
 }
 
 class _CirclesScreenState extends ConsumerState<CirclesScreen> {
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Refresh the circles provider every time the page is opened
+    ref.refresh(CircleListProvider);
+  }
+
+  Future<Map<String, dynamic>> joinCircle({required String circleId}) async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => const LoadingAnimationWidget(),
+    );
+    try {
+      final token = await secureStorage.read(key: 'access_token');
+      final url = Uri.parse('$circleUrl/$circleId/join');
+      final response = await http.post(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+      Navigator.pop(context); // Remove loading
+      if (response.statusCode == 200) {
+        context.push('/circle/$circleId');
+        return jsonDecode(response.body) as Map<String, dynamic>;
+      } else {
+        showDialog(
+          context: context,
+          builder: (_) => ErrorDialogWidget(error: 'Failed to join circle'),
+        );
+        throw Exception('Failed to join circle: ${response.body}');
+      }
+    } catch (e) {
+      Navigator.pop(context); // Remove loading
+      showDialog(
+        context: context,
+        builder: (_) => ErrorDialogWidget(error: 'Failed to join circle'),
+      );
+      rethrow;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final myColors = Theme.of(context).extension<MyColors>()!;
@@ -492,9 +539,7 @@ class _CirclesScreenState extends ConsumerState<CirclesScreen> {
                                           ),
                                           TextButton(
                                             onPressed: () {
-                                              context.push(
-                                                '/circle/${circle.id}',
-                                              );
+                                              joinCircle(circleId: circle.id);
                                             },
                                             child: Text(
                                               'Join',

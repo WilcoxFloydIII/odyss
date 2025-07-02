@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
-import 'package:odyss/core/providers/all_set_screen.dart';
 import 'package:odyss/screens/chat_screen/chat_screen.dart';
 import 'package:odyss/screens/circles_screen/circles_screen.dart';
 import 'package:odyss/screens/circles_screen/circles_screen_widgets/circle_members_screen.dart';
 import 'package:odyss/screens/circles_screen/circles_screen_widgets/create_circle_screen.dart';
 import 'package:odyss/screens/curate_trip_screen/curate_trip_screen.dart';
+import 'package:odyss/screens/all_set_screen.dart';
 import 'package:odyss/screens/curate_trip_screen/trip_details_screen.dart';
 import 'package:odyss/screens/login_screen/login_screen.dart';
 import 'package:odyss/screens/curate_trip_screen/pricing_screen.dart';

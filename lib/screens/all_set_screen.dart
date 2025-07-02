@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:odyss/core/providers/list_providers/ride_list_provider.dart';
+import 'package:odyss/core/providers/list_providers/user_list_provider.dart';
 
-class AllSetScreen extends StatelessWidget {
+class AllSetScreen extends ConsumerWidget {
   const AllSetScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         leading: IconButton(
-          onPressed: () => Navigator.pop(context),
+          onPressed: () {
+            ref.invalidate(ridesListProvider);
+            ref.invalidate(userListProvider);
+            Navigator.pop(context);
+          },
           icon: Icon(Icons.arrow_back_ios_new_rounded),
         ),
       ),
@@ -38,6 +45,8 @@ class AllSetScreen extends StatelessWidget {
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
+                      ref.invalidate(ridesListProvider);
+                      ref.invalidate(userListProvider);
                       context.go('/rides');
                     },
                     child: Text(

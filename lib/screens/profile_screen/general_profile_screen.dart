@@ -21,6 +21,12 @@ class _GeneralProfileScreenState extends ConsumerState<GeneralProfileScreen> {
   bool switchPic = false;
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    ref.refresh(userListProvider);
+  }
+
+  @override
   Widget build(BuildContext context) {
     final myColors = Theme.of(context).extension<MyColors>()!;
 

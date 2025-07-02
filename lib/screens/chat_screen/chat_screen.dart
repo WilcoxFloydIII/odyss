@@ -12,18 +12,13 @@ class ChatScreen extends ConsumerStatefulWidget {
 class _ChatScreenState extends ConsumerState<ChatScreen> {
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(),
       body: SafeArea(
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
-          child: TextButton(
-            onPressed: () {
-            },
-            child: Text('Print'),
-          ),
+          child: TextButton(onPressed: () {}, child: Text('Print')),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

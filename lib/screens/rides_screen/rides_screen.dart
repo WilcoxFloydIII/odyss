@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 // import 'package:odyss/core/colors.dart';
 import 'package:odyss/screens/bottom_app_bar.dart';
 import 'package:odyss/screens/rides_screen/rides_screen_widgets/available_rides_widget.dart';
 import 'package:odyss/screens/rides_screen/rides_screen_widgets/search_widget.dart';
 
-class RidesScreen extends StatefulWidget {
+class RidesScreen extends ConsumerStatefulWidget {
   RidesScreen({super.key});
 
   @override
-  State<RidesScreen> createState() => _RidesScreenState();
+  ConsumerState<RidesScreen> createState() => _RidesScreenState();
 }
 
-class _RidesScreenState extends State<RidesScreen> {
+class _RidesScreenState extends ConsumerState<RidesScreen> {
   @override
   Widget build(BuildContext context) {
     // final myColors = Theme.of(context).extension<MyColors>()!;
@@ -31,15 +32,13 @@ class _RidesScreenState extends State<RidesScreen> {
         body: SafeArea(
           child: Container(
             width: MediaQuery.of(context).size.width,
-            height: (MediaQuery.of(context).size.height*0.75),
+            height: (MediaQuery.of(context).size.height * 0.75),
             padding: EdgeInsets.only(top: 20),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('   Available Rides', style: TextStyle(
-                  fontSize: 20
-                ),),
+                Text('   Available Rides', style: TextStyle(fontSize: 20)),
                 Container(
                   height: (MediaQuery.of(context).size.height * 0.5),
                   width: MediaQuery.of(context).size.width,

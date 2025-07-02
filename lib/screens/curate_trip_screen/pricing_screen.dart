@@ -95,6 +95,7 @@ class _PricingScreenState extends ConsumerState<PricingScreen> {
           route.departureLocation == newRide['depLoc'],
     );
 
+    // ignore: unused_local_variable
     VehicleModel currVehicle = vehicles.firstWhere(
       (vehicle) => vehicle.type == newRide['vehicle'],
     );

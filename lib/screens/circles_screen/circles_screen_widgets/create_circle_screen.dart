@@ -1,6 +1,10 @@
+import 'dart:convert';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:odyss/core/colors.dart';
 import 'package:odyss/core/constraints.dart';
@@ -8,44 +12,64 @@ import 'package:odyss/core/providers/list_providers/circles_list.dart';
 import 'package:odyss/data/models/circle_model.dart';
 import 'package:odyss/screens/error_dialog_widget.dart';
 
-class CreateCircleScreen extends ConsumerStatefulWidget {
+class CreateCircleScreen extends ConsumerWidget {
   const CreateCircleScreen({super.key});
 
   @override
-  ConsumerState<CreateCircleScreen> createState() => _CreateCircleScreenState();
-}
-
-class _CreateCircleScreenState extends ConsumerState<CreateCircleScreen> {
-  TextEditingController titleController = TextEditingController();
-  TextEditingController descriptionController = TextEditingController();
-  TextEditingController departureController = TextEditingController();
-  TextEditingController destinationController = TextEditingController();
-  TextEditingController dateRangeController = TextEditingController();
-
-  final GlobalKey _departureKey = GlobalKey();
-  final GlobalKey _destinationKey = GlobalKey();
-
-  DateTimeRange? selectedRange;
-
-  Future<void> pickDateRange() async {
-    DateTimeRange? result = await showDateRangePicker(
-      context: context,
-      firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(Duration(days: 90)),
-      initialDateRange: selectedRange,
-    );
-
-    if (result != null) {
-      selectedRange = result;
-      dateRangeController.text =
-          '${DateFormat('yyyy/MM/dd').format(result.start)} -- ${DateFormat('yyyy/MM/dd').format(result.end)}';
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final myColors = Theme.of(context).extension<MyColors>()!;
     final allCirclesAsync = ref.watch(CircleListProvider);
+
+    final titleController = TextEditingController();
+    final descriptionController = TextEditingController();
+    final departureController = TextEditingController();
+    final destinationController = TextEditingController();
+    final dateRangeController = TextEditingController();
+    DateTimeRange? selectedRange;
+
+    Future<void> pickDateRange() async {
+      DateTimeRange? result = await showDateRangePicker(
+        context: context,
+        firstDate: DateTime.now(),
+        lastDate: DateTime.now().add(Duration(days: 90)),
+        initialDateRange: selectedRange,
+      );
+
+      if (result != null) {
+        selectedRange = result;
+        dateRangeController.text =
+            '${DateFormat('yyyy/MM/dd').format(result.start)} -- ${DateFormat('yyyy/MM/dd').format(result.end)}';
+      }
+    }
+
+    Future<void> createCircle(CircleModel newCircle) async {
+      final token = await secureStorage.read(key: 'access_token');
+      final response = await http.post(
+        Uri.parse(circleUrl),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(newCircle.toJson()),
+      );
+      if (response.statusCode == 201) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Circle created successfully')));
+        if (kDebugMode) {
+          print(response.body);
+        }
+        ref.invalidate(CircleListProvider);
+        context.go('/circles');
+      } else {
+        if (kDebugMode) {
+          print(response.body);
+        }
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed to create circle')));
+      }
+    }
 
     if (allCirclesAsync is AsyncLoading) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
@@ -55,7 +79,7 @@ class _CreateCircleScreenState extends ConsumerState<CreateCircleScreen> {
       return Scaffold(
         body: ErrorDialogWidget(
           error: allCirclesAsync.error.toString(),
-          onRetry: () => setState(() {}),
+          onRetry: () => {},
         ),
       );
     }
@@ -212,7 +236,6 @@ class _CreateCircleScreenState extends ConsumerState<CreateCircleScreen> {
                           children: [
                             Text('Departure city'),
                             TextFormField(
-                              key: _departureKey,
                               readOnly: true,
                               keyboardType: TextInputType.name,
                               controller: departureController,
@@ -234,53 +257,34 @@ class _CreateCircleScreenState extends ConsumerState<CreateCircleScreen> {
                                 focusedBorder: InputBorder.none,
                               ),
                               onTap: () {
-                                setState(() {
-                                  final RenderBox button =
-                                      _departureKey.currentContext!
-                                              .findRenderObject()
-                                          as RenderBox;
-                                  final RenderBox overlay =
-                                      Overlay.of(
-                                            context,
-                                          ).context.findRenderObject()
-                                          as RenderBox;
-
-                                  final Offset position = button.localToGlobal(
-                                    Offset.zero,
-                                    ancestor: overlay,
-                                  );
-
-                                  showMenu(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadiusGeometry.circular(20),
+                                showMenu(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadiusGeometry.circular(
+                                      20,
                                     ),
-                                    context: context,
-                                    position: RelativeRect.fromLTRB(
-                                      position.dx,
-                                      position.dy +
-                                          button.size.height, // show just below
-                                      position.dx + button.size.width,
-                                      position.dy,
-                                    ),
-                                    items: [
-                                      PopupMenuItem(
-                                        child: Text(
-                                          'Enugu',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 15,
-                                          ),
+                                  ),
+                                  context: context,
+                                  position: RelativeRect.fromLTRB(
+                                    MediaQuery.of(context).size.width * 0.05,
+                                    MediaQuery.of(context).size.height * 0.3,
+                                    MediaQuery.of(context).size.width * 0.9,
+                                    MediaQuery.of(context).size.height * 0.3,
+                                  ),
+                                  items: [
+                                    PopupMenuItem(
+                                      child: Text(
+                                        'Enugu',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 15,
                                         ),
-                                        onTap: () {
-                                          setState(() {
-                                            departureController.text = 'Enugu';
-                                          });
-                                        },
                                       ),
-                                    ],
-                                  );
-                                });
+                                      onTap: () {
+                                        departureController.text = 'Enugu';
+                                      },
+                                    ),
+                                  ],
+                                );
                               },
                             ),
                           ],
@@ -307,7 +311,6 @@ class _CreateCircleScreenState extends ConsumerState<CreateCircleScreen> {
                           children: [
                             Text('Destination city'),
                             TextFormField(
-                              key: _destinationKey,
                               readOnly: true,
                               keyboardType: TextInputType.name,
                               controller: destinationController,
@@ -329,84 +332,58 @@ class _CreateCircleScreenState extends ConsumerState<CreateCircleScreen> {
                                 focusedBorder: InputBorder.none,
                               ),
                               onTap: () {
-                                setState(() {
-                                  final RenderBox button =
-                                      _destinationKey.currentContext!
-                                              .findRenderObject()
-                                          as RenderBox;
-                                  final RenderBox overlay =
-                                      Overlay.of(
-                                            context,
-                                          ).context.findRenderObject()
-                                          as RenderBox;
-
-                                  final Offset position = button.localToGlobal(
-                                    Offset.zero,
-                                    ancestor: overlay,
-                                  );
-
-                                  showMenu(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadiusGeometry.circular(20),
+                                showMenu(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadiusGeometry.circular(
+                                      20,
                                     ),
-                                    context: context,
-                                    position: RelativeRect.fromLTRB(
-                                      position.dx,
-                                      position.dy +
-                                          button.size.height, // show just below
-                                      position.dx + button.size.width,
-                                      position.dy,
+                                  ),
+                                  context: context,
+                                  position: RelativeRect.fromLTRB(
+                                    MediaQuery.of(context).size.width * 0.05,
+                                    MediaQuery.of(context).size.height * 0.3,
+                                    MediaQuery.of(context).size.width * 0.9,
+                                    MediaQuery.of(context).size.height * 0.3,
+                                  ),
+                                  items: [
+                                    PopupMenuItem(
+                                      child: Text(
+                                        'Lagos',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 15,
+                                        ),
+                                      ),
+                                      onTap: () {
+                                        destinationController.text = 'Lagos';
+                                      },
                                     ),
-                                    items: [
-                                      PopupMenuItem(
-                                        child: Text(
-                                          'Lagos',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 15,
-                                          ),
+                                    PopupMenuItem(
+                                      child: Text(
+                                        'Abuja',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 15,
                                         ),
-                                        onTap: () {
-                                          setState(() {
-                                            destinationController.text =
-                                                'Lagos';
-                                          });
-                                        },
                                       ),
-                                      PopupMenuItem(
-                                        child: Text(
-                                          'Abuja',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 15,
-                                          ),
+                                      onTap: () {
+                                        destinationController.text = 'Abuja';
+                                      },
+                                    ),
+                                    PopupMenuItem(
+                                      child: Text(
+                                        'Rivers',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 15,
                                         ),
-                                        onTap: () {
-                                          setState(() {
-                                            destinationController.text =
-                                                'Abuja';
-                                          });
-                                        },
                                       ),
-                                      PopupMenuItem(
-                                        child: Text(
-                                          'Rivers',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 15,
-                                          ),
-                                        ),
-                                        onTap: () {
-                                          setState(() {
-                                            destinationController.text =
-                                                'Rivers';
-                                          });
-                                        },
-                                      ),
-                                    ],
-                                  );
-                                });
+                                      onTap: () {
+                                        destinationController.text = 'Rivers';
+                                      },
+                                    ),
+                                  ],
+                                );
                               },
                             ),
                           ],
@@ -551,6 +528,7 @@ class _CreateCircleScreenState extends ConsumerState<CreateCircleScreen> {
                                     ),
                                   );
                                 } else {
+                                  // ignore: unused_local_variable
                                   CircleModel newCircle = CircleModel(
                                     id: allCircles.length.toString(),
                                     name: titleController.text,
@@ -561,6 +539,7 @@ class _CreateCircleScreenState extends ConsumerState<CreateCircleScreen> {
                                     endDate: selectedRange!.end,
                                     users: [UID],
                                   );
+                                  createCircle(newCircle);
                                 }
                               },
                               child: Row(

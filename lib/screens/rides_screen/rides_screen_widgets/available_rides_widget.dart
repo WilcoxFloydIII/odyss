@@ -1,15 +1,10 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:odyss/core/colors.dart';
-import 'package:odyss/core/constraints.dart';
 import 'package:odyss/core/providers/list_providers/ride_list_provider.dart';
 import 'package:odyss/core/providers/list_providers/user_list_provider.dart';
-import 'package:odyss/data/models/ride_model.dart';
 import 'package:odyss/data/models/user_model.dart';
 import 'package:odyss/screens/error_dialog_widget.dart';
 import 'package:odyss/screens/loading_animation_widget.dart';
@@ -23,6 +18,13 @@ class AvailableRidesWidget extends ConsumerStatefulWidget {
 }
 
 class _AvailableRidesWidgetState extends ConsumerState<AvailableRidesWidget> {
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    ref.refresh(filteredRidesProvider);
+    ref.refresh(userListProvider);
+  }
+
   @override
   Widget build(BuildContext context) {
     final myColors = Theme.of(context).extension<MyColors>()!;

@@ -3,8 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:odyss/core/colors.dart';
+import 'package:odyss/core/providers/list_providers/bookings_list_provider.dart';
 import 'package:odyss/core/providers/list_providers/circles_list.dart';
+import 'package:odyss/core/providers/list_providers/company_list_provider.dart';
 import 'package:odyss/core/providers/list_providers/ride_list_provider.dart';
+import 'package:odyss/core/providers/list_providers/route_list_provider.dart';
 import 'package:odyss/core/providers/list_providers/user_list_provider.dart';
 import 'package:odyss/data/models/circle_model.dart';
 import 'package:odyss/data/models/ride_model.dart';
@@ -23,6 +26,14 @@ class CircleMembersScreen extends ConsumerStatefulWidget {
 }
 
 class _CircleMembersScreenState extends ConsumerState<CircleMembersScreen> {
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.refresh(CircleListProvider);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final myColors = Theme.of(context).extension<MyColors>()!;
@@ -102,6 +113,13 @@ class _CircleMembersScreenState extends ConsumerState<CircleMembersScreen> {
                 IconButton(
                   icon: Icon(Icons.arrow_back_ios, size: 20),
                   onPressed: () {
+                    ref.invalidate(CircleListProvider);
+                    ref.invalidate(ridesListProvider);
+                    ref.invalidate(userListProvider);
+                    ref.invalidate(partnerListProvider);
+                    ref.invalidate(routesListProvider);
+                    ref.invalidate(vehiclesListProvider);
+                    ref.invalidate(bookingsListProvider);
                     context.pop();
                   },
                 ),

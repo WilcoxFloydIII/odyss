@@ -10,17 +10,17 @@ class UserModel {
   late final String password;
   late final List<String> vibes;
   late final List rides;
-  late final String insta;
-  late final String tiktok;
-  late final String x;
-  late final String fb;
+  final String? insta;
+  final String? tiktok;
+  final String? x;
+  final String? fb;
   late final String bio;
 
-  UserModel(
+  UserModel({
     this.x,
     this.fb,
     this.tiktok,
-    this.insta,{
+    this.insta,
     required this.id,
     required this.bio,
     required this.nickName,
@@ -34,14 +34,13 @@ class UserModel {
     required this.vibes,
     // required this.rides,
   });
-  
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-      json['x'] ?? '',
-      json['fb'] ?? '',
-      json['tiktok'] ?? '',
-      json['insta'] ?? '',
+      x: json['x'],
+      fb: json['fb'],
+      tiktok: json['tiktok'],
+      insta: json['insta'],
       id: json['id'] ?? '',
       bio: json['bio'] ?? '',
       nickName: json['nickname'] ?? '',
@@ -55,5 +54,26 @@ class UserModel {
       vibes: List<String>.from(json['vibes'] ?? []),
       // rides: json['rides'] ?? [],
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'x': x,
+      'fb': fb,
+      'tiktok': tiktok,
+      'insta': insta,
+      'id': id,
+      'bio': bio,
+      'nickname': nickName,
+      'first_name': firstName,
+      'last_name': lastName,
+      'intro_video': video,
+      'avatar': picture,
+      'phone_number': number,
+      'email': email,
+      'password': password,
+      'vibes': vibes,
+      // 'rides': rides,
+    };
   }
 }

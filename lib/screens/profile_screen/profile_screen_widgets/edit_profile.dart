@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_null_comparison
+
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,7 +10,6 @@ import 'package:odyss/core/constraints.dart';
 import 'package:odyss/core/providers/other_providers/intro_video_provider.dart';
 import 'package:odyss/core/providers/other_providers/profile_picture_provider.dart';
 import 'package:odyss/core/providers/list_providers/user_list_provider.dart';
-import 'package:odyss/screens/loading_animation_widget.dart';
 import 'package:odyss/screens/profile_screen/profile_screen_widgets/image_changer_button.dart';
 import 'package:odyss/screens/profile_screen/profile_screen_widgets/video_changer_button.dart';
 import 'package:path_provider/path_provider.dart';
@@ -197,10 +198,13 @@ class _EditProfileState extends ConsumerState<EditProfile> {
                                               width: 120,
                                               height: 120,
                                             )
-                                          : CircularProgressIndicator(),
-                                      Positioned(
-                                        top: 40,
-                                        left: 30,child: ImageChangerButton()),
+                                          : Center(
+                                              child:
+                                                  CircularProgressIndicator(),
+                                            ),
+                                      Center(
+                                        child: ImageChangerButton(),
+                                      ),
                                     ],
                                   ),
                                 ),
@@ -221,10 +225,9 @@ class _EditProfileState extends ConsumerState<EditProfile> {
                                               child:
                                                   CircularProgressIndicator(),
                                             ),
-                                      Positioned(
-                                        top: 40,
-                                        left: 30,
-                                        child: VideoChangerButton()),
+                                      Center(
+                                        child: VideoChangerButton(),
+                                      ),
                                     ],
                                   ),
                                 ),

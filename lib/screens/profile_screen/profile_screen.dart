@@ -1,5 +1,4 @@
-import 'dart:io';
-
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -23,12 +22,19 @@ class ProfileScreen extends ConsumerStatefulWidget {
 
 class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   VideoPlayerController? _controller;
-  File? _lastFile;
+  // File? _lastFile;
 
   @override
   void dispose() {
     _controller?.dispose();
     super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    ref.refresh(userListProvider);
+    ref.refresh(ridesListProvider);
   }
 
   bool switchPic = false;
@@ -61,7 +67,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
     if (userListAsync is AsyncError) {
       // Print the full error for debugging
-      print('User data error: ${userListAsync.error}');
+      if (kDebugMode) {
+        print('User data error: ${userListAsync.error}');
+      }
       return Scaffold(
         body: ErrorDialogWidget(
           error: userListAsync.error.toString(),
@@ -1157,6 +1165,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                 await secureStorage.delete(
                                   key: 'refresh_token',
                                 );
+                                // ignore: use_build_context_synchronously
                                 context.go('/start');
                               },
                               child: Text('Log out'),
@@ -1167,7 +1176,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     ],
                   ),
                 ),
-                
               ],
             ),
           ),

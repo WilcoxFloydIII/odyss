@@ -25,6 +25,13 @@ class _SelectedRideDialogState extends ConsumerState<SelectedRideDialog> {
   bool offlineFill = false;
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    ref.refresh(userListProvider);
+    ref.refresh(ridesListProvider);
+  }
+
+  @override
   Widget build(BuildContext context) {
     final myColors = Theme.of(context).extension<MyColors>()!;
 

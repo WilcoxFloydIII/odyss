@@ -18,6 +18,7 @@ class SplashScreen extends ConsumerStatefulWidget {
 }
 
 class _SplashScreenState extends ConsumerState<SplashScreen> {
+  // ignore: unused_field
   bool _loadingUser = false;
   String? _errorMessage;
   Timer? _refreshTimer;
