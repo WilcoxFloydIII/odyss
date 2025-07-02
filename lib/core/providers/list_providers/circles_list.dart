@@ -1,10 +1,9 @@
 import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
+import 'package:odyss/core/constraints.dart';
 import 'package:odyss/data/models/circle_model.dart';
 
-// Replace with your actual API endpoint
-const String circlesUrl = 'https://your-api-url.com/circles';
 
 final CircleListProvider = FutureProvider<List<CircleModel>>((ref) async {
   final response = await http.get(Uri.parse(circlesUrl));

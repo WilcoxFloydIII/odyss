@@ -5,9 +5,10 @@ import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 import 'package:odyss/core/colors.dart';
 import 'package:odyss/core/constraints.dart';
-import 'package:odyss/core/providers/intro_video_provider.dart';
-import 'package:odyss/core/providers/profile_picture_provider.dart';
+import 'package:odyss/core/providers/other_providers/intro_video_provider.dart';
+import 'package:odyss/core/providers/other_providers/profile_picture_provider.dart';
 import 'package:odyss/core/providers/list_providers/user_list_provider.dart';
+import 'package:odyss/screens/loading_animation_widget.dart';
 import 'package:odyss/screens/profile_screen/profile_screen_widgets/image_changer_button.dart';
 import 'package:odyss/screens/profile_screen/profile_screen_widgets/video_changer_button.dart';
 import 'package:path_provider/path_provider.dart';
@@ -47,6 +48,31 @@ class _EditProfileState extends ConsumerState<EditProfile> {
     await _controller!.initialize();
     _controller!.play();
     setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final users = ref.read(userListProvider).value ?? [];
+      final user = users.firstWhere((element) => element.id == UID);
+      if (user != null) {
+        if (user.picture.isNotEmpty) {
+          final file = await downloadFileFromUrl(
+            user.picture,
+            'profile_pic.jpg',
+          );
+          ref.read(imageFileProvider.notifier).setImage(file);
+        }
+        if (user.video.isNotEmpty) {
+          final file = await downloadFileFromUrl(
+            user.video,
+            'profile_video.mp4',
+          );
+          ref.read(videoFileProvider.notifier).setVideo(file);
+        }
+      }
+    });
   }
 
   @override
@@ -103,8 +129,8 @@ class _EditProfileState extends ConsumerState<EditProfile> {
       }
     });
 
-    final video = ref.watch(videoFileProvider);
     final profilePic = ref.watch(imageFileProvider);
+    final videoFile = ref.watch(videoFileProvider);
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
@@ -156,35 +182,38 @@ class _EditProfileState extends ConsumerState<EditProfile> {
                             alignment: WrapAlignment.center,
                             runAlignment: WrapAlignment.center,
                             children: [
-                              Container(
-                                width: 120,
-                                height: 120,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(60),
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(60),
+                                child: Container(
+                                  width: 120,
+                                  height: 120,
                                   color: Colors.blueGrey.shade100,
-                                  image: DecorationImage(
-                                    image: profilePic != null
-                                        ? FileImage(profilePic)
-                                        : const AssetImage(
-                                                'assets/images/default_profile.png',
-                                              )
-                                              as ImageProvider,
-                                    fit: BoxFit.cover,
+                                  child: Stack(
+                                    children: [
+                                      profilePic != null
+                                          ? Image.file(
+                                              profilePic,
+                                              fit: BoxFit.cover,
+                                              width: 120,
+                                              height: 120,
+                                            )
+                                          : CircularProgressIndicator(),
+                                      Positioned(
+                                        top: 40,
+                                        left: 30,child: ImageChangerButton()),
+                                    ],
                                   ),
                                 ),
-                                child: Center(child: ImageChangerButton()),
                               ),
-                              Stack(
-                                alignment: Alignment.topCenter,
-                                children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(20),
-                                    child: Container(
-                                      width: 120,
-                                      height: 120,
-                                      color: Colors.blueGrey.shade100,
-                                      child:
-                                          video != null &&
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(20),
+                                child: Container(
+                                  width: 120,
+                                  height: 120,
+                                  color: Colors.blueGrey.shade100,
+                                  child: Stack(
+                                    children: [
+                                      videoFile != null &&
                                               _controller != null &&
                                               _controller!.value.isInitialized
                                           ? VideoPlayer(_controller!)
@@ -192,13 +221,13 @@ class _EditProfileState extends ConsumerState<EditProfile> {
                                               child:
                                                   CircularProgressIndicator(),
                                             ),
-                                    ),
+                                      Positioned(
+                                        top: 40,
+                                        left: 30,
+                                        child: VideoChangerButton()),
+                                    ],
                                   ),
-                                  Positioned(
-                                    top: 420,
-                                    child: const VideoChangerButton(),
-                                  ),
-                                ],
+                                ),
                               ),
                             ],
                           ),
@@ -570,9 +599,7 @@ class _EditProfileState extends ConsumerState<EditProfile> {
                       children: [
                         Expanded(
                           child: ElevatedButton(
-                            onPressed: () {
-                            
-                            },
+                            onPressed: () {},
                             child: Text('Update'),
                           ),
                         ),

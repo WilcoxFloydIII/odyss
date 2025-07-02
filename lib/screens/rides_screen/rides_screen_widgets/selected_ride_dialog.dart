@@ -541,58 +541,79 @@ class _SelectedRideDialogState extends ConsumerState<SelectedRideDialog> {
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () {
-                          isMember
-                              ? Flushbar(
-                                  message:
-                                      'You are already a member of this trip',
-                                  duration: Duration(seconds: 2),
-                                  flushbarPosition:
-                                      FlushbarPosition.TOP, // Top of screen
-                                  backgroundColor: Colors
-                                      .redAccent, // Optional: customize color
-                                  margin: EdgeInsets.all(
-                                    8,
-                                  ), // Optional: margin for better look
-                                  borderRadius: BorderRadius.circular(
-                                    8,
-                                  ), // Optional: rounded corners
-                                ).show(context)
-                              : showGeneralDialog(
-                                  context: context,
-                                  barrierDismissible: true,
-                                  barrierLabel: 'Dialog',
-                                  transitionDuration: const Duration(
-                                    milliseconds: 300,
-                                  ),
-                                  pageBuilder:
-                                      (context, animation, secondaryAnimation) {
-                                        return AlmostDoneScreen();
-                                      },
-                                  transitionBuilder:
-                                      (
-                                        context,
-                                        animation,
-                                        secondaryAnimation,
-                                        child,
-                                      ) {
-                                        const begin = Offset(
-                                          1.0,
-                                          0.0,
-                                        ); // Slide in from right
-                                        const end = Offset.zero;
-                                        const curve = Curves.ease;
+                          if (ride.memberIds.length >= ride.seats) {
+                            Flushbar(
+                              message: 'You are already a member of this trip',
+                              duration: Duration(seconds: 2),
+                              flushbarPosition:
+                                  FlushbarPosition.TOP, // Top of screen
+                              backgroundColor:
+                                  Colors.redAccent, // Optional: customize color
+                              margin: EdgeInsets.all(
+                                8,
+                              ), // Optional: margin for better look
+                              borderRadius: BorderRadius.circular(
+                                8,
+                              ), // Optional: rounded corners
+                            ).show(context);
+                          } else {
+                            isMember
+                                ? Flushbar(
+                                    message:
+                                        'You are already a member of this trip',
+                                    duration: Duration(seconds: 2),
+                                    flushbarPosition:
+                                        FlushbarPosition.TOP, // Top of screen
+                                    backgroundColor: Colors
+                                        .redAccent, // Optional: customize color
+                                    margin: EdgeInsets.all(
+                                      8,
+                                    ), // Optional: margin for better look
+                                    borderRadius: BorderRadius.circular(
+                                      8,
+                                    ), // Optional: rounded corners
+                                  ).show(context)
+                                : showGeneralDialog(
+                                    context: context,
+                                    barrierDismissible: true,
+                                    barrierLabel: 'Dialog',
+                                    transitionDuration: const Duration(
+                                      milliseconds: 300,
+                                    ),
+                                    pageBuilder:
+                                        (
+                                          context,
+                                          animation,
+                                          secondaryAnimation,
+                                        ) {
+                                          return AlmostDoneScreen();
+                                        },
+                                    transitionBuilder:
+                                        (
+                                          context,
+                                          animation,
+                                          secondaryAnimation,
+                                          child,
+                                        ) {
+                                          const begin = Offset(
+                                            1.0,
+                                            0.0,
+                                          ); // Slide in from right
+                                          const end = Offset.zero;
+                                          const curve = Curves.ease;
 
-                                        final tween = Tween(
-                                          begin: begin,
-                                          end: end,
-                                        ).chain(CurveTween(curve: curve));
+                                          final tween = Tween(
+                                            begin: begin,
+                                            end: end,
+                                          ).chain(CurveTween(curve: curve));
 
-                                        return SlideTransition(
-                                          position: animation.drive(tween),
-                                          child: child,
-                                        );
-                                      },
-                                );
+                                          return SlideTransition(
+                                            position: animation.drive(tween),
+                                            child: child,
+                                          );
+                                        },
+                                  );
+                          }
                         },
                         style: ButtonStyle(
                           backgroundColor: WidgetStatePropertyAll(

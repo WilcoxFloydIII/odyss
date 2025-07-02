@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:odyss/core/colors.dart';
 //import 'package:odyss/core/providers/ride_list_provider.dart';
 import 'package:odyss/core/providers/list_providers/user_list_provider.dart';
+import 'package:odyss/screens/profile_screen/profile_screen_widgets/video_player_loop_widget.dart';
 //import 'package:odyss/data/models/ride_model.dart';
 
 class GeneralProfileScreen extends ConsumerStatefulWidget {
@@ -55,14 +56,7 @@ class _GeneralProfileScreenState extends ConsumerState<GeneralProfileScreen> {
           ),
         );
       } else {
-        return Container(
-          width: 150,
-          height: 150,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(30),
-            color: Colors.blueGrey.shade100,
-          ),
-        );
+        return VideoPlayerLoop(url: user.video);
       }
     }
 

@@ -12,6 +12,7 @@ import 'package:odyss/data/models/ride_model.dart';
 import 'package:odyss/screens/bottom_app_bar.dart';
 import 'package:odyss/screens/error_dialog_widget.dart';
 import 'package:video_player/video_player.dart';
+import 'package:odyss/screens/profile_screen/profile_screen_widgets/video_player_loop_widget.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});
@@ -160,50 +161,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           },
         );
       } else {
-        return FutureBuilder(
-          future: _controller == null || _lastFile != null
-              ? VideoPlayerController.networkUrl(
-                  Uri.parse(user.video),
-                ).initialize()
-              : _controller!.initialize(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              if (_controller == null ||
-                  (_lastFile == null && !_controller!.value.isInitialized)) {
-                _controller = VideoPlayerController.networkUrl(
-                  Uri.parse(user.video),
-                );
-                _controller!.setLooping(true);
-                _controller!.play();
-              }
-              return ClipRRect(
-                borderRadius: BorderRadius.circular(30),
-                child: Container(
-                  width: 150,
-                  height: 150,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
-                    color: Colors.blueGrey.shade100,
-                  ),
-                  child: AspectRatio(
-                    aspectRatio: _controller!.value.aspectRatio,
-                    child: VideoPlayer(_controller!),
-                  ),
-                ),
-              );
-            } else {
-              return Container(
-                width: 150,
-                height: 150,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(30),
-                  color: Colors.blueGrey.shade100,
-                ),
-                child: const Center(child: CircularProgressIndicator()),
-              );
-            }
-          },
-        );
+        return VideoPlayerLoop(url: user.video);
       }
     }
 

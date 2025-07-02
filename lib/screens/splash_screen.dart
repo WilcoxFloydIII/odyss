@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 import 'package:odyss/core/constraints.dart';
-import 'package:odyss/core/providers/auth_state_provider.dart';
+import 'package:odyss/core/providers/other_providers/auth_state_provider.dart';
 import 'package:odyss/data/models/user_model.dart';
 import 'package:odyss/screens/loading_animation_widget.dart';
 import 'package:odyss/screens/error_dialog_widget.dart';

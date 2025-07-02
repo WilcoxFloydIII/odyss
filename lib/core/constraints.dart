@@ -15,6 +15,7 @@ String tripsUrl2 = 'https://server.odyss.ng/trips';
 String partnerUrl = 'https://server.odyss.ng/users/companies';
 String routesUrl = 'https://server.odyss.ng/users/company_routes';
 String vehiclesUrl = 'https://server.odyss.ng/users/company_vehicles';
+String circlesUrl = 'https://server.odyss.ng/users/circles';
 // String initPayment = 'https://server.odyss.ng/payments/initiate';
 // String verifyPayment = 'https://server.odyss.ng/payments/verify';
 

@@ -9,20 +9,20 @@ class UserModel {
   late final String email;
   late final String password;
   late final List<String> vibes;
-  // late final List rides;
-  // late final String insta;
-  // late final String tiktok;
-  // late final String x;
-  // late final String fb;
+  late final List rides;
+  late final String insta;
+  late final String tiktok;
+  late final String x;
+  late final String fb;
   late final String bio;
 
-  UserModel({
+  UserModel(
+    this.x,
+    this.fb,
+    this.tiktok,
+    this.insta,{
     required this.id,
     required this.bio,
-    // required this.x,
-    // required this.fb,
-    // required this.tiktok,
-    // required this.insta,
     required this.nickName,
     required this.firstName,
     required this.lastName,
@@ -38,7 +38,12 @@ class UserModel {
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
+      json['x'] ?? '',
+      json['fb'] ?? '',
+      json['tiktok'] ?? '',
+      json['insta'] ?? '',
       id: json['id'] ?? '',
+      bio: json['bio'] ?? '',
       nickName: json['nickname'] ?? '',
       firstName: json['first_name'] ?? '',
       lastName: json['last_name'] ?? '',
@@ -49,49 +54,6 @@ class UserModel {
       password: json['password'] ?? '',
       vibes: List<String>.from(json['vibes'] ?? []),
       // rides: json['rides'] ?? [],
-      // insta: json['insta'] ?? '',
-      // tiktok: json['tiktok'] ?? '',
-      // x: json['x'] ?? '',
-      // fb: json['fb'] ?? '',
-      bio: json['bio'] ?? '',
-    );
-  }
-
-  UserModel copyWith({
-    String? id,
-    String? nickName,
-    String? firstName,
-    String? lastName,
-    String? video,
-    String? picture,
-    String? number,
-    String? email,
-    String? password,
-    List<String>? vibes,
-    List? rides,
-    // String? insta,
-    // String? tiktok,
-    // String? x,
-    // String? fb,
-    String? bio,
-  }) {
-    return UserModel(
-      id: id ?? this.id,
-      bio: bio ?? this.bio,
-      // x: x ?? this.x,
-      // fb: fb ?? this.fb,
-      // tiktok: tiktok ?? this.tiktok,
-      // insta: insta ?? this.insta,
-      nickName: nickName ?? this.nickName,
-      firstName: firstName ?? this.firstName,
-      lastName: lastName ?? this.lastName,
-      video: video ?? this.video,
-      picture: picture ?? this.picture,
-      number: number ?? this.number,
-      email: email ?? this.email,
-      password: password ?? this.password,
-      vibes: vibes ?? this.vibes,
-      // rides: rides ?? this.rides,
     );
   }
 }

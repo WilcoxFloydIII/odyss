@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:odyss/core/providers/theme_provider.dart';
+import 'package:odyss/core/providers/other_providers/theme_provider.dart';
 import 'package:odyss/core/theme.dart';
 import 'package:odyss/routes/router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

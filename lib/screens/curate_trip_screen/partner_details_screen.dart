@@ -43,6 +43,7 @@ class _PartnerDetailsScreenState extends ConsumerState<PartnerDetailsScreen> {
     }
 
     if (partnerListAsync is AsyncError) {
+      print(partnerListAsync.error);
       return Scaffold(
         body: ErrorDialogWidget(
           error: partnerListAsync.error.toString(),

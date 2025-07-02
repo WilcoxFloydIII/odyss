@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:odyss/core/colors.dart';
-import 'package:odyss/core/providers/intro_video_provider.dart';
+import 'package:odyss/core/providers/other_providers/intro_video_provider.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 

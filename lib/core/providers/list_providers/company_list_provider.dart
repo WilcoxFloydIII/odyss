@@ -8,7 +8,7 @@ import 'package:odyss/data/models/company_model.dart';
 final partnerListProvider = FutureProvider<List<PartnerModel>>((ref) async {
   final token = await secureStorage.read(key: 'access_token');
   final response = await http.get(
-    Uri.parse(usersUrl2),
+    Uri.parse(partnerUrl),
     headers: {
       'Authorization': 'Bearer $token',
       'Content-Type': 'application/json',
