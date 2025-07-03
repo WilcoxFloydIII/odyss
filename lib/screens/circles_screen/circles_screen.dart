@@ -133,7 +133,7 @@ class _CirclesScreenState extends ConsumerState<CirclesScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Container(
+                SizedBox(
                   height: MediaQuery.of(context).size.height * 0.14,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -149,7 +149,7 @@ class _CirclesScreenState extends ConsumerState<CirclesScreen> {
                               fontWeight: FontWeight.w700,
                             ),
                           ),
-                          Container(
+                          SizedBox(
                             width: 130,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
@@ -166,7 +166,9 @@ class _CirclesScreenState extends ConsumerState<CirclesScreen> {
                                     context.push('/createCircle');
                                   },
                                   style: ButtonStyle(
-                                    shape: WidgetStatePropertyAll(CircleBorder()),
+                                    shape: WidgetStatePropertyAll(
+                                      CircleBorder(),
+                                    ),
                                     padding: WidgetStatePropertyAll(
                                       EdgeInsets.all(13),
                                     ),
@@ -200,11 +202,13 @@ class _CirclesScreenState extends ConsumerState<CirclesScreen> {
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
-                        Container(
+                        SizedBox(
                           height:
-                              (((125 + MediaQuery.of(context).size.width * 0.05) *
+                              (((125 +
+                                      MediaQuery.of(context).size.width *
+                                          0.05) *
                                   memberCircles.length) +
-                                  50),
+                              50),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -213,7 +217,7 @@ class _CirclesScreenState extends ConsumerState<CirclesScreen> {
                                 style: TextStyle(fontSize: 15),
                               ),
                               SizedBox(height: 10),
-                              Container(
+                              SizedBox(
                                 height:
                                     (125 +
                                         MediaQuery.of(context).size.width *
@@ -228,12 +232,35 @@ class _CirclesScreenState extends ConsumerState<CirclesScreen> {
                                     DateTime end = circle.endDate;
                                     isMemberEmpty() {
                                       if (memberCircles.isEmpty) {
-                                        return Text(
-                                          'No active circles',
-                                          style: TextStyle(
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.w700,
-                                            color: Colors.grey.shade600,
+                                        return Center(
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Icon(
+                                                Icons.groups_2_rounded,
+                                                size: 64,
+                                                color: Colors.grey.shade400,
+                                              ),
+                                              SizedBox(height: 16),
+                                              Text(
+                                                'No circles yet',
+                                                style: TextStyle(
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: Colors.grey.shade600,
+                                                ),
+                                              ),
+                                              SizedBox(height: 8),
+                                              Text(
+                                                'Join or create a circle to get started!',
+                                                style: TextStyle(
+                                                  fontSize: 14,
+                                                  color: Colors.grey.shade400,
+                                                  fontWeight: FontWeight.w400,
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         );
                                       } else {
@@ -256,17 +283,17 @@ class _CirclesScreenState extends ConsumerState<CirclesScreen> {
                                             height: 125,
                                             decoration: BoxDecoration(
                                               color: Colors.grey.shade100,
-                                              borderRadius: BorderRadius.circular(
-                                                30,
-                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(30),
                                             ),
                                             child: Row(
                                               mainAxisAlignment:
-                                                  MainAxisAlignment.spaceBetween,
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.center,
                                               children: [
-                                                Container(
+                                                SizedBox(
                                                   width: 65,
                                                   height: 65,
                                                   child: Stack(
@@ -340,7 +367,7 @@ class _CirclesScreenState extends ConsumerState<CirclesScreen> {
                                                       ),
                                                     ),
                                                     SizedBox(height: 10),
-                                                    Container(
+                                                    SizedBox(
                                                       width:
                                                           MediaQuery.of(
                                                             context,
@@ -376,7 +403,8 @@ class _CirclesScreenState extends ConsumerState<CirclesScreen> {
                                                     'View',
                                                     style: TextStyle(
                                                       fontSize: 12,
-                                                      fontWeight: FontWeight.w600,
+                                                      fontWeight:
+                                                          FontWeight.w600,
                                                     ),
                                                   ),
                                                 ),
@@ -394,17 +422,22 @@ class _CirclesScreenState extends ConsumerState<CirclesScreen> {
                             ],
                           ),
                         ),
-                        Container(
+                        SizedBox(
                           height:
-                              (((125 + MediaQuery.of(context).size.width * 0.05) *
+                              (((125 +
+                                      MediaQuery.of(context).size.width *
+                                          0.05) *
                                   filteredAllCircles.length) +
-                                  50),
+                              50),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('All Circles', style: TextStyle(fontSize: 15)),
+                              Text(
+                                'All Circles',
+                                style: TextStyle(fontSize: 15),
+                              ),
                               SizedBox(height: 10),
-                              Container(
+                              SizedBox(
                                 height:
                                     (125 +
                                         MediaQuery.of(context).size.width *
@@ -418,6 +451,39 @@ class _CirclesScreenState extends ConsumerState<CirclesScreen> {
                                         filteredAllCircles[index];
                                     DateTime start = circle.startDate;
                                     DateTime end = circle.endDate;
+                                    if (filteredAllCircles.isEmpty) {
+                                      return Center(
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Icon(
+                                              Icons.public_rounded,
+                                              size: 64,
+                                              color: Colors.grey.shade400,
+                                            ),
+                                            SizedBox(height: 16),
+                                            Text(
+                                              'No public circles',
+                                              style: TextStyle(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.w600,
+                                                color: Colors.grey.shade600,
+                                              ),
+                                            ),
+                                            SizedBox(height: 8),
+                                            Text(
+                                              'Be the first to curate a public circle!',
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                color: Colors.grey.shade400,
+                                                fontWeight: FontWeight.w400,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    }
                                     return Padding(
                                       padding: EdgeInsets.only(
                                         bottom:
@@ -435,7 +501,9 @@ class _CirclesScreenState extends ConsumerState<CirclesScreen> {
                                         height: 125,
                                         decoration: BoxDecoration(
                                           color: Colors.grey.shade100,
-                                          borderRadius: BorderRadius.circular(30),
+                                          borderRadius: BorderRadius.circular(
+                                            30,
+                                          ),
                                         ),
                                         child: Row(
                                           mainAxisAlignment:
@@ -443,7 +511,7 @@ class _CirclesScreenState extends ConsumerState<CirclesScreen> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.center,
                                           children: [
-                                            Container(
+                                            SizedBox(
                                               width: 65,
                                               height: 65,
                                               child: Stack(
@@ -455,8 +523,9 @@ class _CirclesScreenState extends ConsumerState<CirclesScreen> {
                                                       height: 35,
                                                       width: 35,
                                                       decoration: BoxDecoration(
-                                                        color:
-                                                            Colors.grey.shade300,
+                                                        color: Colors
+                                                            .grey
+                                                            .shade300,
                                                         borderRadius:
                                                             BorderRadius.circular(
                                                               20,
@@ -471,8 +540,9 @@ class _CirclesScreenState extends ConsumerState<CirclesScreen> {
                                                       height: 35,
                                                       width: 35,
                                                       decoration: BoxDecoration(
-                                                        color:
-                                                            Colors.grey.shade300,
+                                                        color: Colors
+                                                            .grey
+                                                            .shade300,
                                                         borderRadius:
                                                             BorderRadius.circular(
                                                               20,
@@ -487,8 +557,9 @@ class _CirclesScreenState extends ConsumerState<CirclesScreen> {
                                                       height: 35,
                                                       width: 35,
                                                       decoration: BoxDecoration(
-                                                        color:
-                                                            Colors.grey.shade300,
+                                                        color: Colors
+                                                            .grey
+                                                            .shade300,
                                                         borderRadius:
                                                             BorderRadius.circular(
                                                               20,
@@ -513,7 +584,7 @@ class _CirclesScreenState extends ConsumerState<CirclesScreen> {
                                                   ),
                                                 ),
                                                 SizedBox(height: 10),
-                                                Container(
+                                                SizedBox(
                                                   width:
                                                       MediaQuery.of(
                                                         context,
@@ -523,7 +594,8 @@ class _CirclesScreenState extends ConsumerState<CirclesScreen> {
                                                     circle.name,
                                                     style: TextStyle(
                                                       fontSize: 12,
-                                                      fontWeight: FontWeight.w700,
+                                                      fontWeight:
+                                                          FontWeight.w700,
                                                     ),
                                                   ),
                                                 ),

@@ -211,7 +211,7 @@ class _SelectedRideDialogState extends ConsumerState<SelectedRideDialog> {
         ),
       ),
       body: SafeArea(
-        child: Container(
+        child: SizedBox(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height - 170,
           child: ListView(
@@ -415,12 +415,12 @@ class _SelectedRideDialogState extends ConsumerState<SelectedRideDialog> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
+                    SizedBox(
                       width: double.infinity,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Container(
+                          SizedBox(
                             width: 200,
                             child: Row(
                               children: [

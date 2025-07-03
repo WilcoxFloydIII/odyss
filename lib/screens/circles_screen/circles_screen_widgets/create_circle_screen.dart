@@ -93,7 +93,7 @@ class CreateCircleScreen extends ConsumerWidget {
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         body: SafeArea(
-          child: Container(
+          child: SizedBox(
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
             child: Column(
@@ -107,7 +107,7 @@ class CreateCircleScreen extends ConsumerWidget {
                       },
                       icon: Icon(Icons.arrow_back_ios_rounded, size: 30),
                     ),
-                    Container(
+                    SizedBox(
                       width: MediaQuery.of(context).size.width * 0.8,
                       child: Text(
                         'What makes up this circle?',
@@ -441,7 +441,7 @@ class CreateCircleScreen extends ConsumerWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Container(
+                          SizedBox(
                             width: 130,
                             child: ElevatedButton(
                               onPressed: () {

@@ -37,7 +37,10 @@ class _SignupScreen3State extends ConsumerState<SignupScreen3> {
           child: SingleChildScrollView(
             child: ConstrainedBox(
               constraints: BoxConstraints(
-                minHeight: MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top - kToolbarHeight,
+                minHeight:
+                    MediaQuery.of(context).size.height -
+                    MediaQuery.of(context).padding.top -
+                    kToolbarHeight,
               ),
               child: IntrinsicHeight(
                 child: Column(
@@ -52,7 +55,8 @@ class _SignupScreen3State extends ConsumerState<SignupScreen3> {
                           children: [
                             IconButton(
                               onPressed: () async {
-                                if (profilePic != null && await profilePic.exists()) {
+                                if (profilePic != null &&
+                                    await profilePic.exists()) {
                                   await profilePic.delete();
                                   ref.read(imageFileProvider.notifier).clear();
                                 }
@@ -61,9 +65,12 @@ class _SignupScreen3State extends ConsumerState<SignupScreen3> {
                               style: ButtonStyle(
                                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                               ),
-                              icon: Icon(Icons.arrow_back_ios_rounded, size: 25),
+                              icon: Icon(
+                                Icons.arrow_back_ios_rounded,
+                                size: 25,
+                              ),
                             ),
-                            Container(
+                            SizedBox(
                               width: MediaQuery.of(context).size.width * 0.8,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -91,7 +98,9 @@ class _SignupScreen3State extends ConsumerState<SignupScreen3> {
                         SizedBox(height: 50),
                         Container(
                           width: MediaQuery.of(context).size.width,
-                          padding: EdgeInsets.all(MediaQuery.sizeOf(context).width * 0.05),
+                          padding: EdgeInsets.all(
+                            MediaQuery.sizeOf(context).width * 0.05,
+                          ),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -119,13 +128,19 @@ class _SignupScreen3State extends ConsumerState<SignupScreen3> {
                               SizedBox(height: 24),
                               Container(
                                 width: MediaQuery.of(context).size.width * 0.9,
-                                padding: EdgeInsets.only(top: 10, bottom: 0, left: 10, right: 10),
+                                padding: EdgeInsets.only(
+                                  top: 10,
+                                  bottom: 0,
+                                  left: 10,
+                                  right: 10,
+                                ),
                                 decoration: BoxDecoration(
                                   border: Border.all(width: 2),
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                                 child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text('Nickname'),
@@ -133,10 +148,16 @@ class _SignupScreen3State extends ConsumerState<SignupScreen3> {
                                       keyboardType: TextInputType.name,
                                       controller: nickNameController,
                                       textInputAction: TextInputAction.next,
-                                      style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400),
+                                      style: TextStyle(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w400,
+                                      ),
                                       decoration: InputDecoration(
                                         hintText: 'Add a nickname',
-                                        hintStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w400),
+                                        hintStyle: TextStyle(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w400,
+                                        ),
                                         border: InputBorder.none,
                                         enabledBorder: InputBorder.none,
                                         contentPadding: EdgeInsets.zero,
@@ -150,14 +171,23 @@ class _SignupScreen3State extends ConsumerState<SignupScreen3> {
                               SizedBox(height: 24),
                               Container(
                                 width: MediaQuery.of(context).size.width * 0.9,
-                                padding: EdgeInsets.only(top: 10, bottom: 0, left: 10, right: 10),
+                                padding: EdgeInsets.only(
+                                  top: 10,
+                                  bottom: 0,
+                                  left: 10,
+                                  right: 10,
+                                ),
                                 decoration: BoxDecoration(
-                                  border: Border.all(width: 2, color: myColors.primary),
+                                  border: Border.all(
+                                    width: 2,
+                                    color: myColors.primary,
+                                  ),
                                   borderRadius: BorderRadius.circular(20),
                                   color: myColors.backgound,
                                 ),
                                 child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text('Bio'),
@@ -167,10 +197,17 @@ class _SignupScreen3State extends ConsumerState<SignupScreen3> {
                                       maxLength: 250,
                                       maxLines: 3,
                                       textInputAction: TextInputAction.next,
-                                      style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400),
+                                      style: TextStyle(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w400,
+                                      ),
                                       decoration: InputDecoration(
-                                        hintText: 'Tell others who you are and what you are about',
-                                        hintStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w400),
+                                        hintText:
+                                            'Tell others who you are and what you are about',
+                                        hintStyle: TextStyle(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w400,
+                                        ),
                                         fillColor: myColors.backgound,
                                         border: InputBorder.none,
                                         enabledBorder: InputBorder.none,
@@ -186,60 +223,92 @@ class _SignupScreen3State extends ConsumerState<SignupScreen3> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
-                                  Container(
+                                  SizedBox(
                                     width: 130,
                                     child: ElevatedButton(
                                       onPressed: () {
-                                        if (nickNameController.text.isEmpty || nickNameController.text.length < 3) {
-                                          ScaffoldMessenger.of(context).showSnackBar(
+                                        if (nickNameController.text.isEmpty ||
+                                            nickNameController.text.length <
+                                                3) {
+                                          ScaffoldMessenger.of(
+                                            context,
+                                          ).showSnackBar(
                                             SnackBar(
-                                              backgroundColor: myColors.backgound,
+                                              backgroundColor:
+                                                  myColors.backgound,
                                               content: Text(
                                                 'Please add a nickname',
                                                 textAlign: TextAlign.center,
-                                                style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: Colors.red),
+                                                style: TextStyle(
+                                                  fontSize: 13,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: Colors.red,
+                                                ),
                                               ),
                                             ),
                                           );
                                           return;
-                                        } else if (bioController.text.isEmpty || bioController.text.length < 10) {
-                                          ScaffoldMessenger.of(context).showSnackBar(
+                                        } else if (bioController.text.isEmpty ||
+                                            bioController.text.length < 10) {
+                                          ScaffoldMessenger.of(
+                                            context,
+                                          ).showSnackBar(
                                             SnackBar(
-                                              backgroundColor: myColors.backgound,
+                                              backgroundColor:
+                                                  myColors.backgound,
                                               content: Text(
                                                 'Bio should not be too brief',
                                                 textAlign: TextAlign.center,
-                                                style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: Colors.red),
+                                                style: TextStyle(
+                                                  fontSize: 13,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: Colors.red,
+                                                ),
                                               ),
                                             ),
                                           );
                                           return;
                                         } else if (profilePic == null) {
-                                          ScaffoldMessenger.of(context).showSnackBar(
+                                          ScaffoldMessenger.of(
+                                            context,
+                                          ).showSnackBar(
                                             SnackBar(
-                                              backgroundColor: myColors.backgound,
+                                              backgroundColor:
+                                                  myColors.backgound,
                                               content: Text(
                                                 'Please add a profile picture',
                                                 textAlign: TextAlign.center,
-                                                style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: Colors.red),
+                                                style: TextStyle(
+                                                  fontSize: 13,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: Colors.red,
+                                                ),
                                               ),
                                             ),
                                           );
                                           return;
                                         } else {
                                           print(profilePic.path);
-                                          newUser['nickname'] = nickNameController.text;
+                                          newUser['nickname'] =
+                                              nickNameController.text;
                                           newUser['bio'] = bioController.text;
                                           newUser['picture'] = profilePic.path;
                                           context.push('/signup4');
                                         }
                                       },
                                       child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         children: [
-                                          Text('Next', style: TextStyle(fontSize: 15)),
+                                          Text(
+                                            'Next',
+                                            style: TextStyle(fontSize: 15),
+                                          ),
                                           SizedBox(width: 10),
-                                          Icon(Icons.arrow_forward_rounded, size: 20),
+                                          Icon(
+                                            Icons.arrow_forward_rounded,
+                                            size: 20,
+                                          ),
                                         ],
                                       ),
                                     ),
@@ -254,12 +323,18 @@ class _SignupScreen3State extends ConsumerState<SignupScreen3> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text('Already have an account?', style: TextStyle(fontWeight: FontWeight.w400)),
+                        Text(
+                          'Already have an account?',
+                          style: TextStyle(fontWeight: FontWeight.w400),
+                        ),
                         TextButton(
                           onPressed: () {
                             context.push('/login');
                           },
-                          child: Text('Login', style: TextStyle(fontWeight: FontWeight.w700)),
+                          child: Text(
+                            'Login',
+                            style: TextStyle(fontWeight: FontWeight.w700),
+                          ),
                         ),
                       ],
                     ),

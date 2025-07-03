@@ -7,7 +7,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class ImageChangerButton extends ConsumerWidget {
-  const ImageChangerButton({Key? key}) : super(key: key);
+  const ImageChangerButton({super.key});
 
   Future<void> _pickAndSaveProfilePic(
     WidgetRef ref,

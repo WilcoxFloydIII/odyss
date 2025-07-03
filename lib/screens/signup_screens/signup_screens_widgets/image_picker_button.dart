@@ -8,11 +8,12 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class ImagePickerButton extends ConsumerWidget {
-  const ImagePickerButton({Key? key}) : super(key: key);
+  const ImagePickerButton({super.key});
 
   Future<bool> _requestPhotoPermission(BuildContext context) async {
     if (Platform.isAndroid) {
-      if (await Permission.photos.isGranted || await Permission.storage.isGranted) {
+      if (await Permission.photos.isGranted ||
+          await Permission.storage.isGranted) {
         return true;
       }
       if (await Permission.photos.request().isGranted) {
@@ -39,7 +40,9 @@ class ImagePickerButton extends ConsumerWidget {
           context: context,
           builder: (ctx) => AlertDialog(
             title: Text('Permission Required'),
-            content: Text('Photo access is required to select a profile picture. Please enable it in Settings.'),
+            content: Text(
+              'Photo access is required to select a profile picture. Please enable it in Settings.',
+            ),
             actions: [
               TextButton(
                 onPressed: () {
@@ -56,9 +59,9 @@ class ImagePickerButton extends ConsumerWidget {
           ),
         );
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Photo permission denied.')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Photo permission denied.')));
       }
       return false;
     }
@@ -76,7 +79,9 @@ class ImagePickerButton extends ConsumerWidget {
     }
 
     // Pick image
-    final XFile? image = await ImagePicker().pickImage(source: ImageSource.gallery);
+    final XFile? image = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+    );
     if (image == null) return;
 
     // Get directory
@@ -129,7 +134,7 @@ class ImagePickerButton extends ConsumerWidget {
         ),
       ),
       child: Text(
-       profilePic == null ? '+ add a profile pic' : 'edit profile pic',
+        profilePic == null ? '+ add a profile pic' : 'edit profile pic',
         style: TextStyle(
           color: myColors.backgound,
           fontWeight: FontWeight.w400,

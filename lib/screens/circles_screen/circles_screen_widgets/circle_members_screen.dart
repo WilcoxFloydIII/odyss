@@ -16,7 +16,7 @@ import 'package:odyss/screens/error_dialog_widget.dart';
 import 'package:odyss/screens/loading_animation_widget.dart';
 
 class CircleMembersScreen extends ConsumerStatefulWidget {
-  const CircleMembersScreen({Key? key, required this.id}) : super(key: key);
+  const CircleMembersScreen({super.key, required this.id});
 
   final String id;
 
@@ -123,7 +123,7 @@ class _CircleMembersScreenState extends ConsumerState<CircleMembersScreen> {
                     context.pop();
                   },
                 ),
-                Container(
+                SizedBox(
                   width: 45,
                   height: 45,
                   child: Stack(
@@ -217,7 +217,7 @@ class _CircleMembersScreenState extends ConsumerState<CircleMembersScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Container(
+              SizedBox(
                 width: MediaQuery.of(context).size.width * 0.8,
                 child: Text(
                   circle.description,
@@ -225,7 +225,7 @@ class _CircleMembersScreenState extends ConsumerState<CircleMembersScreen> {
                   style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
                 ),
               ),
-              Container(
+              SizedBox(
                 height: MediaQuery.of(context).size.height * 0.65,
                 child: ListView.builder(
                   itemCount: circle.users.length,
@@ -294,7 +294,7 @@ class _CircleMembersScreenState extends ConsumerState<CircleMembersScreen> {
                                           ),
                                         ),
                                       ),
-                                      Container(
+                                      SizedBox(
                                         height:
                                             MediaQuery.of(context).size.height *
                                             0.4, // Adjust height as needed
@@ -360,7 +360,7 @@ class _CircleMembersScreenState extends ConsumerState<CircleMembersScreen> {
                                                     ),
                                                     child: Column(
                                                       children: [
-                                                        Container(
+                                                        SizedBox(
                                                           width:
                                                               double.infinity,
                                                           child: Row(
@@ -368,14 +368,14 @@ class _CircleMembersScreenState extends ConsumerState<CircleMembersScreen> {
                                                                 MainAxisAlignment
                                                                     .spaceBetween,
                                                             children: [
-                                                              Container(
+                                                              SizedBox(
                                                                 width: 200,
                                                                 child: Row(
                                                                   mainAxisAlignment:
                                                                       MainAxisAlignment
                                                                           .start,
                                                                   children: [
-                                                                    Container(
+                                                                    SizedBox(
                                                                       width:
                                                                           ((17 *
                                                                               (cardLimit() -
@@ -490,7 +490,7 @@ class _CircleMembersScreenState extends ConsumerState<CircleMembersScreen> {
                                                           ),
                                                         ),
                                                         SizedBox(height: 20),
-                                                        Container(
+                                                        SizedBox(
                                                           width:
                                                               double.infinity,
                                                           height: 70,
@@ -613,7 +613,7 @@ class _CircleMembersScreenState extends ConsumerState<CircleMembersScreen> {
                                                           ),
                                                         ),
                                                         SizedBox(height: 20),
-                                                        Container(
+                                                        SizedBox(
                                                           width:
                                                               double.infinity,
                                                           child: Row(
@@ -621,7 +621,7 @@ class _CircleMembersScreenState extends ConsumerState<CircleMembersScreen> {
                                                                 MainAxisAlignment
                                                                     .spaceBetween,
                                                             children: [
-                                                              Container(
+                                                              SizedBox(
                                                                 width: 200,
                                                                 child: Row(
                                                                   children: [

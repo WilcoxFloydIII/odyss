@@ -182,7 +182,7 @@ class _GeneralProfileScreenState extends ConsumerState<GeneralProfileScreen> {
                           fontWeight: FontWeight.w400,
                         ),
                       ),
-                      Container(
+                      SizedBox(
                         width: 260,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,

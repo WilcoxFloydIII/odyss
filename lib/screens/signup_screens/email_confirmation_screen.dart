@@ -10,8 +10,7 @@ import 'package:odyss/screens/error_dialog_widget.dart';
 import 'package:odyss/screens/loading_animation_widget.dart';
 
 class EmailConfirmationScreen extends StatefulWidget {
-
-  const EmailConfirmationScreen({super.key,r});
+  const EmailConfirmationScreen({super.key, r});
 
   @override
   State<EmailConfirmationScreen> createState() =>
@@ -185,7 +184,7 @@ class _EmailConfirmationScreenState extends State<EmailConfirmationScreen> {
                           ),
                           icon: Icon(Icons.arrow_back_ios_rounded, size: 25),
                         ),
-                        Container(
+                        SizedBox(
                           width: MediaQuery.of(context).size.width * 0.8,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,

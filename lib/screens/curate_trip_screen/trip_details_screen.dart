@@ -142,7 +142,8 @@ class _TripDetailsScreenState extends ConsumerState<TripDetailsScreen> {
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text('Departure City'),
@@ -157,7 +158,8 @@ class _TripDetailsScreenState extends ConsumerState<TripDetailsScreen> {
                                       fontWeight: FontWeight.w400,
                                     ),
                                     decoration: InputDecoration(
-                                      hintText: 'What city are you currently in?',
+                                      hintText:
+                                          'What city are you currently in?',
                                       hintStyle: TextStyle(
                                         fontSize: 13,
                                         fontWeight: FontWeight.w400,
@@ -189,7 +191,9 @@ class _TripDetailsScreenState extends ConsumerState<TripDetailsScreen> {
                                         showMenu(
                                           shape: RoundedRectangleBorder(
                                             borderRadius:
-                                                BorderRadiusGeometry.circular(20),
+                                                BorderRadiusGeometry.circular(
+                                                  20,
+                                                ),
                                           ),
                                           context: context,
                                           position: RelativeRect.fromLTRB(
@@ -239,7 +243,8 @@ class _TripDetailsScreenState extends ConsumerState<TripDetailsScreen> {
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text('Destination City'),
@@ -286,7 +291,9 @@ class _TripDetailsScreenState extends ConsumerState<TripDetailsScreen> {
                                         showMenu(
                                           shape: RoundedRectangleBorder(
                                             borderRadius:
-                                                BorderRadiusGeometry.circular(20),
+                                                BorderRadiusGeometry.circular(
+                                                  20,
+                                                ),
                                           ),
                                           context: context,
                                           position: RelativeRect.fromLTRB(
@@ -366,7 +373,8 @@ class _TripDetailsScreenState extends ConsumerState<TripDetailsScreen> {
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text('Trip date'),
@@ -410,7 +418,7 @@ class _TripDetailsScreenState extends ConsumerState<TripDetailsScreen> {
                                       if (picked != null) {
                                         setState(() {
                                           date = picked;
-                                          
+
                                           timeController.text =
                                               "${picked.day}/${picked.month}/${picked.year}";
                                         });
@@ -424,7 +432,7 @@ class _TripDetailsScreenState extends ConsumerState<TripDetailsScreen> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                Container(
+                                SizedBox(
                                   width: 130,
                                   child: ElevatedButton(
                                     onPressed: () async {
@@ -491,17 +499,18 @@ class _TripDetailsScreenState extends ConsumerState<TripDetailsScreen> {
                                             destinationController.text;
                                         newRide['date'] = date;
                                         print(newRide['date']);
-                                      ref.invalidate(ridesListProvider);
-                                      ref.invalidate(userListProvider);
-                                      ref.invalidate(partnerListProvider);
-                                      ref.invalidate(routesListProvider);
-                                      ref.invalidate(vehiclesListProvider);
-                                      ref.invalidate(bookingsListProvider);
+                                        ref.invalidate(ridesListProvider);
+                                        ref.invalidate(userListProvider);
+                                        ref.invalidate(partnerListProvider);
+                                        ref.invalidate(routesListProvider);
+                                        ref.invalidate(vehiclesListProvider);
+                                        ref.invalidate(bookingsListProvider);
                                         context.push('/partnerDetails');
                                       }
                                     },
                                     child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
                                         Text(
                                           'Next',

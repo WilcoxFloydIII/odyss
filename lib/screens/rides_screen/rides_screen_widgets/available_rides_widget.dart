@@ -58,6 +58,40 @@ class _AvailableRidesWidgetState extends ConsumerState<AvailableRidesWidget> {
     final filteredRides = filteredRidesAsync.value ?? [];
     final userList = userListAsync.value ?? [];
 
+    if (filteredRides.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(height: 30),
+            Icon(
+              Icons.directions_car_filled_rounded,
+              size: 64,
+              color: Colors.grey.shade400,
+            ),
+            SizedBox(height: 16),
+            Text(
+              'No available rides',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
+                color: Colors.grey.shade600,
+              ),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'Check back later or curate a new trip!',
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey.shade400,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
     return RefreshIndicator(
       onRefresh: () async {
         setState(() {}); // Triggers a rebuild, which refetches FutureProviders
@@ -103,17 +137,17 @@ class _AvailableRidesWidgetState extends ConsumerState<AvailableRidesWidget> {
               ),
               child: Column(
                 children: [
-                  Container(
+                  SizedBox(
                     width: double.infinity,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Container(
+                        SizedBox(
                           width: 250,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Container(
+                              SizedBox(
                                 width: ((17 * (cardLimit() - 1)) + 43),
                                 height: 40,
                                 child: Stack(
@@ -164,7 +198,10 @@ class _AvailableRidesWidgetState extends ConsumerState<AvailableRidesWidget> {
                           },
                           style: ButtonStyle(
                             padding: WidgetStatePropertyAll(
-                              EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                              EdgeInsets.symmetric(
+                                vertical: 10,
+                                horizontal: 20,
+                              ),
                             ),
                             foregroundColor: WidgetStateColor.resolveWith((
                               states,
@@ -198,7 +235,7 @@ class _AvailableRidesWidgetState extends ConsumerState<AvailableRidesWidget> {
                     ),
                   ),
                   SizedBox(height: 20),
-                  Container(
+                  SizedBox(
                     width: double.infinity,
                     height: 70,
                     child: Row(
@@ -241,7 +278,8 @@ class _AvailableRidesWidgetState extends ConsumerState<AvailableRidesWidget> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     ride.departureLoc,
@@ -261,7 +299,8 @@ class _AvailableRidesWidgetState extends ConsumerState<AvailableRidesWidget> {
                               ),
                               SizedBox(height: 27),
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     ride.arrivalLoc,
@@ -286,12 +325,12 @@ class _AvailableRidesWidgetState extends ConsumerState<AvailableRidesWidget> {
                     ),
                   ),
                   SizedBox(height: 20),
-                  Container(
+                  SizedBox(
                     width: double.infinity,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Container(
+                        SizedBox(
                           width: 200,
                           child: Row(
                             children: [

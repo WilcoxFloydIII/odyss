@@ -177,7 +177,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              Container(
+                              SizedBox(
                                 width: 130,
                                 child: ElevatedButton(
                                   onPressed: () {

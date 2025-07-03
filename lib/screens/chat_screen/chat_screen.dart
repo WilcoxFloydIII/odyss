@@ -13,12 +13,35 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
-      body: SafeArea(
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          child: TextButton(onPressed: () {}, child: Text('Print')),
+      appBar: AppBar(
+        title: Text('Chat'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Icon(Icons.rocket_launch_rounded, size: 64, color: Colors.grey.shade400),
+            SizedBox(height: 24),
+            Text(
+              'Coming Soon',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.w600,
+                color: Colors.grey.shade600,
+                letterSpacing: 1.2,
+              ),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'Chat features are on the way!',
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey.shade400,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+          ],
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

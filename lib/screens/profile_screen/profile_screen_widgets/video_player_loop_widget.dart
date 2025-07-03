@@ -3,7 +3,7 @@ import 'package:video_player/video_player.dart';
 
 class VideoPlayerLoop extends StatefulWidget {
   final String url;
-  const VideoPlayerLoop({required this.url});
+  const VideoPlayerLoop({super.key, required this.url});
 
   @override
   State<VideoPlayerLoop> createState() => _VideoPlayerLoopState();

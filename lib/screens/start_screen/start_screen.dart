@@ -14,14 +14,14 @@ class _StartScreenState extends State<StartScreen> {
     return Scaffold(
       appBar: AppBar(automaticallyImplyLeading: false),
       body: SafeArea(
-        child: Container(
+        child: SizedBox(
           height: MediaQuery.of(context).size.height * 1,
           width: MediaQuery.of(context).size.width * 1,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Image.asset('assets/images/trans_logo.png', width: 150,),
+              Image.asset('assets/images/trans_logo.png', width: 150),
               Image.asset('assets/images/intoimg1.png'),
               Container(
                 height: 300,
@@ -42,7 +42,12 @@ class _StartScreenState extends State<StartScreen> {
                           fontWeight: FontWeight.w600,
                           fontSize: 18,
                         ),
-                        children: [TextSpan(text: 'Odyss', style: TextStyle(fontWeight: FontWeight.w900))],
+                        children: [
+                          TextSpan(
+                            text: 'Odyss',
+                            style: TextStyle(fontWeight: FontWeight.w900),
+                          ),
+                        ],
                       ),
                     ),
                     SizedBox(height: 10),

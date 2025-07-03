@@ -6,7 +6,7 @@ import 'package:odyss/screens/rides_screen/rides_screen_widgets/available_rides_
 import 'package:odyss/screens/rides_screen/rides_screen_widgets/search_widget.dart';
 
 class RidesScreen extends ConsumerStatefulWidget {
-  RidesScreen({super.key});
+  const RidesScreen({super.key});
 
   @override
   ConsumerState<RidesScreen> createState() => _RidesScreenState();

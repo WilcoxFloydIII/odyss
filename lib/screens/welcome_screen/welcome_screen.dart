@@ -11,7 +11,7 @@ class WelcomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(automaticallyImplyLeading: false),
       body: SafeArea(
-        child: Container(
+        child: SizedBox(
           height: MediaQuery.of(context).size.height * 1,
           width: MediaQuery.of(context).size.width * 1,
           child: Column(
@@ -31,9 +31,12 @@ class WelcomeScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
+                  SizedBox(
                     width: MediaQuery.of(context).size.width,
-                    child: Image.asset('assets/images/introimg2.png', fit: BoxFit.contain,),
+                    child: Image.asset(
+                      'assets/images/introimg2.png',
+                      fit: BoxFit.contain,
+                    ),
                   ),
                 ],
               ),

@@ -7,7 +7,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class VideoChangerButton extends ConsumerWidget {
-  const VideoChangerButton({Key? key}) : super(key: key);
+  const VideoChangerButton({super.key});
 
   Future<void> _pickAndSaveVideo(BuildContext context, WidgetRef ref) async {
     final picker = ImagePicker();
@@ -50,7 +50,6 @@ class VideoChangerButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
     return TextButton(
       onPressed: () => _pickAndSaveVideo(context, ref),
       child: Image.asset('assets/images/pen.png', height: 25),

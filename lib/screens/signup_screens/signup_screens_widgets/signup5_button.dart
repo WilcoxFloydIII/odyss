@@ -6,8 +6,7 @@ class VibeButton extends StatefulWidget {
   final String text;
   final VoidCallback? onPressed;
 
-  const VibeButton({Key? key, required this.text, this.onPressed})
-    : super(key: key);
+  const VibeButton({super.key, required this.text, this.onPressed});
 
   @override
   State<VibeButton> createState() => _VibeButtonState();

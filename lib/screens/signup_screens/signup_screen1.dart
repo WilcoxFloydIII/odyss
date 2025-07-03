@@ -60,7 +60,7 @@ class _SignupPage1State extends State<SignupScreen1> {
                             ),
                             icon: Icon(Icons.arrow_back_ios_rounded, size: 25),
                           ),
-                          Container(
+                          SizedBox(
                             width: MediaQuery.of(context).size.width * 0.8,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -96,7 +96,7 @@ class _SignupPage1State extends State<SignupScreen1> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Container(
+                            SizedBox(
                               width: MediaQuery.of(context).size.width * 0.9,
                               child: Wrap(
                                 alignment: WrapAlignment.spaceBetween,
@@ -245,7 +245,7 @@ class _SignupPage1State extends State<SignupScreen1> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                Container(
+                                SizedBox(
                                   width: 130,
                                   child: ElevatedButton(
                                     onPressed: () {

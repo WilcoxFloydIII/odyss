@@ -15,17 +15,11 @@ class MyColors extends ThemeExtension<MyColors> {
   final Color primary;
   final Color backgound;
 
-  const MyColors({
-    required this.primary,
-    required this.backgound,
-  });
+  const MyColors({required this.primary, required this.backgound});
 
   @override
   MyColors copyWith({Color? light, Color? dark}) {
-    return MyColors(
-      primary: light ?? this.primary,
-      backgound: dark ?? this.backgound,
-    );
+    return MyColors(primary: light ?? primary, backgound: dark ?? backgound);
   }
 
   @override

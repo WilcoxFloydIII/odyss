@@ -10,7 +10,7 @@ import 'package:odyss/core/providers/list_providers/route_list_provider.dart';
 import 'package:odyss/core/providers/list_providers/bookings_list_provider.dart';
 
 class BottomAppBarWidget extends ConsumerStatefulWidget {
-  BottomAppBarWidget({
+  const BottomAppBarWidget({
     super.key,
     required this.toggle1,
     required this.toggle2,

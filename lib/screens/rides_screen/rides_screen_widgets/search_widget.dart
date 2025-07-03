@@ -6,7 +6,7 @@ import 'package:odyss/core/colors.dart';
 import 'package:odyss/core/providers/list_providers/ride_list_provider.dart';
 
 class SearchWidget extends ConsumerStatefulWidget {
-  SearchWidget({super.key});
+  const SearchWidget({super.key});
 
   @override
   ConsumerState<SearchWidget> createState() => _SearchWidgetState();
@@ -328,16 +328,19 @@ class _SearchWidgetState extends ConsumerState<SearchWidget> {
                                 padding: WidgetStatePropertyAll(
                                   EdgeInsets.all(0),
                                 ),
-                                shape: WidgetStatePropertyAll(CircleBorder(eccentricity: 0)),
+                                shape: WidgetStatePropertyAll(
+                                  CircleBorder(eccentricity: 0),
+                                ),
                                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                foregroundColor: WidgetStateProperty.resolveWith((
-                                  states,
-                                ) {
-                                  if (states.contains(WidgetState.pressed)) {
-                                    return Colors.pinkAccent;
-                                  }
-                                  return myColors.primary;
-                                }),
+                                foregroundColor:
+                                    WidgetStateProperty.resolveWith((states) {
+                                      if (states.contains(
+                                        WidgetState.pressed,
+                                      )) {
+                                        return Colors.pinkAccent;
+                                      }
+                                      return myColors.primary;
+                                    }),
                               ),
                               icon: Icon(Icons.refresh),
                             ),

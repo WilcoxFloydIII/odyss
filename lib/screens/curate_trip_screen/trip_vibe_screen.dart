@@ -97,7 +97,7 @@ class _TripVibeScreenState extends State<TripVibeScreen> {
                             },
                             icon: Icon(Icons.arrow_back_ios_rounded, size: 30),
                           ),
-                          Container(
+                          SizedBox(
                             width: MediaQuery.of(context).size.width * 0.87,
                             child: Text(
                               overflow: TextOverflow.clip,
@@ -136,7 +136,9 @@ class _TripVibeScreenState extends State<TripVibeScreen> {
                                     text: 'Playlist & Conversations',
                                   ),
                                   TripVibeButton(text: 'Open to Chatting'),
-                                  TripVibeButton(text: 'Leave on Time, No Delay'),
+                                  TripVibeButton(
+                                    text: 'Leave on Time, No Delay',
+                                  ),
                                   TripVibeButton(text: 'Open to New Friends'),
                                   TripVibeButton(text: 'Peaceful & Calm'),
                                   TripVibeButton(text: 'Purposeful Movement'),
@@ -151,7 +153,7 @@ class _TripVibeScreenState extends State<TripVibeScreen> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                Container(
+                                SizedBox(
                                   width: 130,
                                   child: ElevatedButton(
                                     onPressed: () {
@@ -178,7 +180,8 @@ class _TripVibeScreenState extends State<TripVibeScreen> {
                                       }
                                     },
                                     child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
                                         Text(
                                           'Next',

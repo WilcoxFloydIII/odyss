@@ -235,7 +235,8 @@ class _PartnerDetailsScreenState extends ConsumerState<PartnerDetailsScreen> {
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text('Transport partner'),
@@ -283,7 +284,9 @@ class _PartnerDetailsScreenState extends ConsumerState<PartnerDetailsScreen> {
                                         showMenu(
                                           shape: RoundedRectangleBorder(
                                             borderRadius:
-                                                BorderRadiusGeometry.circular(20),
+                                                BorderRadiusGeometry.circular(
+                                                  20,
+                                                ),
                                           ),
                                           context: context,
                                           position: RelativeRect.fromLTRB(
@@ -295,28 +298,29 @@ class _PartnerDetailsScreenState extends ConsumerState<PartnerDetailsScreen> {
                                             position.dx + button.size.width,
                                             position.dy,
                                           ),
-                                          items: List.generate(partners.length, (
-                                            index,
-                                          ) {
-                                            return PopupMenuItem(
-                                              child: Text(
-                                                partners[index].name,
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 15,
+                                          items: List.generate(
+                                            partners.length,
+                                            (index) {
+                                              return PopupMenuItem(
+                                                child: Text(
+                                                  partners[index].name,
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.w500,
+                                                    fontSize: 15,
+                                                  ),
                                                 ),
-                                              ),
-                                              onTap: () {
-                                                setState(() {
-                                                  partnerController.text =
-                                                      partners[index].name;
-                                                });
-                                                vehicleController.clear();
-                                              numberController.clear();
-                                              timeController.clear();
+                                                onTap: () {
+                                                  setState(() {
+                                                    partnerController.text =
+                                                        partners[index].name;
+                                                  });
+                                                  vehicleController.clear();
+                                                  numberController.clear();
+                                                  timeController.clear();
+                                                },
+                                              );
                                             },
-                                            );
-                                          }),
+                                          ),
                                         );
                                       });
                                     },
@@ -340,7 +344,8 @@ class _PartnerDetailsScreenState extends ConsumerState<PartnerDetailsScreen> {
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text('Vehicle Type'),
@@ -388,29 +393,29 @@ class _PartnerDetailsScreenState extends ConsumerState<PartnerDetailsScreen> {
                                       } else {
                                         final PartnerModel selectedPartner =
                                             partners.firstWhere(
-                                          (partnerInstance) =>
-                                              partnerInstance.name ==
-                                              partnerController.text,
-                                        );
+                                              (partnerInstance) =>
+                                                  partnerInstance.name ==
+                                                  partnerController.text,
+                                            );
                                         final id = selectedPartner.id;
 
                                         final RouteModel selectedRoute = routes
                                             .firstWhere(
-                                          (routeInstance) =>
-                                              routeInstance.companyId == id,
-                                        );
+                                              (routeInstance) =>
+                                                  routeInstance.companyId == id,
+                                            );
 
                                         final List<VehicleModel> vehicles =
                                             List.generate(
-                                          selectedRoute.vehicles.length,
-                                          (i) {
-                                            return allVehicles.firstWhere(
-                                              (vehicle) =>
-                                                  vehicle.id ==
-                                                  selectedRoute.vehicles[i],
+                                              selectedRoute.vehicles.length,
+                                              (i) {
+                                                return allVehicles.firstWhere(
+                                                  (vehicle) =>
+                                                      vehicle.id ==
+                                                      selectedRoute.vehicles[i],
+                                                );
+                                              },
                                             );
-                                          },
-                                        );
 
                                         return setState(() {
                                           final RenderBox button =
@@ -453,7 +458,8 @@ class _PartnerDetailsScreenState extends ConsumerState<PartnerDetailsScreen> {
                                                   child: Text(
                                                     vehicles[index].type,
                                                     style: TextStyle(
-                                                      fontWeight: FontWeight.w500,
+                                                      fontWeight:
+                                                          FontWeight.w500,
                                                       fontSize: 15,
                                                     ),
                                                   ),
@@ -465,8 +471,8 @@ class _PartnerDetailsScreenState extends ConsumerState<PartnerDetailsScreen> {
                                                           vehicles[index].seats;
                                                     });
                                                     timeController.clear();
-                                                  numberController.clear();
-                                                },
+                                                    numberController.clear();
+                                                  },
                                                 );
                                               },
                                             ),
@@ -494,7 +500,8 @@ class _PartnerDetailsScreenState extends ConsumerState<PartnerDetailsScreen> {
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text('Number of seats'),
@@ -578,7 +585,8 @@ class _PartnerDetailsScreenState extends ConsumerState<PartnerDetailsScreen> {
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text('Time of departure'),
@@ -626,17 +634,17 @@ class _PartnerDetailsScreenState extends ConsumerState<PartnerDetailsScreen> {
                                       } else {
                                         final PartnerModel selectedPartner =
                                             partners.firstWhere(
-                                          (partnerInstance) =>
-                                              partnerInstance.name ==
-                                              partnerController.text,
-                                        );
+                                              (partnerInstance) =>
+                                                  partnerInstance.name ==
+                                                  partnerController.text,
+                                            );
                                         final id = selectedPartner.id;
 
                                         final RouteModel selectedRoute = routes
                                             .firstWhere(
-                                          (routeInstance) =>
-                                              routeInstance.companyId == id,
-                                        );
+                                              (routeInstance) =>
+                                                  routeInstance.companyId == id,
+                                            );
 
                                         return setState(() {
                                           final RenderBox button =
@@ -673,7 +681,9 @@ class _PartnerDetailsScreenState extends ConsumerState<PartnerDetailsScreen> {
                                               position.dy,
                                             ),
                                             items: List.generate(
-                                              selectedRoute.departureTime.length,
+                                              selectedRoute
+                                                  .departureTime
+                                                  .length,
                                               (index) {
                                                 bool hourDigitSmall = false;
                                                 bool minuteDigitSmall = false;
@@ -700,7 +710,8 @@ class _PartnerDetailsScreenState extends ConsumerState<PartnerDetailsScreen> {
                                                         : '${selectedRoute.departureTime[index].hour} : ${minuteDigitSmall ? '0${selectedRoute.departureTime[index].minute}' : '${selectedRoute.departureTime[index].minute}'}',
                                                     textAlign: TextAlign.center,
                                                     style: TextStyle(
-                                                      fontWeight: FontWeight.w500,
+                                                      fontWeight:
+                                                          FontWeight.w500,
                                                       fontSize: 15,
                                                     ),
                                                   ),
@@ -741,7 +752,7 @@ class _PartnerDetailsScreenState extends ConsumerState<PartnerDetailsScreen> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                Container(
+                                SizedBox(
                                   width: 130,
                                   child: ElevatedButton(
                                     onPressed: () {
@@ -763,7 +774,9 @@ class _PartnerDetailsScreenState extends ConsumerState<PartnerDetailsScreen> {
                                             ),
                                           ),
                                         );
-                                      } else if (vehicleController.text.isEmpty) {
+                                      } else if (vehicleController
+                                          .text
+                                          .isEmpty) {
                                         ScaffoldMessenger.of(
                                           context,
                                         ).showSnackBar(
@@ -799,7 +812,9 @@ class _PartnerDetailsScreenState extends ConsumerState<PartnerDetailsScreen> {
                                             ),
                                           ),
                                         );
-                                      } else if (numberController.text.isEmpty) {
+                                      } else if (numberController
+                                          .text
+                                          .isEmpty) {
                                         ScaffoldMessenger.of(
                                           context,
                                         ).showSnackBar(
@@ -822,14 +837,16 @@ class _PartnerDetailsScreenState extends ConsumerState<PartnerDetailsScreen> {
                                             partnerController.text;
                                         newRide['vehicle'] =
                                             vehicleController.text;
-                                        newRide['seats'] = numberController.text;
+                                        newRide['seats'] =
+                                            numberController.text;
                                         newRide['time'] = time;
                                         print(newRide['time']);
                                         context.push('/tripVibe');
                                       }
                                     },
                                     child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
                                         Text(
                                           'Next',

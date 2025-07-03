@@ -5,14 +5,13 @@ import 'package:odyss/core/constraints.dart';
 class TripVibeButton extends StatefulWidget {
   final String text;
 
-  TripVibeButton({Key? key, required this.text}) : super(key: key);
+  const TripVibeButton({super.key, required this.text});
 
   @override
   State<TripVibeButton> createState() => _TripVibeButtonState();
 }
 
 class _TripVibeButtonState extends State<TripVibeButton> {
-  
   bool _isSelected = false;
 
   @override

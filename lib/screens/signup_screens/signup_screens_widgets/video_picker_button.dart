@@ -8,7 +8,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class VideoPickerButton extends ConsumerWidget {
-  const VideoPickerButton({Key? key}) : super(key: key);
+  const VideoPickerButton({super.key});
 
   Future<void> _pickAndSaveVideo(BuildContext context, WidgetRef ref) async {
     final picker = ImagePicker();

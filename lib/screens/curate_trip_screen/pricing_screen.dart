@@ -185,7 +185,7 @@ class _PricingScreenState extends ConsumerState<PricingScreen> {
                             },
                             icon: Icon(Icons.arrow_back_ios_rounded, size: 30),
                           ),
-                          Container(
+                          SizedBox(
                             width: MediaQuery.of(context).size.width * 0.87,
                             child: Text(
                               overflow: TextOverflow.clip,
@@ -226,7 +226,8 @@ class _PricingScreenState extends ConsumerState<PricingScreen> {
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text('Trip price per seat (₦)'),
@@ -252,8 +253,8 @@ class _PricingScreenState extends ConsumerState<PricingScreen> {
                                             "Prices are automatically set based on the trip details you've chosen",
                                         messageSize: 12,
                                         duration: Duration(seconds: 1),
-                                        flushbarPosition:
-                                            FlushbarPosition.TOP, // Top of screen
+                                        flushbarPosition: FlushbarPosition
+                                            .TOP, // Top of screen
                                         backgroundColor: Colors
                                             .red, // Optional: customize color
                                         margin: EdgeInsets.all(
@@ -327,7 +328,8 @@ class _PricingScreenState extends ConsumerState<PricingScreen> {
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text('Smart Fill Policy Preference'),
@@ -374,7 +376,9 @@ class _PricingScreenState extends ConsumerState<PricingScreen> {
                                         showMenu(
                                           shape: RoundedRectangleBorder(
                                             borderRadius:
-                                                BorderRadiusGeometry.circular(20),
+                                                BorderRadiusGeometry.circular(
+                                                  20,
+                                                ),
                                           ),
                                           context: context,
                                           position: RelativeRect.fromLTRB(
@@ -504,7 +508,8 @@ class _PricingScreenState extends ConsumerState<PricingScreen> {
                                       ); // Dismiss loading
                                     },
                                     child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
                                         Text(
                                           'Book your seat',
