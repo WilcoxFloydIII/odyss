@@ -30,18 +30,16 @@ class _RidesScreenState extends ConsumerState<RidesScreen> {
           child: SearchWidget(),
         ),
         body: SafeArea(
-          child: SingleChildScrollView(
-            child: Container(
-              width: MediaQuery.of(context).size.width,
-              padding: EdgeInsets.only(top: 20),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('   Available Rides', style: TextStyle(fontSize: 20)),
-                  AvailableRidesWidget(),
-                ],
-              ),
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            padding: EdgeInsets.only(top: 20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('   Available Rides', style: TextStyle(fontSize: 20)),
+                Expanded(child: AvailableRidesWidget()),
+              ],
             ),
           ),
         ),

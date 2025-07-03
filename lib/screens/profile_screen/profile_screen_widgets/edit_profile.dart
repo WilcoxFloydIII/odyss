@@ -60,6 +60,12 @@ class _EditProfileState extends ConsumerState<EditProfile> {
   @override
   void initState() {
     super.initState();
+    final users = ref.read(userListProvider).value ?? [];
+    final user = users.firstWhere((element) => element.id == UID);
+    nickNameController.text = user.nickName;
+    firstNameController.text = user.firstName;
+    lastNameController.text = user.lastName;
+    bioController.text = user.bio;
     // WidgetsBinding.instance.addPostFrameCallback((_) async {
     //   final users = ref.read(userListProvider).value ?? [];
     //   final user = users.firstWhere((element) => element.id == UID);
@@ -293,10 +299,6 @@ class _EditProfileState extends ConsumerState<EditProfile> {
     final user = users.firstWhere((element) => element.id == UID);
 
     // Initialize controllers only if they are empty (to avoid overwriting edits on rebuild)
-    nickNameController.text = user.nickName;
-    firstNameController.text = user.firstName;
-    lastNameController.text = user.lastName;
-    bioController.text = user.bio;
 
     // WidgetsBinding.instance.addPostFrameCallback((_) async {
     //   if (user.video.isNotEmpty) {

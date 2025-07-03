@@ -415,7 +415,7 @@ class _CirclesScreenState extends ConsumerState<CirclesScreen> {
                                                       ),
                                                       onPressed: () async {
                                                         final circleLink =
-                                                            'https://odyss.app/circle/${circle.id}';
+                                                            'https://mobile.odyss.ng/circle/${circle.id}';
                                                         final shareText =
                                                             'Join my circle on Odyss! $circleLink\nIf you don\'t have the app, download it from the store.';
                                                         await Share.share(
@@ -639,26 +639,11 @@ class _CirclesScreenState extends ConsumerState<CirclesScreen> {
                                                         ),
                                                       ],
                                                     ),
-                                                    IconButton(
-                                                      icon: Icon(
-                                                        Icons.share,
-                                                        color: Colors
-                                                            .grey
-                                                            .shade700,
-                                                        size: 22,
-                                                      ),
-                                                      onPressed: () async {
-                                                        final circleLink =
-                                                            'https://odyss.app/circle/${circle.id}';
-                                                        final shareText =
-                                                            'Join my circle on Odyss! $circleLink\nIf you don\'t have the app, download it from the store.';
-                                                        await Share.share(
-                                                          shareText,
-                                                          subject:
-                                                              'Join my Odyss Circle',
-                                                        );
+                                                    TextButton(
+                                                      onPressed: () {
+                                                        joinCircle(circleId: circle.id);
                                                       },
-                                                      tooltip: 'Share',
+                                                      child: Text('Join'),
                                                     ),
                                                   ],
                                                 ),
