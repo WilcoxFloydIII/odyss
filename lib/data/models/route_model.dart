@@ -1,4 +1,8 @@
+import 'package:intl/intl.dart';
+
 class RouteModel {
+  late String id;
+  late String terminal;
   late String companyId;
   late String departureLocation;
   late String arrivalLocation;
@@ -8,6 +12,8 @@ class RouteModel {
   late List<String> vehicles;
 
   RouteModel({
+    required this.id,
+    required this.terminal,
     required this.companyId,
     required this.arrivalLocation,
     required this.departureLocation,
@@ -19,18 +25,37 @@ class RouteModel {
 
   factory RouteModel.fromJson(Map<String, dynamic> json) {
     return RouteModel(
+      id: json['id']?.toString() ?? '',
+      terminal: json['terminal']?.toString() ?? '',
       companyId: json['company_id']?.toString() ?? '',
       price: json['price']?.toString() ?? '',
       arrivalLocation: json['destination']?.toString() ?? '',
       departureLocation: json['origin']?.toString() ?? '',
       // duration: DateTime.parse(json['duration'] as String),
-      departureTime:
-          (json['dep_time'] as List?)
-              ?.map<DateTime>((e) => DateTime.parse(e.toString()))
-              .toList() ??
-          [],
+      departureTime: (() {
+        final depTime = json['dep_time'];
+        if (depTime is List) {
+          return depTime.map<DateTime>((e) {
+            try {
+              return DateTime.parse(e.toString());
+            } catch (_) {
+              // Try parsing as time-only (e.g., "08:00 AM")
+              return DateFormat.jm().parse(e.toString());
+            }
+          }).toList();
+        } else if (depTime is String) {
+          try {
+            return [DateTime.parse(depTime)];
+          } catch (_) {
+            // Try parsing as time-only (e.g., "08:00 AM")
+            return [DateFormat.jm().parse(depTime)];
+          }
+        } else {
+          return <DateTime>[];
+        }
+      })(),
       vehicles:
-          (json['vehicles'] as List?)
+          (json['vehicles'] as List<dynamic>?)
               ?.map<String>((e) => e.toString())
               .toList() ??
           [],

@@ -1,16 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:odyss/core/colors.dart';
 import 'package:odyss/core/constraints.dart';
+import 'package:odyss/core/providers/list_providers/bookings_list_provider.dart';
+import 'package:odyss/core/providers/list_providers/company_list_provider.dart';
+import 'package:odyss/core/providers/list_providers/ride_list_provider.dart';
+import 'package:odyss/core/providers/list_providers/route_list_provider.dart';
+import 'package:odyss/core/providers/list_providers/user_list_provider.dart';
 
-class TripDetailsScreen extends StatefulWidget {
+class TripDetailsScreen extends ConsumerStatefulWidget {
   const TripDetailsScreen({super.key});
 
   @override
-  State<TripDetailsScreen> createState() => _TripDetailsScreenState();
+  ConsumerState<TripDetailsScreen> createState() => _TripDetailsScreenState();
 }
 
-class _TripDetailsScreenState extends State<TripDetailsScreen> {
+class _TripDetailsScreenState extends ConsumerState<TripDetailsScreen> {
   final GlobalKey _departureKey = GlobalKey();
   final GlobalKey _destinationKey = GlobalKey();
   final GlobalKey _timeKey = GlobalKey();
@@ -420,7 +426,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                               Container(
                                 width: 130,
                                 child: ElevatedButton(
-                                  onPressed: () {
+                                  onPressed: () async {
                                     if (departureController.text.isEmpty) {
                                       ScaffoldMessenger.of(
                                         context,
@@ -484,6 +490,12 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                                           destinationController.text;
                                       newRide['date'] = date;
                                       print(newRide['date']);
+                                      ref.invalidate(ridesListProvider);
+                                      ref.invalidate(userListProvider);
+                                      ref.invalidate(partnerListProvider);
+                                      ref.invalidate(routesListProvider);
+                                      ref.invalidate(vehiclesListProvider);
+                                      ref.invalidate(bookingsListProvider);
                                       context.push('/partnerDetails');
                                     }
                                   },

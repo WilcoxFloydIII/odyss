@@ -4,8 +4,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:odyss/core/colors.dart';
 import 'package:odyss/core/constraints.dart';
+import 'package:odyss/core/providers/list_providers/bookings_list_provider.dart';
+import 'package:odyss/core/providers/list_providers/circles_list.dart';
 import 'package:odyss/core/providers/list_providers/company_list_provider.dart';
+import 'package:odyss/core/providers/list_providers/ride_list_provider.dart';
 import 'package:odyss/core/providers/list_providers/route_list_provider.dart';
+import 'package:odyss/core/providers/list_providers/user_list_provider.dart';
 import 'package:odyss/data/models/company_model.dart';
 import 'package:odyss/data/models/route_model.dart';
 import 'package:odyss/screens/error_dialog_widget.dart';
@@ -20,6 +24,20 @@ class PartnerDetailsScreen extends ConsumerStatefulWidget {
 }
 
 class _PartnerDetailsScreenState extends ConsumerState<PartnerDetailsScreen> {
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.refresh(CircleListProvider);
+      ref.refresh(ridesListProvider);
+      ref.refresh(userListProvider);
+      ref.refresh(partnerListProvider);
+      ref.refresh(routesListProvider);
+      ref.refresh(vehiclesListProvider);
+      ref.refresh(bookingsListProvider);
+    });
+  }
+
   final GlobalKey _partnerKey = GlobalKey();
   final GlobalKey _vehicleKey = GlobalKey();
   final GlobalKey _timeKey = GlobalKey();
@@ -292,6 +310,9 @@ class _PartnerDetailsScreenState extends ConsumerState<PartnerDetailsScreen> {
                                                 partnerController.text =
                                                     partners[index].name;
                                               });
+                                              vehicleController.clear();
+                                              numberController.clear();
+                                              timeController.clear();
                                             },
                                           );
                                         }),
@@ -442,6 +463,8 @@ class _PartnerDetailsScreenState extends ConsumerState<PartnerDetailsScreen> {
                                                     numberController.text =
                                                         vehicles[index].seats;
                                                   });
+                                                  timeController.clear();
+                                                  numberController.clear();
                                                 },
                                               );
                                             },
