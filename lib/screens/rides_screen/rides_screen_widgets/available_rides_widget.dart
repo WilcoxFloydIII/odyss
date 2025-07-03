@@ -59,35 +59,39 @@ class _AvailableRidesWidgetState extends ConsumerState<AvailableRidesWidget> {
     final userList = userListAsync.value ?? [];
 
     if (filteredRides.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(height: 30),
-            Icon(
-              Icons.directions_car_filled_rounded,
-              size: 64,
-              color: Colors.grey.shade400,
-            ),
-            SizedBox(height: 16),
-            Text(
-              'No available rides',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w600,
-                color: Colors.grey.shade600,
-              ),
-            ),
-            SizedBox(height: 8),
-            Text(
-              'Check back later or curate a new trip!',
-              style: TextStyle(
-                fontSize: 14,
+      return Container(
+        height: MediaQuery.of(context).size.height*0.5,
+        width: MediaQuery.of(context).size.width,
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(height: 30),
+              Icon(
+                Icons.directions_car_filled_rounded,
+                size: 64,
                 color: Colors.grey.shade400,
-                fontWeight: FontWeight.w400,
               ),
-            ),
-          ],
+              SizedBox(height: 16),
+              Text(
+                'No available rides',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.grey.shade600,
+                ),
+              ),
+              SizedBox(height: 8),
+              Text(
+                'Check back later or curate a new trip!',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.grey.shade400,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ],
+          ),
         ),
       );
     }

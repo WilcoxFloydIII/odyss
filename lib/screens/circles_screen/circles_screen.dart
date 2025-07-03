@@ -12,6 +12,7 @@ import 'package:odyss/data/models/circle_model.dart';
 import 'package:odyss/screens/bottom_app_bar.dart';
 import 'package:odyss/screens/error_dialog_widget.dart';
 import 'package:odyss/screens/loading_animation_widget.dart';
+import 'package:share_plus/share_plus.dart';
 
 class CirclesScreen extends ConsumerStatefulWidget {
   const CirclesScreen({super.key});
@@ -203,12 +204,13 @@ class _CirclesScreenState extends ConsumerState<CirclesScreen> {
                     child: Column(
                       children: [
                         SizedBox(
-                          height:
-                              (((125 +
-                                      MediaQuery.of(context).size.width *
-                                          0.05) *
-                                  memberCircles.length) +
-                              50),
+                          height: memberCircles.isEmpty
+                              ? 200
+                              : (((125 +
+                                            MediaQuery.of(context).size.width *
+                                                0.05) *
+                                        memberCircles.length) +
+                                    50),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -217,219 +219,232 @@ class _CirclesScreenState extends ConsumerState<CirclesScreen> {
                                 style: TextStyle(fontSize: 15),
                               ),
                               SizedBox(height: 10),
-                              SizedBox(
-                                height:
-                                    (125 +
-                                        MediaQuery.of(context).size.width *
-                                            0.05) *
-                                    memberCircles.length,
-                                child: ListView.builder(
-                                  physics: NeverScrollableScrollPhysics(),
-                                  itemCount: memberCircles.length,
-                                  itemBuilder: (context, index) {
-                                    CircleModel circle = memberCircles[index];
-                                    DateTime start = circle.startDate;
-                                    DateTime end = circle.endDate;
-                                    isMemberEmpty() {
-                                      if (memberCircles.isEmpty) {
-                                        return Center(
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Icon(
-                                                Icons.groups_2_rounded,
-                                                size: 64,
-                                                color: Colors.grey.shade400,
-                                              ),
-                                              SizedBox(height: 16),
-                                              Text(
-                                                'No circles yet',
-                                                style: TextStyle(
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.w600,
-                                                  color: Colors.grey.shade600,
-                                                ),
-                                              ),
-                                              SizedBox(height: 8),
-                                              Text(
-                                                'Join or create a circle to get started!',
-                                                style: TextStyle(
-                                                  fontSize: 14,
-                                                  color: Colors.grey.shade400,
-                                                  fontWeight: FontWeight.w400,
-                                                ),
-                                              ),
-                                            ],
+                              memberCircles.isEmpty
+                                  ? Center(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(
+                                            Icons.groups_2_rounded,
+                                            size: 64,
+                                            color: Colors.grey.shade400,
                                           ),
-                                        );
-                                      } else {
-                                        return Padding(
-                                          padding: EdgeInsets.only(
-                                            bottom:
-                                                MediaQuery.of(
-                                                  context,
-                                                ).size.width *
-                                                0.05,
+                                          SizedBox(height: 16),
+                                          Text(
+                                            'No circles yet',
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.w600,
+                                              color: Colors.grey.shade600,
+                                            ),
                                           ),
-                                          child: Container(
-                                            width: double.infinity,
-                                            padding: EdgeInsets.fromLTRB(
-                                              15,
-                                              15,
-                                              10,
-                                              15,
+                                          SizedBox(height: 8),
+                                          Text(
+                                            'Join or create a circle to get started!',
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.grey.shade400,
+                                              fontWeight: FontWeight.w400,
                                             ),
-                                            height: 125,
-                                            decoration: BoxDecoration(
-                                              color: Colors.grey.shade100,
-                                              borderRadius:
-                                                  BorderRadius.circular(30),
-                                            ),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                SizedBox(
-                                                  width: 65,
-                                                  height: 65,
-                                                  child: Stack(
-                                                    children: [
-                                                      Positioned(
-                                                        left: 0,
-                                                        top: 17.5,
-                                                        child: Container(
-                                                          height: 35,
-                                                          width: 35,
-                                                          decoration: BoxDecoration(
-                                                            color: Colors
-                                                                .grey
-                                                                .shade300,
-                                                            borderRadius:
-                                                                BorderRadius.circular(
-                                                                  20,
-                                                                ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      Positioned(
-                                                        left: 17.5,
-                                                        top: 27.5,
-                                                        child: Container(
-                                                          height: 35,
-                                                          width: 35,
-                                                          decoration: BoxDecoration(
-                                                            color: Colors
-                                                                .grey
-                                                                .shade300,
-                                                            borderRadius:
-                                                                BorderRadius.circular(
-                                                                  20,
-                                                                ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      Positioned(
-                                                        left: 17.5,
-                                                        top: 7.5,
-                                                        child: Container(
-                                                          height: 35,
-                                                          width: 35,
-                                                          decoration: BoxDecoration(
-                                                            color: Colors
-                                                                .grey
-                                                                .shade300,
-                                                            borderRadius:
-                                                                BorderRadius.circular(
-                                                                  20,
-                                                                ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  : SizedBox(
+                                      height:
+                                          (125 +
+                                              MediaQuery.of(
+                                                    context,
+                                                  ).size.width *
+                                                  0.05) *
+                                          memberCircles.length,
+                                      child: ListView.builder(
+                                        physics: NeverScrollableScrollPhysics(),
+                                        itemCount: memberCircles.length,
+                                        itemBuilder: (context, index) {
+                                          CircleModel circle =
+                                              memberCircles[index];
+                                          DateTime start = circle.startDate;
+                                          DateTime end = circle.endDate;
+                                          return GestureDetector(
+                                            onTap: () {
+                                              context.push(
+                                                '/circle/${circle.id}',
+                                              );
+                                            },
+                                            child: Padding(
+                                              padding: EdgeInsets.only(
+                                                bottom:
+                                                    MediaQuery.of(
+                                                      context,
+                                                    ).size.width *
+                                                    0.05,
+                                              ),
+                                              child: Container(
+                                                width: double.infinity,
+                                                padding: EdgeInsets.fromLTRB(
+                                                  15,
+                                                  15,
+                                                  10,
+                                                  15,
                                                 ),
-                                                Column(
+                                                height: 125,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.grey.shade100,
+                                                  borderRadius:
+                                                      BorderRadius.circular(30),
+                                                ),
+                                                child: Row(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment
                                                           .spaceBetween,
                                                   crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
+                                                      CrossAxisAlignment.center,
                                                   children: [
-                                                    Text(
-                                                      '${circle.departure} - ${circle.destination}',
-                                                      style: TextStyle(
-                                                        fontSize: 10,
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                      ),
-                                                    ),
-                                                    SizedBox(height: 10),
                                                     SizedBox(
-                                                      width:
-                                                          MediaQuery.of(
-                                                            context,
-                                                          ).size.width *
-                                                          0.5,
-                                                      child: Text(
-                                                        circle.name,
-                                                        style: TextStyle(
-                                                          fontSize: 12,
-                                                          fontWeight:
-                                                              FontWeight.w700,
-                                                        ),
+                                                      width: 65,
+                                                      height: 65,
+                                                      child: Stack(
+                                                        children: [
+                                                          Positioned(
+                                                            left: 0,
+                                                            top: 17.5,
+                                                            child: Container(
+                                                              height: 35,
+                                                              width: 35,
+                                                              decoration: BoxDecoration(
+                                                                color: Colors
+                                                                    .grey
+                                                                    .shade300,
+                                                                borderRadius:
+                                                                    BorderRadius.circular(
+                                                                      20,
+                                                                    ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          Positioned(
+                                                            left: 17.5,
+                                                            top: 27.5,
+                                                            child: Container(
+                                                              height: 35,
+                                                              width: 35,
+                                                              decoration: BoxDecoration(
+                                                                color: Colors
+                                                                    .grey
+                                                                    .shade300,
+                                                                borderRadius:
+                                                                    BorderRadius.circular(
+                                                                      20,
+                                                                    ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          Positioned(
+                                                            left: 17.5,
+                                                            top: 7.5,
+                                                            child: Container(
+                                                              height: 35,
+                                                              width: 35,
+                                                              decoration: BoxDecoration(
+                                                                color: Colors
+                                                                    .grey
+                                                                    .shade300,
+                                                                borderRadius:
+                                                                    BorderRadius.circular(
+                                                                      20,
+                                                                    ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
                                                       ),
                                                     ),
-                                                    SizedBox(height: 10),
-                                                    Text(
-                                                      '${start.day} ${DateFormat.MMM().format(start)} ${start.year} - ${end.day} ${DateFormat.MMM().format(end)} ${end.year}',
-                                                      style: TextStyle(
-                                                        fontSize: 10,
-                                                        fontWeight:
-                                                            FontWeight.w600,
+                                                    Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(
+                                                          '${circle.departure} - ${circle.destination}',
+                                                          style: TextStyle(
+                                                            fontSize: 10,
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                          ),
+                                                        ),
+                                                        SizedBox(height: 10),
+                                                        SizedBox(
+                                                          width:
+                                                              MediaQuery.of(
+                                                                context,
+                                                              ).size.width *
+                                                              0.5,
+                                                          child: Text(
+                                                            circle.name,
+                                                            style: TextStyle(
+                                                              fontSize: 12,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w700,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        SizedBox(height: 10),
+                                                        Text(
+                                                          '${start.day} ${DateFormat.MMM().format(start)} ${start.year} - ${end.day} ${DateFormat.MMM().format(end)} ${end.year}',
+                                                          style: TextStyle(
+                                                            fontSize: 10,
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    IconButton(
+                                                      icon: Icon(
+                                                        Icons.share,
+                                                        color: Colors
+                                                            .grey
+                                                            .shade700,
+                                                        size: 22,
                                                       ),
+                                                      onPressed: () async {
+                                                        final circleLink =
+                                                            'https://odyss.app/circle/${circle.id}';
+                                                        final shareText =
+                                                            'Join my circle on Odyss! $circleLink\nIf you don\'t have the app, download it from the store.';
+                                                        await Share.share(
+                                                          shareText,
+                                                          subject:
+                                                              'Join my Odyss Circle',
+                                                        );
+                                                      },
+                                                      tooltip: 'Share',
                                                     ),
                                                   ],
                                                 ),
-                                                TextButton(
-                                                  onPressed: () {
-                                                    context.push(
-                                                      '/circle/${circle.id}',
-                                                    );
-                                                  },
-                                                  child: Text(
-                                                    'View',
-                                                    style: TextStyle(
-                                                      fontSize: 12,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
+                                              ),
                                             ),
-                                          ),
-                                        );
-                                      }
-                                    }
-
-                                    return isMemberEmpty();
-                                  },
-                                ),
-                              ),
+                                          );
+                                        },
+                                      ),
+                                    ),
                             ],
                           ),
                         ),
                         SizedBox(
-                          height:
-                              (((125 +
-                                      MediaQuery.of(context).size.width *
-                                          0.05) *
-                                  filteredAllCircles.length) +
-                              50),
+                          height: filteredAllCircles.isEmpty
+                              ? 200
+                              : (((125 +
+                                            MediaQuery.of(context).size.width *
+                                                0.05) *
+                                        filteredAllCircles.length) +
+                                    50),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -438,197 +453,221 @@ class _CirclesScreenState extends ConsumerState<CirclesScreen> {
                                 style: TextStyle(fontSize: 15),
                               ),
                               SizedBox(height: 10),
-                              SizedBox(
-                                height:
-                                    (125 +
-                                        MediaQuery.of(context).size.width *
-                                            0.05) *
-                                    filteredAllCircles.length,
-                                child: ListView.builder(
-                                  physics: NeverScrollableScrollPhysics(),
-                                  itemCount: filteredAllCircles.length,
-                                  itemBuilder: (context, index) {
-                                    CircleModel circle =
-                                        filteredAllCircles[index];
-                                    DateTime start = circle.startDate;
-                                    DateTime end = circle.endDate;
-                                    if (filteredAllCircles.isEmpty) {
-                                      return Center(
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Icon(
-                                              Icons.public_rounded,
-                                              size: 64,
-                                              color: Colors.grey.shade400,
-                                            ),
-                                            SizedBox(height: 16),
-                                            Text(
-                                              'No public circles',
-                                              style: TextStyle(
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.w600,
-                                                color: Colors.grey.shade600,
-                                              ),
-                                            ),
-                                            SizedBox(height: 8),
-                                            Text(
-                                              'Be the first to curate a public circle!',
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                                color: Colors.grey.shade400,
-                                                fontWeight: FontWeight.w400,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      );
-                                    }
-                                    return Padding(
-                                      padding: EdgeInsets.only(
-                                        bottom:
-                                            MediaQuery.of(context).size.width *
-                                            0.05,
-                                      ),
-                                      child: Container(
-                                        width: double.infinity,
-                                        padding: EdgeInsets.fromLTRB(
-                                          15,
-                                          15,
-                                          10,
-                                          15,
-                                        ),
-                                        height: 125,
-                                        decoration: BoxDecoration(
-                                          color: Colors.grey.shade100,
-                                          borderRadius: BorderRadius.circular(
-                                            30,
+                              filteredAllCircles.isEmpty
+                                  ? Center(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(
+                                            Icons.groups_2_rounded,
+                                            size: 64,
+                                            color: Colors.grey.shade400,
                                           ),
-                                        ),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            SizedBox(
-                                              width: 65,
-                                              height: 65,
-                                              child: Stack(
-                                                children: [
-                                                  Positioned(
-                                                    left: 0,
-                                                    top: 17.5,
-                                                    child: Container(
-                                                      height: 35,
-                                                      width: 35,
-                                                      decoration: BoxDecoration(
-                                                        color: Colors
-                                                            .grey
-                                                            .shade300,
-                                                        borderRadius:
-                                                            BorderRadius.circular(
-                                                              20,
-                                                            ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Positioned(
-                                                    left: 17.5,
-                                                    top: 27.5,
-                                                    child: Container(
-                                                      height: 35,
-                                                      width: 35,
-                                                      decoration: BoxDecoration(
-                                                        color: Colors
-                                                            .grey
-                                                            .shade300,
-                                                        borderRadius:
-                                                            BorderRadius.circular(
-                                                              20,
-                                                            ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Positioned(
-                                                    left: 17.5,
-                                                    top: 7.5,
-                                                    child: Container(
-                                                      height: 35,
-                                                      width: 35,
-                                                      decoration: BoxDecoration(
-                                                        color: Colors
-                                                            .grey
-                                                            .shade300,
-                                                        borderRadius:
-                                                            BorderRadius.circular(
-                                                              20,
-                                                            ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
+                                          SizedBox(height: 16),
+                                          Text(
+                                            'No circles yet',
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.w600,
+                                              color: Colors.grey.shade600,
                                             ),
-                                            Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  '${circle.departure} - ${circle.destination}',
-                                                  style: TextStyle(
-                                                    fontSize: 10,
-                                                    fontWeight: FontWeight.w600,
-                                                  ),
-                                                ),
-                                                SizedBox(height: 10),
-                                                SizedBox(
-                                                  width:
-                                                      MediaQuery.of(
-                                                        context,
-                                                      ).size.width *
-                                                      0.5,
-                                                  child: Text(
-                                                    circle.name,
-                                                    style: TextStyle(
-                                                      fontSize: 12,
-                                                      fontWeight:
-                                                          FontWeight.w700,
-                                                    ),
-                                                  ),
-                                                ),
-                                                SizedBox(height: 10),
-                                                Text(
-                                                  '${start.day} ${DateFormat.MMM().format(start)} ${start.year} - ${end.day} ${DateFormat.MMM().format(end)} ${end.year}',
-                                                  style: TextStyle(
-                                                    fontSize: 10,
-                                                    fontWeight: FontWeight.w600,
-                                                  ),
-                                                ),
-                                              ],
+                                          ),
+                                          SizedBox(height: 8),
+                                          Text(
+                                            'Create a circle to get started!',
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.grey.shade400,
+                                              fontWeight: FontWeight.w400,
                                             ),
-                                            TextButton(
-                                              onPressed: () {
-                                                joinCircle(circleId: circle.id);
-                                              },
-                                              child: Text(
-                                                'Join',
-                                                style: TextStyle(
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.w600,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
+                                          ),
+                                        ],
                                       ),
-                                    );
-                                  },
-                                ),
-                              ),
+                                    )
+                                  : SizedBox(
+                                      height:
+                                          (125 +
+                                              MediaQuery.of(
+                                                    context,
+                                                  ).size.width *
+                                                  0.05) *
+                                          filteredAllCircles.length,
+                                      child: ListView.builder(
+                                        physics: NeverScrollableScrollPhysics(),
+                                        itemCount: filteredAllCircles.length,
+                                        itemBuilder: (context, index) {
+                                          CircleModel circle =
+                                              filteredAllCircles[index];
+                                          DateTime start = circle.startDate;
+                                          DateTime end = circle.endDate;
+                                          return GestureDetector(
+                                            onTap: () {
+                                              context.push(
+                                                '/circle/${circle.id}',
+                                              );
+                                            },
+                                            child: Padding(
+                                              padding: EdgeInsets.only(
+                                                bottom:
+                                                    MediaQuery.of(
+                                                      context,
+                                                    ).size.width *
+                                                    0.05,
+                                              ),
+                                              child: Container(
+                                                width: double.infinity,
+                                                padding: EdgeInsets.fromLTRB(
+                                                  15,
+                                                  15,
+                                                  10,
+                                                  15,
+                                                ),
+                                                height: 125,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.grey.shade100,
+                                                  borderRadius:
+                                                      BorderRadius.circular(30),
+                                                ),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: [
+                                                    SizedBox(
+                                                      width: 65,
+                                                      height: 65,
+                                                      child: Stack(
+                                                        children: [
+                                                          Positioned(
+                                                            left: 0,
+                                                            top: 17.5,
+                                                            child: Container(
+                                                              height: 35,
+                                                              width: 35,
+                                                              decoration: BoxDecoration(
+                                                                color: Colors
+                                                                    .grey
+                                                                    .shade300,
+                                                                borderRadius:
+                                                                    BorderRadius.circular(
+                                                                      20,
+                                                                    ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          Positioned(
+                                                            left: 17.5,
+                                                            top: 27.5,
+                                                            child: Container(
+                                                              height: 35,
+                                                              width: 35,
+                                                              decoration: BoxDecoration(
+                                                                color: Colors
+                                                                    .grey
+                                                                    .shade300,
+                                                                borderRadius:
+                                                                    BorderRadius.circular(
+                                                                      20,
+                                                                    ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          Positioned(
+                                                            left: 17.5,
+                                                            top: 7.5,
+                                                            child: Container(
+                                                              height: 35,
+                                                              width: 35,
+                                                              decoration: BoxDecoration(
+                                                                color: Colors
+                                                                    .grey
+                                                                    .shade300,
+                                                                borderRadius:
+                                                                    BorderRadius.circular(
+                                                                      20,
+                                                                    ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(
+                                                          '${circle.departure} - ${circle.destination}',
+                                                          style: TextStyle(
+                                                            fontSize: 10,
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                          ),
+                                                        ),
+                                                        SizedBox(height: 10),
+                                                        SizedBox(
+                                                          width:
+                                                              MediaQuery.of(
+                                                                context,
+                                                              ).size.width *
+                                                              0.5,
+                                                          child: Text(
+                                                            circle.name,
+                                                            style: TextStyle(
+                                                              fontSize: 12,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w700,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        SizedBox(height: 10),
+                                                        Text(
+                                                          '${start.day} ${DateFormat.MMM().format(start)} ${start.year} - ${end.day} ${DateFormat.MMM().format(end)} ${end.year}',
+                                                          style: TextStyle(
+                                                            fontSize: 10,
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    IconButton(
+                                                      icon: Icon(
+                                                        Icons.share,
+                                                        color: Colors
+                                                            .grey
+                                                            .shade700,
+                                                        size: 22,
+                                                      ),
+                                                      onPressed: () async {
+                                                        final circleLink =
+                                                            'https://odyss.app/circle/${circle.id}';
+                                                        final shareText =
+                                                            'Join my circle on Odyss! $circleLink\nIf you don\'t have the app, download it from the store.';
+                                                        await Share.share(
+                                                          shareText,
+                                                          subject:
+                                                              'Join my Odyss Circle',
+                                                        );
+                                                      },
+                                                      tooltip: 'Share',
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
                             ],
                           ),
                         ),

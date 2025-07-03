@@ -38,48 +38,48 @@ class _EditProfileState extends ConsumerState<EditProfile> {
   TextEditingController twitterController = TextEditingController();
   TextEditingController facebookController = TextEditingController();
 
-  Future<File> downloadFileFromUrl(String url, String filename) async {
-    final response = await http.get(Uri.parse(url));
-    final dir = await getTemporaryDirectory();
-    final file = File('${dir.path}/$filename');
-    await file.writeAsBytes(response.bodyBytes);
-    return file;
-  }
+  // Future<File> downloadFileFromUrl(String url, String filename) async {
+  //   final response = await http.get(Uri.parse(url));
+  //   final dir = await getTemporaryDirectory();
+  //   final file = File('${dir.path}/$filename');
+  //   await file.writeAsBytes(response.bodyBytes);
+  //   return file;
+  // }
 
-  VideoPlayerController? _controller;
-  File? _lastFile;
+  // VideoPlayerController? _controller;
+  // File? _lastFile;
 
-  void _initializeVideo(File file) async {
-    _controller?.dispose();
-    _controller = VideoPlayerController.file(file);
-    await _controller!.initialize();
-    _controller!.play();
-    setState(() {});
-  }
+  // void _initializeVideo(File file) async {
+  //   _controller?.dispose();
+  //   _controller = VideoPlayerController.file(file);
+  //   await _controller!.initialize();
+  //   _controller!.play();
+  //   setState(() {});
+  // }
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final users = ref.read(userListProvider).value ?? [];
-      final user = users.firstWhere((element) => element.id == UID);
-      if (user != null) {
-        if (user.picture.isNotEmpty) {
-          final file = await downloadFileFromUrl(
-            user.picture,
-            'profile_pic.jpg',
-          );
-          ref.read(imageFileProvider.notifier).setImage(file);
-        }
-        if (user.video.isNotEmpty) {
-          final file = await downloadFileFromUrl(
-            user.video,
-            'profile_video.mp4',
-          );
-          ref.read(videoFileProvider.notifier).setVideo(file);
-        }
-      }
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((_) async {
+    //   final users = ref.read(userListProvider).value ?? [];
+    //   final user = users.firstWhere((element) => element.id == UID);
+    //   if (user != null) {
+    //     if (user.picture.isNotEmpty) {
+    //       final file = await downloadFileFromUrl(
+    //         user.picture,
+    //         'profile_pic.jpg',
+    //       );
+    //       ref.read(imageFileProvider.notifier).setImage(file);
+    //     }
+    //     if (user.video.isNotEmpty) {
+    //       final file = await downloadFileFromUrl(
+    //         user.video,
+    //         'profile_video.mp4',
+    //       );
+    //       ref.read(videoFileProvider.notifier).setVideo(file);
+    //     }
+    //   }
+    // });
   }
 
   @override
@@ -92,40 +92,39 @@ class _EditProfileState extends ConsumerState<EditProfile> {
     insatgramController.dispose();
     twitterController.dispose();
     facebookController.dispose();
-    _controller?.dispose();
+    // _controller?.dispose();
     super.dispose();
   }
 
-  Future<String?> uploadFile({
-    required String uploadUrl,
-    required String filePath,
-    required String fieldName,
-    required String token,
-    required String contentType,
-  }) async {
-    var request = http.MultipartRequest('POST', Uri.parse(uploadUrl));
-    request.headers['Authorization'] = 'Bearer $token';
-    request.files.add(
-      await http.MultipartFile.fromPath(
-        fieldName,
-        filePath,
-        contentType: MediaType.parse(contentType),
-      ),
-    );
-    final streamedResponse = await request.send();
-    final response = await http.Response.fromStream(streamedResponse);
+  // Future<String?> uploadFile({
+  //   required String uploadUrl,
+  //   required String filePath,
+  //   required String fieldName,
+  //   required String token,
+  //   required String contentType,
+  // }) async {
+  //   var request = http.MultipartRequest('POST', Uri.parse(uploadUrl));
+  //   request.headers['Authorization'] = 'Bearer $token';
+  //   request.files.add(
+  //     await http.MultipartFile.fromPath(
+  //       fieldName,
+  //       filePath,
+  //       contentType: MediaType.parse(contentType),
+  //     ),
+  //   );
+  //   final streamedResponse = await request.send();
+  //   final response = await http.Response.fromStream(streamedResponse);
 
-    if (response.statusCode == 200) {
-      // Expecting: { "url": "https://..." }
-      final decoded = jsonDecode(response.body);
-      return decoded['url'] as String?;
-    } else {
-      throw Exception('Failed to upload file: ${response.body}');
-    }
-  }
+  //   if (response.statusCode == 200) {
+  //     // Expecting: { "url": "https://..." }
+  //     final decoded = jsonDecode(response.body);
+  //     return decoded['url'] as String?;
+  //   } else {
+  //     throw Exception('Failed to upload file: ${response.body}');
+  //   }
+  // }
 
   Future<void> updateMyProfile() async {
-    final secureStorage = FlutterSecureStorage();
     final token = await secureStorage.read(key: 'access_token');
     final url = Uri.parse(usersUrl); // Set your baseUrl somewhere accessible
 
@@ -185,13 +184,12 @@ class _EditProfileState extends ConsumerState<EditProfile> {
   }
 
   Future<void> updateMyProfileWithSeparateUploads() async {
-    final secureStorage = FlutterSecureStorage();
     final token = await secureStorage.read(key: 'access_token');
-    final profilePic = ref.read(imageFileProvider);
-    final videoFile = ref.read(videoFileProvider);
+    // final profilePic = ref.read(imageFileProvider);
+    // final videoFile = ref.read(videoFileProvider);
 
-    String? imageUrl;
-    String? videoUrl;
+    // String? imageUrl;
+    // String? videoUrl;
 
     showDialog(
       context: context,
@@ -201,26 +199,26 @@ class _EditProfileState extends ConsumerState<EditProfile> {
 
     try {
       // 1. Upload image if available
-      if (profilePic != null) {
-        imageUrl = await uploadFile(
-          uploadUrl: uploadUrl, // <-- your image upload endpoint
-          filePath: profilePic.path,
-          fieldName: 'file',
-          token: token!,
-          contentType: 'image/jpeg', // or 'image/png'
-        );
-      }
+      // if (profilePic != null) {
+      //   imageUrl = await uploadFile(
+      //     uploadUrl: uploadUrl, // <-- your image upload endpoint
+      //     filePath: profilePic.path,
+      //     fieldName: 'file',
+      //     token: token!,
+      //     contentType: 'image/jpeg', // or 'image/png'
+      //   );
+      // }
 
       // 2. Upload video if available
-      if (videoFile != null) {
-        videoUrl = await uploadFile(
-          uploadUrl: uploadUrl, // <-- your video upload endpoint
-          filePath: videoFile.path,
-          fieldName: 'file',
-          token: token!,
-          contentType: 'video/mp4',
-        );
-      }
+      // if (videoFile != null) {
+      //   videoUrl = await uploadFile(
+      //     uploadUrl: uploadUrl, // <-- your video upload endpoint
+      //     filePath: videoFile.path,
+      //     fieldName: 'file',
+      //     token: token!,
+      //     contentType: 'video/mp4',
+      //   );
+      // }
 
       // 3. Now PUT the profile data
       final url = Uri.parse(usersUrl);
@@ -233,8 +231,8 @@ class _EditProfileState extends ConsumerState<EditProfile> {
         'insta': insatgramController.text,
         'x': twitterController.text,
         'fb': facebookController.text,
-        if (imageUrl != null) 'avatar': imageUrl,
-        if (videoUrl != null) 'intro_video': videoUrl,
+        // if (imageUrl != null) 'avatar': imageUrl,
+        // if (videoUrl != null) 'intro_video': videoUrl,
       };
 
       final response = await http.put(
@@ -269,12 +267,12 @@ class _EditProfileState extends ConsumerState<EditProfile> {
 
   @override
   Widget build(BuildContext context) {
-    ref.listen<File?>(videoFileProvider, (previous, next) {
-      if (next != null && next != _lastFile) {
-        _lastFile = next;
-        _initializeVideo(next);
-      }
-    });
+    // ref.listen<File?>(videoFileProvider, (previous, next) {
+    //   if (next != null && next != _lastFile) {
+    //     _lastFile = next;
+    //     _initializeVideo(next);
+    //   }
+    // });
 
     final myColors = Theme.of(context).extension<MyColors>()!;
     final userListAsync = ref.watch(userListProvider);
@@ -300,15 +298,15 @@ class _EditProfileState extends ConsumerState<EditProfile> {
     lastNameController.text = user.lastName;
     bioController.text = user.bio;
 
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      if (user.video.isNotEmpty) {
-        final file = await downloadFileFromUrl(user.video, 'profile_video.mp4');
-        ref.read(imageFileProvider.notifier).setImage(file);
-      }
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((_) async {
+    //   if (user.video.isNotEmpty) {
+    //     final file = await downloadFileFromUrl(user.video, 'profile_video.mp4');
+    //     ref.read(imageFileProvider.notifier).setImage(file);
+    //   }
+    // });
 
-    final profilePic = ref.watch(imageFileProvider);
-    final videoFile = ref.watch(videoFileProvider);
+    // final profilePic = ref.watch(imageFileProvider);
+    // final videoFile = ref.watch(videoFileProvider);
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
@@ -351,65 +349,65 @@ class _EditProfileState extends ConsumerState<EditProfile> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Wrap(
-                            spacing: 40,
-                            runSpacing: 40,
-                            alignment: WrapAlignment.center,
-                            runAlignment: WrapAlignment.center,
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(60),
-                                child: Container(
-                                  width: 120,
-                                  height: 120,
-                                  color: Colors.blueGrey.shade100,
-                                  child: Stack(
-                                    children: [
-                                      profilePic != null
-                                          ? Image.file(
-                                              profilePic,
-                                              fit: BoxFit.cover,
-                                              width: 120,
-                                              height: 120,
-                                            )
-                                          : Center(
-                                              child:
-                                                  CircularProgressIndicator(),
-                                            ),
-                                      Center(child: ImageChangerButton()),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(20),
-                                child: Container(
-                                  width: 120,
-                                  height: 120,
-                                  color: Colors.blueGrey.shade100,
-                                  child: Stack(
-                                    children: [
-                                      videoFile != null &&
-                                              _controller != null &&
-                                              _controller!.value.isInitialized
-                                          ? VideoPlayer(_controller!)
-                                          : const Center(
-                                              child:
-                                                  CircularProgressIndicator(),
-                                            ),
-                                      Center(child: VideoChangerButton()),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
+                    // Row(
+                    //   children: [
+                    //     Expanded(
+                    //       child: Wrap(
+                    //         spacing: 40,
+                    //         runSpacing: 40,
+                    //         alignment: WrapAlignment.center,
+                    //         runAlignment: WrapAlignment.center,
+                    //         children: [
+                    //           ClipRRect(
+                    //             borderRadius: BorderRadius.circular(60),
+                    //             child: Container(
+                    //               width: 120,
+                    //               height: 120,
+                    //               color: Colors.blueGrey.shade100,
+                    //               child: Stack(
+                    //                 children: [
+                    //                   profilePic != null
+                    //                       ? Image.file(
+                    //                           profilePic,
+                    //                           fit: BoxFit.cover,
+                    //                           width: 120,
+                    //                           height: 120,
+                    //                         )
+                    //                       : Center(
+                    //                           child:
+                    //                               CircularProgressIndicator(),
+                    //                         ),
+                    //                   Center(child: ImageChangerButton()),
+                    //                 ],
+                    //               ),
+                    //             ),
+                    //           ),
+                    //           ClipRRect(
+                    //             borderRadius: BorderRadius.circular(20),
+                    //             child: Container(
+                    //               width: 120,
+                    //               height: 120,
+                    //               color: Colors.blueGrey.shade100,
+                    //               child: Stack(
+                    //                 children: [
+                    //                   videoFile != null &&
+                    //                           _controller != null &&
+                    //                           _controller!.value.isInitialized
+                    //                       ? VideoPlayer(_controller!)
+                    //                       : const Center(
+                    //                           child:
+                    //                               CircularProgressIndicator(),
+                    //                         ),
+                    //                   Center(child: VideoChangerButton()),
+                    //                 ],
+                    //               ),
+                    //             ),
+                    //           ),
+                    //         ],
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
                     SizedBox(height: 40),
                     Text('Personal Info'),
                     SizedBox(height: 20),
