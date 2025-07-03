@@ -457,14 +457,14 @@ class _PartnerDetailsScreenState extends ConsumerState<PartnerDetailsScreen> {
                                                   ),
                                                 ),
                                                 onTap: () {
+                                                  timeController.clear();
+                                                  numberController.clear();
                                                   setState(() {
                                                     vehicleController.text =
                                                         vehicles[index].type;
                                                     numberController.text =
                                                         vehicles[index].seats;
                                                   });
-                                                  timeController.clear();
-                                                  numberController.clear();
                                                 },
                                               );
                                             },
