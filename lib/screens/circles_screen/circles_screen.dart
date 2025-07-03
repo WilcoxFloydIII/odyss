@@ -354,7 +354,8 @@ class _CirclesScreenState extends ConsumerState<CirclesScreen> {
                                                 ),
                                                 Column(
                                                   mainAxisAlignment:
-                                                      MainAxisAlignment.start,
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.start,
                                                   children: [
