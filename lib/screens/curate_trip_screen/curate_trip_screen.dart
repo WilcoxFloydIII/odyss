@@ -26,43 +26,45 @@ class _CurateTripScreenState extends State<CurateTripScreen> {
           MediaQuery.of(context).size.width * 0.05,
           0,
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Image.asset('assets/icons/curate_icon.png', width: 150),
-            SizedBox(height: 30),
-            Text(
-              'Curate a Trip That Feels Like You',
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 20),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: MediaQuery.of(context).size.width * 0.05,
-              ),
-              child: Text(
-                "Let's help you create a ride where everyone's on the same vibe - it only takes a few steps!.",
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Image.asset('assets/icons/curate_icon.png', width: 150),
+              SizedBox(height: 30),
+              Text(
+                'Curate a Trip That Feels Like You',
                 textAlign: TextAlign.center,
-                style: TextStyle(fontWeight: FontWeight.w500),
+                style: TextStyle(fontSize: 20),
               ),
-            ),
-            SizedBox(height: 50),
-            Row(
-              children: [
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      context.push('/tripDetails');
-                    },
-                    child: Text(
-                      'Get curating',
-                      style: TextStyle(fontWeight: FontWeight.w700),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: MediaQuery.of(context).size.width * 0.05,
+                ),
+                child: Text(
+                  "Let's help you create a ride where everyone's on the same vibe - it only takes a few steps!.",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontWeight: FontWeight.w500),
+                ),
+              ),
+              SizedBox(height: 50),
+              Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        context.push('/tripDetails');
+                      },
+                      child: Text(
+                        'Get curating',
+                        style: TextStyle(fontWeight: FontWeight.w700),
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

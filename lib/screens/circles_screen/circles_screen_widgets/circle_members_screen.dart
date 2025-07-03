@@ -196,13 +196,13 @@ class _CircleMembersScreenState extends ConsumerState<CircleMembersScreen> {
                   ),
                 ),
                 SizedBox(width: 10),
-                Container(
-                  width: 250,
+                Expanded(
                   child: Text(
                     circle.name,
                     style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
+                    overflow: TextOverflow.ellipsis,
                   ),
-                ), // Placeholder for the back button
+                ),
               ],
             ),
           ),

@@ -10,6 +10,60 @@ import 'package:permission_handler/permission_handler.dart';
 class ImagePickerButton extends ConsumerWidget {
   const ImagePickerButton({Key? key}) : super(key: key);
 
+  Future<bool> _requestPhotoPermission(BuildContext context) async {
+    if (Platform.isAndroid) {
+      if (await Permission.photos.isGranted || await Permission.storage.isGranted) {
+        return true;
+      }
+      if (await Permission.photos.request().isGranted) {
+        return true;
+      }
+      if (await Permission.storage.request().isGranted) {
+        return true;
+      }
+      await openAppSettings();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please grant storage permission in settings.')),
+      );
+      return false;
+    } else {
+      var status = await Permission.photos.status;
+      if (status.isGranted) {
+        return true;
+      }
+      status = await Permission.photos.request();
+      if (status.isGranted) {
+        return true;
+      } else if (status.isPermanentlyDenied) {
+        await showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: Text('Permission Required'),
+            content: Text('Photo access is required to select a profile picture. Please enable it in Settings.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(ctx).pop();
+                  openAppSettings();
+                },
+                child: Text('Open Settings'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(ctx).pop(),
+                child: Text('Cancel'),
+              ),
+            ],
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Photo permission denied.')),
+        );
+      }
+      return false;
+    }
+  }
+
   Future<void> _pickAndSaveProfilePic(
     WidgetRef ref,
     BuildContext context,
@@ -17,26 +71,12 @@ class ImagePickerButton extends ConsumerWidget {
     final picker = ImagePicker();
 
     // Request permissions
-    PermissionStatus permissionStatus;
-    if (Platform.isAndroid) {
-      permissionStatus = await Permission.photos.request(); // Android 13+
-      if (permissionStatus.isDenied) {
-        permissionStatus = await Permission.storage
-            .request(); // Android 12 and below
-      }
-    } else {
-      permissionStatus = await Permission.photos.request(); // iOS
-    }
-
-    if (!permissionStatus.isGranted) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Permission denied')));
+    if (!await _requestPhotoPermission(context)) {
       return;
     }
 
     // Pick image
-    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+    final XFile? image = await ImagePicker().pickImage(source: ImageSource.gallery);
     if (image == null) return;
 
     // Get directory

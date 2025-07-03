@@ -8,6 +8,9 @@
 		<key>NSCameraUsageDescription</key>
 		<string>This app needs access to your camera to take photos.</string>
 
+		<key>NSPhotoLibraryAddUsageDescription</key>
+		<string>This app needs permission to save photos to your library.</string>
+
 		<key>CFBundleDevelopmentRegion</key>
 		<string>$(DEVELOPMENT_LANGUAGE)</string>
 		<key>CFBundleDisplayName</key>
