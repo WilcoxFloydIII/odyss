@@ -16,6 +16,7 @@ final partnerListProvider = FutureProvider<List<PartnerModel>>((ref) async {
   );
   if (response.statusCode == 200) {
     final List<dynamic> data = jsonDecode(response.body);
+    print('list Companies: $data');
     return data.map((e) => PartnerModel.fromJson(e)).toList();
   } else {
     throw Exception('Failed to fetch companies: ${response.body}');

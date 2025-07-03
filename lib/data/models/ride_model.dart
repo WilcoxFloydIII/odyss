@@ -54,40 +54,6 @@ class RideModel {
     );
   }
 
-  RideModel copyWith({
-    String? id,
-    List<String>? vibes,
-    List? memberIds,
-    int? seats,
-    String? company,
-    double? price,
-    String? departureLoc,
-    String? arrivalLoc,
-    DateTime? departureDate,
-    DateTime? arrivalDate,
-    String? departureTOD,
-    String? vehicle,
-    String? creator,
-    bool? fill,
-  }) {
-    return RideModel(
-      id: id ?? this.id,
-      vehicle: vehicle ?? this.vehicle,
-      memberIds: memberIds ?? this.memberIds,
-      seats: seats ?? this.seats,
-      company: company ?? this.company,
-      price: price ?? this.price,
-      departureLoc: departureLoc ?? this.departureLoc,
-      arrivalLoc: arrivalLoc ?? this.arrivalLoc,
-      departureTOD: departureTOD ?? this.departureTOD,
-      departureDate: departureDate ?? this.departureDate,
-      arrivalDate: arrivalDate ?? this.arrivalDate,
-      creator: creator ?? this.creator,
-      fill: fill ?? this.fill,
-      vibes: vibes ?? this.vibes,
-    );
-  }
-
   Map<String, dynamic> toJson({required String email}) {
     // Ensure memberIds is a list of strings
     return {
@@ -104,6 +70,7 @@ class RideModel {
       'creator': creator,
       'fill': fill,
       'vibes': vibes,
+      'email': email,
     };
   }
 

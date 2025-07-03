@@ -7,13 +7,19 @@ import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 import 'package:odyss/core/colors.dart';
 import 'package:odyss/core/constraints.dart';
+import 'package:odyss/core/providers/list_providers/ride_list_provider.dart';
 import 'package:odyss/core/providers/other_providers/intro_video_provider.dart';
 import 'package:odyss/core/providers/other_providers/profile_picture_provider.dart';
 import 'package:odyss/core/providers/list_providers/user_list_provider.dart';
+import 'package:odyss/screens/error_dialog_widget.dart';
+import 'package:odyss/screens/loading_animation_widget.dart';
 import 'package:odyss/screens/profile_screen/profile_screen_widgets/image_changer_button.dart';
 import 'package:odyss/screens/profile_screen/profile_screen_widgets/video_changer_button.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:video_player/video_player.dart';
+import 'dart:convert';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:http_parser/http_parser.dart';
 
 class EditProfile extends ConsumerStatefulWidget {
   const EditProfile({super.key});
@@ -88,6 +94,177 @@ class _EditProfileState extends ConsumerState<EditProfile> {
     facebookController.dispose();
     _controller?.dispose();
     super.dispose();
+  }
+
+  Future<String?> uploadFile({
+    required String uploadUrl,
+    required String filePath,
+    required String fieldName,
+    required String token,
+    required String contentType,
+  }) async {
+    var request = http.MultipartRequest('POST', Uri.parse(uploadUrl));
+    request.headers['Authorization'] = 'Bearer $token';
+    request.files.add(
+      await http.MultipartFile.fromPath(
+        fieldName,
+        filePath,
+        contentType: MediaType.parse(contentType),
+      ),
+    );
+    final streamedResponse = await request.send();
+    final response = await http.Response.fromStream(streamedResponse);
+
+    if (response.statusCode == 200) {
+      // Expecting: { "url": "https://..." }
+      final decoded = jsonDecode(response.body);
+      return decoded['url'] as String?;
+    } else {
+      throw Exception('Failed to upload file: ${response.body}');
+    }
+  }
+
+  Future<void> updateMyProfile() async {
+    final secureStorage = FlutterSecureStorage();
+    final token = await secureStorage.read(key: 'access_token');
+    final url = Uri.parse(usersUrl); // Set your baseUrl somewhere accessible
+
+    // Collect data from controllers and providers
+    final data = {
+      'nickname': nickNameController.text,
+      'first_name': firstNameController.text,
+      'last_name': lastNameController.text,
+      'bio': bioController.text,
+      'tiktok': tiktokController.text,
+      'insta': insatgramController.text,
+      'x': twitterController.text,
+      'fb': facebookController.text,
+      // Add these if you want to send media URLs or base64:
+      // 'intro_video': ...,
+      // 'avatar': ...,
+    };
+
+    // Optionally add video and image if you want to send them as URLs or base64
+    // final videoFile = ref.read(videoFileProvider);
+    // final profilePic = ref.read(imageFileProvider);
+
+    // Show loading
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => const LoadingAnimationWidget(),
+    );
+
+    try {
+      final response = await http.put(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(data),
+      );
+      Navigator.pop(context); // Remove loading
+
+      if (response.statusCode == 200) {
+        // Success! Optionally show a success dialog or message
+        // You can also update the user provider here if needed
+      } else {
+        showDialog(
+          context: context,
+          builder: (_) => ErrorDialogWidget(error: response.body),
+        );
+      }
+    } catch (e) {
+      Navigator.pop(context); // Remove loading
+      showDialog(
+        context: context,
+        builder: (_) => ErrorDialogWidget(error: e.toString()),
+      );
+    }
+  }
+
+  Future<void> updateMyProfileWithSeparateUploads() async {
+    final secureStorage = FlutterSecureStorage();
+    final token = await secureStorage.read(key: 'access_token');
+    final profilePic = ref.read(imageFileProvider);
+    final videoFile = ref.read(videoFileProvider);
+
+    String? imageUrl;
+    String? videoUrl;
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => const LoadingAnimationWidget(),
+    );
+
+    try {
+      // 1. Upload image if available
+      if (profilePic != null) {
+        imageUrl = await uploadFile(
+          uploadUrl: uploadUrl, // <-- your image upload endpoint
+          filePath: profilePic.path,
+          fieldName: 'file',
+          token: token!,
+          contentType: 'image/jpeg', // or 'image/png'
+        );
+      }
+
+      // 2. Upload video if available
+      if (videoFile != null) {
+        videoUrl = await uploadFile(
+          uploadUrl: uploadUrl, // <-- your video upload endpoint
+          filePath: videoFile.path,
+          fieldName: 'file',
+          token: token!,
+          contentType: 'video/mp4',
+        );
+      }
+
+      // 3. Now PUT the profile data
+      final url = Uri.parse(usersUrl);
+      final data = {
+        'nickname': nickNameController.text,
+        'first_name': firstNameController.text,
+        'last_name': lastNameController.text,
+        'bio': bioController.text,
+        'tiktok': tiktokController.text,
+        'insta': insatgramController.text,
+        'x': twitterController.text,
+        'fb': facebookController.text,
+        if (imageUrl != null) 'avatar': imageUrl,
+        if (videoUrl != null) 'intro_video': videoUrl,
+      };
+
+      final response = await http.put(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(data),
+      );
+
+      Navigator.pop(context); // Remove loading
+
+      if (response.statusCode == 200) {
+        ref.invalidate(userListProvider);
+        ref.invalidate(ridesListProvider);
+        context.go('/profile');
+      } else {
+        showDialog(
+          context: context,
+          builder: (_) => ErrorDialogWidget(error: response.body),
+        );
+      }
+    } catch (e) {
+      Navigator.pop(context); // Remove loading
+      showDialog(
+        context: context,
+        builder: (_) => ErrorDialogWidget(error: e.toString()),
+      );
+    }
   }
 
   @override
@@ -202,9 +379,7 @@ class _EditProfileState extends ConsumerState<EditProfile> {
                                               child:
                                                   CircularProgressIndicator(),
                                             ),
-                                      Center(
-                                        child: ImageChangerButton(),
-                                      ),
+                                      Center(child: ImageChangerButton()),
                                     ],
                                   ),
                                 ),
@@ -225,9 +400,7 @@ class _EditProfileState extends ConsumerState<EditProfile> {
                                               child:
                                                   CircularProgressIndicator(),
                                             ),
-                                      Center(
-                                        child: VideoChangerButton(),
-                                      ),
+                                      Center(child: VideoChangerButton()),
                                     ],
                                   ),
                                 ),
@@ -602,7 +775,9 @@ class _EditProfileState extends ConsumerState<EditProfile> {
                       children: [
                         Expanded(
                           child: ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () async {
+                              await updateMyProfileWithSeparateUploads();
+                            },
                             child: Text('Update'),
                           ),
                         ),

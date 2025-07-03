@@ -14,8 +14,20 @@ final routesListProvider = FutureProvider<List<RouteModel>>((ref) async {
     },
   );
   if (response.statusCode == 200) {
-    final List<dynamic> data = jsonDecode(response.body);
-    return data.map((e) => RouteModel.fromJson(e)).toList();
+    final decoded = jsonDecode(response.body);
+    if (decoded is List) {
+      print('list Routes: $decoded');
+      return decoded.map((e) => RouteModel.fromJson(e)).toList();
+    } else if (decoded is Map && decoded.containsKey('error')) {
+      print('Routes: $decoded');
+      throw Exception(decoded['error']);
+    } else if (decoded is String) {
+      print('Routes: $decoded');
+      throw Exception('Failed to fetch routes: $decoded');
+    } else {
+      print('Routes: $decoded');
+      throw Exception('Unexpected response format');
+    }
   } else {
     print('Failed to fetch routes: ${response.body}');
     throw Exception('Failed to fetch routes: ${response.body}');
@@ -32,8 +44,20 @@ final vehiclesListProvider = FutureProvider<List<VehicleModel>>((ref) async {
     },
   );
   if (response.statusCode == 200) {
-    final List<dynamic> data = jsonDecode(response.body);
-    return data.map((e) => VehicleModel.fromJson(e)).toList();
+    final decoded = jsonDecode(response.body);
+    if (decoded is List) {
+      print('list Vehicles: $decoded');
+      return decoded.map((e) => VehicleModel.fromJson(e)).toList();
+    } else if (decoded is Map && decoded.containsKey('error')) {
+      print('Vehicles: $decoded');
+      throw Exception('Failed to fetch vehicles${decoded['error']}');
+    } else if (decoded is String) {
+      print('Vehicles: $decoded');
+      throw Exception(decoded);
+    } else {
+      print('Vehicles: $decoded');
+      throw Exception('Unexpected response format');
+    }
   } else {
     print('Failed to fetch vehicles: ${response.body}');
     throw Exception('Failed to fetch vehicles: ${response.body}');

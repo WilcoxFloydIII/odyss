@@ -35,6 +35,9 @@ Future<void> initiateTripAndPay({
 
     if (response.statusCode != 200) {
       final error = jsonDecode(response.body)['message'] ?? 'Trip init failed';
+      print(response.body);
+      print(ride.toJson(email: userEmail));
+      print(userEmail);
       throw Exception(error);
     }
 

@@ -114,7 +114,7 @@ class _TripVibeScreenState extends State<TripVibeScreen> {
                       SizedBox(height: 50),
                       Container(
                         width: MediaQuery.of(context).size.width,
-                        height: 300,
+                        height: 600,
                         padding: EdgeInsets.all(
                           MediaQuery.sizeOf(context).width * 0.05,
                         ),

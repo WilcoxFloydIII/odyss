@@ -12,6 +12,7 @@ String usersUrl = 'https://server.odyss.ng/users/me';
 String usersUrl2 = 'https://server.odyss.ng/users';
 String tripsUrl = 'https://server.odyss.ng/payments/initiate-trip';
 String tripsUrl2 = 'https://server.odyss.ng/trips';
+String uploadUrl = 'https://server.odyss.ng/users/upload-file';
 String partnerUrl = 'https://server.odyss.ng/users/companies';
 String routesUrl = 'https://server.odyss.ng/users/company_routes';
 String vehiclesUrl = 'https://server.odyss.ng/users/company_vehicles';
